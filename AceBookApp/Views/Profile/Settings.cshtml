@@ -1,0 +1,137 @@
+﻿@model AceBookApp.Models.Account
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="~/js/Setting.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/Feed.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/Profile.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/Setting.css" />
+</head>
+
+<body style="visibility:hidden">
+    <div class="parentDiv">
+        <div class="leftDiv">
+            <span class="leftHeading">Account Settings</span>
+        </div>
+        <div class="rightDiv">
+            <div class="rightHeadingDiv">
+                <span class="rightHeading">General Account Settings</span>
+            </div>
+            <div class="rightSettingDiv">
+                <div class="rightSettingNameDiv">
+                    <div>
+                        <div class="rightSettingNameDisplayDiv">
+                            <span class="rightSettingNameHeaderDiv">Name</span><br />
+                            <span class="rightSettingNameValueDiv">@Model.FirstName @Model.Surname</span>
+                        </div>
+                        <div class="rightSettingName1EditDiv">
+                            <span class="rightSettingName1EditLabelDiv">First</span>
+                            <input class="rightSettingName1Edit" type="text" value="@Model.FirstName" /><br />
+                        </div>
+                        <div class="rightSettingName2EditDiv">
+                            <span class="rightSettingName2EditLabelDiv">Last</span>
+                            <input class="rightSettingName2Edit" type="text" value="@Model.Surname" />
+                        </div>
+                        <div class="rightSettingNameCancelSaveBtnDiv">
+                            <div class="rightSettingNameCancelBtnDiv">
+                                <input type="button" value="Cancel" class="rightSettingNameCancelBtn" />
+                            </div>
+                            <div class="rightSettingNameSaveBtnDiv">
+                                <input type="button" value="Save" class="rightSettingNameSaveBtn" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rightSettingNameEditBtnDiv">
+                        <input type="button" value="Edit" class="rightSettingNameEditBtn" />
+                    </div>
+                </div>
+                <div class="rightSettingContactDiv">
+                    <div>
+                        <div class="rightSettingContactDisplayDiv">
+                            <span class="rightSettingContactHeaderDiv">Conatct</span><br />
+                            <span class="rightSettingContactValueDiv">@Model.Email</span>
+                        </div>
+                        <div class="rightSettingContact1EditDiv">
+                            <span class="rightSettingContact1EditLabelDiv">Email</span>
+                            <input class="rightSettingContact1Edit" type="text" value="@Model.Email" /><br />
+                        </div>
+                        <div class="rightSettingContactCancelSaveBtnDiv">
+                            <div class="rightSettingContactCancelBtnDiv">
+                                <input type="button" value="Cancel" class="rightSettingContactCancelBtn" />
+                            </div>
+                            <div class="rightSettingContactSaveBtnDiv">
+                                <input type="button" value="Save" class="rightSettingContactSaveBtn" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rightSettingContactEditBtnDiv">
+                        <input type="button" value="Edit" class="rightSettingContactEditBtn" />
+                    </div>
+                </div>
+                <div class="rightSettingPasswordDiv">
+                    <div>
+                        <div class="rightSettingPasswordDisplayDiv">
+                            <span class="rightSettingPasswordHeaderDiv">Change Password</span><br />
+                            <span class="rightSettingPasswordValueDiv">It's a good idea to use a strong password that you're not using elsewhere</span>
+                        </div>
+                        <div class="rightSettingPassword1EditDiv">
+                            <span class="rightSettingPassword1EditLabelDiv">Current password</span>
+                            <input class="rightSettingPassword1Edit" type="password" /><br />
+                        </div>
+                        <div class="rightSettingPassword2EditDiv">
+                            <span class="rightSettingPassword2EditLabelDiv">New password</span>
+                            <input class="rightSettingPassword2Edit" type="password" oninput="CheckPassword1(this.value)" /><br />
+                        </div>
+                        <div class="rightSettingPassword3EditDiv">
+                            <span class="rightSettingPassword3EditLabelDiv">Re-type new password</span>
+                            <input class="rightSettingPassword3Edit" type="password" oninput="CheckPassword2(this.value)" /><br />
+                            <span class="rightSettingPasswordErrorDiv"></span>
+                        </div>
+                        <div class="rightSettingPasswordCancelSaveBtnDiv">
+                            <div class="rightSettingPasswordCancelBtnDiv">
+                                <input type="button" value="Cancel" class="rightSettingPasswordCancelBtn" />
+                            </div>
+                            <div class="rightSettingPasswordSaveBtnDiv">
+                                <input type="button" value="Save" class="rightSettingPasswordSaveBtn" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="rightSettingPasswordEditBtnDiv">
+                        <input type="button" value="Edit" class="rightSettingPasswordEditBtn" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="searchDiv">
+        <div id="searchFeed">
+            <div id="result"></div>
+            <input id="searchInput" name="Name" oninput="Search(this.value)" placeholder="Search Acebook" />
+            <img class="searchIcon" src="~/images/searchIcon.png" />
+            <img class="acebookLogo" src="~/images/acebookLogo-modified.png" />
+            <img class="homeIcon" src="~/images/homeicon.png" />
+            <img class="notiIcon" src="~/images/notiicon.png" />
+            <img class="myProfilelogoImgRight" />
+            <div class="searchFeedSettingDiv" style="visibility: hidden;">
+                <div class="searchFeedSettingProfileNameDiv">
+                    <img class="searchFeedSettingProfileImg" />
+                    <span class="searchFeedSettingProfileName"></span>
+                </div>
+                <div class="searchFeedSettingOptionDiv">
+                    <img class="searchFeedSettingOptionImg" src="~/images/settingicon.png" />
+                    <span class="searchFeedSettingOption">Setting & privacy</span>
+                </div>
+                <div class="searchFeedSettingLogoutOptionDiv">
+                    <img class="searchFeedSettingLogoutOptionImg" src="~/images/logouticon.png" />
+                    <span class="searchFeedSettingLogoutOption">Log out</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+

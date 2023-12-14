@@ -1,0 +1,46 @@
+﻿
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="~/js/Friend.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/Feed.css" />
+    <link href="~/css/friend.css" rel="stylesheet" />
+</head>
+
+<div class="FriendsDiv">
+    <div class="FriendsMenuDiv">
+        <div class="FriendsMenuHeaderDiv">
+            <h1 class="FriendsMenuHeaderA">Friends</h1>
+        </div>
+        <div class="FriendsMenuRequestsDiv">
+            <img class="FriendsMenuRequestsImg" src="~/images/friendreqicon.png" />
+            <a class="FriendsMenuRequestsA">Friend Requests</a>
+        </div>
+        <div class="FriendsMenuAllFriendsDiv">
+            <img class="FriendsMenuAllFriendsImg" src="~/images/allfriendsicon.png" />
+            <a class="FriendsMenuAllFriendsA">All Friends</a>
+        </div>
+        <img class="backArrow" src="~/images/backarrowicon.png" />
+        <div class="FriendsMenuFriendListDiv"></div>
+    </div>
+
+    <div class="FriendsResultDiv">
+        <span class="FriendsResultHeader">Friend Requests</span>
+        <div class="FriendsResult"></div>
+        <div class="FriendProfileDiv" id="myID">
+            <object id="profileLoader" data=" " style="width:100vw; height:100vh;"></object>
+        </div>
+        <div class="NoReq"></div>
+    </div>
+</div>
+
+
+<div class="searchDiv">
+    <div id="searchFeed">
+        <div id="result"></div>
+        <input id="searchInput" name="Name" oninput="Search(this.value)" placeholder="Search Acebook" />
+        <img class="searchIcon" src="~/images/searchIcon.png" />
+        <img class="acebookLogo" src="~/images/acebookLogo-modified.png" />
+        <img class="homeIcon" src="~/images/homeicon.png" />
+        <img class="myProfilelogoImgRight" />
+    </div>
+</div>

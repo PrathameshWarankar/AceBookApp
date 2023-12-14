@@ -1,0 +1,225 @@
+﻿
+body {
+    background-image: url("../images/loginPage.PNG");
+    background-size: 100% 100%;
+}
+
+#createacc {
+    background-color: white;
+    position: relative;
+    left: 535px;
+    top: 120px;
+    width: 430px;
+    height: 535px;
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.15);
+}
+
+form{
+    margin: 15px;
+}
+
+h2 {
+    padding-top:10px;
+    color: #1c1e21;
+    font-family: SFProDisplay-Bold, Helvetica, Arial, sans-serif;
+    font-size: 32px;
+    line-height: 38px;
+}
+
+h5 {
+    position: absolute;
+    top: 23px;
+    color: #606770;
+    font-family: SFProText-Regular, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 24px;
+    font-weight: normal;
+}
+
+#actualform {
+    padding-top: 15px;
+    margin-top: 35px;
+    border-top: 1px solid #dddfe2;
+}
+
+.form-control {
+    height: 40px;
+    width: 100%;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    font-size: 15px;
+    color: #1d2129;
+    padding: 15px;
+    font-family: Helvetica, Arial, sans-serif;
+    margin-bottom: 10px;
+}
+
+#fname{
+    width: 195px;
+}
+
+#sname {
+    position: absolute;
+    top: 99px;
+    left: 220px;
+    width: 195px;
+}
+
+h3 {
+    color: #606770;
+    font-family: SFProText-Medium, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+    line-height: 20px;
+    margin-bottom: 0;
+    margin-top: 2px;
+}
+
+.dob {
+    -webkit-appearance: none;
+    width: 127px;
+    height: 34px;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    color: #606770;
+    font-family: SFProText-Medium, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    padding-left: 10px;
+}
+
+.form-control:focus, .dob:focus {
+    outline: none;
+    border: 1px solid #1877f2;
+}
+
+#date {
+    position: absolute;
+    top: 271px;
+}
+
+#mon{
+    position: absolute;
+    top: 271px;
+    left: 152px;
+}
+
+#year {
+    position: absolute;
+    top: 271px;
+    left: 290px;
+}
+
+#gender {
+    position: relative;
+    top: 47px;
+    color: #606770;
+    font-family: SFProText-Medium, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+#male {
+    position: relative;
+    top: 60px;
+    padding: 8px;
+    padding-right: 84px;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    font-size: 15px;
+    color: dimgrey;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+#female {
+    position: relative;
+    top: 60px;
+    left: -17px;
+    padding: 8px;
+    padding-right: 66px;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    font-size: 15px;
+    color: dimgrey;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+#maleradio {
+    position: relative;
+    top: 61px;
+    right: 30px;
+    cursor: pointer;
+}
+
+#femaleradio {
+    position: relative;
+    top: 61px;
+    right: 47px;
+    cursor: pointer;
+}
+
+#terms1a {
+    color: #606770;
+    font-family: SFProText-Medium, Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    position: relative;
+    top: 74px;
+}
+
+#terms1b {
+    color: #606770;
+    font-family: SFProText-Medium, Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    position: relative;
+    top: 67px;
+}
+
+#terms2a {
+    color: #606770;
+    font-family: SFProText-Medium, Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    position: relative;
+    top: 70px;
+}
+
+#terms2b {
+    color: #606770;
+    font-family: SFProText-Medium, Helvetica, Arial, sans-serif;
+    font-size: 11px;
+    font-weight: normal;
+    position: relative;
+    top: 63px;
+}
+
+.btn{
+    text-align: center;
+}
+
+#submitbtn {
+    background-color: #42b72a;
+    color: white;
+    font-weight: bold;
+    border: none;
+    line-height: 35px;
+    border-radius: 6px;
+    width: 200px;
+    font-size: 19px;
+    cursor: pointer;
+    position: relative;
+    top: 80px;
+}
+
+img {
+    content: url("../images/cancelOption.PNG");
+    position: absolute;
+    top: 9px;
+    left: 398px;
+    height: 25px;
+    cursor: pointer;
+}
+
+
+/*#1877f2*/

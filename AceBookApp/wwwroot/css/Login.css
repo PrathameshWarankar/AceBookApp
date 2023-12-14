@@ -1,0 +1,111 @@
+﻿body {
+    background-color: #e9ebee;
+    overflow:hidden;
+}
+
+#login {
+    background-color: white;
+    position: relative;
+    top: -110px;
+    left: 840px;
+    height: 320px;
+    width: 370px;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.15);
+}
+
+.form-control {
+    position: relative;
+    height: 50px;
+    width: 100%;
+    border: 1px solid #dddfe2;
+    border-radius: 5px;
+    font-size: 17px;
+    color: #1d2129;
+    padding: 15px;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+.form-control:focus {
+    outline: none;
+    border: 1px solid #1877f2;
+}
+
+#password {
+    margin-top: 15px;
+}
+
+#loginbtn {
+    margin-top: 15px;
+    width: 100%;
+    background-color: #1877f2;
+    border: none;
+    border-radius: 6px;
+    font-size: 20px;
+    line-height: 46px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#forgotpass {
+    margin-top: 17px;
+    text-align: center;
+    font-family: Helvetica, Arial, sans-serif;
+    color: #1877f2;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+a, a:visited, a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+#createbtndiv {
+    border-top: 1px solid #dddfe2;
+    text-align: center;
+}
+
+#createbtn {
+    margin-top: 30px;
+    position: relative;
+    background-color: #42b72a;
+    color: white;
+    font-weight: bold;
+    border: none;
+    line-height: 47px;
+    border-radius: 6px;
+    width: 200px;
+    font-size: 17px;
+    cursor: pointer;
+}
+
+h2 {
+    font-size: 55px;
+    color: #1877f2;
+    font-family: SFProDisplay-Regular, Helvetica, Arial, sans-serif;
+    position: relative;
+    top: 190px;
+    left: 250px;
+    font-weight:900;
+}
+
+#note1 {
+    font-family: SFProDisplay-Regular, Helvetica, Arial, sans-serif;
+    position: relative;
+    top: 150px;
+    left: 250px;
+    font-size: 27px;
+    font-weight:100;
+}
+
+#note2 {
+    font-family: SFProDisplay-Regular, Helvetica, Arial, sans-serif;
+    position: relative;
+    top: 125px;
+    left: 250px;
+    font-size: 27px;
+    font-weight: 100;
+}

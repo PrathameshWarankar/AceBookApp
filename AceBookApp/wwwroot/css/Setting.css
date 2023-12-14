@@ -1,0 +1,147 @@
+﻿
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+.parentDiv {
+    position: relative;
+    top: 55px;
+    display: flex;
+}
+
+.leftDiv {
+    background-color: white;
+    width: 360px;
+    height: 100%;
+    box-shadow: 0px 1px 5px rgb(0 0 0 / 0.25);
+}
+
+.rightDiv {
+    padding-left: 230px;
+    padding-top: 30px;
+}
+
+.rightHeading {
+    font-family: Arial;
+    font-size: 20px;
+    font-weight: 600;
+    font-stretch: expanded;
+}
+
+.leftHeading {
+    font-family: Arial;
+    font-size: 24px;
+    font-weight: 600;
+    font-stretch: expanded;
+    padding: 20px;
+    position: relative;
+    top: 25px;
+}
+
+.rightSettingDiv {
+    background-color: white;
+    margin-top: 18px;
+    border-radius: 8px;
+    padding: 0px 15px 0px 15px;
+    box-shadow: 0px 0px 2px rgb(0 0 0 / 0.25);
+    width: 650px;
+}
+
+.rightSettingNameDiv, .rightSettingContactDiv, .rightSettingPasswordDiv {
+    padding: 18px 0px 18px 0px;
+    border-bottom: 1px solid lightgray;
+    display: flex;
+}
+
+.rightSettingNameHeaderDiv, .rightSettingContactHeaderDiv, .rightSettingPasswordHeaderDiv, .rightSettingNameEditBtn, .rightSettingContactEditBtn, .rightSettingPasswordEditBtn, .rightSettingNameCancelBtn, .rightSettingNameSaveBtn, .rightSettingContactCancelBtn, .rightSettingPasswordCancelBtn, .rightSettingContactSaveBtn, .rightSettingPasswordSaveBtn {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.rightSettingNameValueDiv, .rightSettingContactValueDiv, .rightSettingPasswordValueDiv {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    position: relative;
+    top: 2px;
+}
+
+.rightSettingNameEditBtnDiv, .rightSettingContactEditBtnDiv, .rightSettingPasswordEditBtnDiv {
+    position: relative;
+    /*    left: 475px;*/
+    top: 5px;
+}
+
+.rightSettingNameEditBtn, .rightSettingContactEditBtn, .rightSettingPasswordEditBtn {
+    border: none;
+    outline: none;
+    padding: 8px 12px 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.rightSettingContactEditBtnDiv {
+    /*left: 410px;*/
+}
+
+.rightSettingName1EditDiv, .rightSettingName2EditDiv, .rightSettingContact1EditDiv, .rightSettingPassword1EditDiv, .rightSettingPassword2EditDiv, .rightSettingPassword3EditDiv {
+    position: relative;
+    top: 10px;
+    padding-bottom: 10px;
+}
+
+.rightSettingName1Edit, .rightSettingName2Edit, .rightSettingContact1Edit, .rightSettingPassword1Edit, .rightSettingPassword2Edit, .rightSettingPassword3Edit {
+    height: 55px;
+    border: 1px solid lightgray;
+    border-radius: 8px;
+    width: 650px;
+    outline: none;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    padding-top: 15px;
+    padding-left: 15px;
+}
+
+.rightSettingNameCancelSaveBtnDiv, .rightSettingContactCancelSaveBtnDiv, .rightSettingPasswordCancelSaveBtnDiv {
+    display: flex;
+    position: relative;
+    padding-top: 20px;
+    left: 430px;
+}
+
+.rightSettingNameCancelBtn, .rightSettingNameSaveBtn, .rightSettingContactCancelBtn, .rightSettingPasswordCancelBtn, .rightSettingContactSaveBtn, .rightSettingPasswordSaveBtn {
+    width: 100px;
+    height: 35px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.rightSettingNameSaveBtn, .rightSettingContactSaveBtn, .rightSettingPasswordSaveBtn {
+    background-color: #1B74E4;
+    color: white;
+}
+
+.rightSettingName2EditLabelDiv, .rightSettingName1EditLabelDiv, .rightSettingContact1EditLabelDiv, .rightSettingPassword1EditLabelDiv, .rightSettingPassword2EditLabelDiv, .rightSettingPassword3EditLabelDiv {
+    position: absolute;
+    top: 5px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    padding-left: 15px;
+    color: gray;
+}
+
+.rightSettingNameDisplayDiv, .rightSettingContactDisplayDiv, .rightSettingPasswordDisplayDiv {
+    width: 600px;
+}
+
+.rightSettingPasswordErrorDiv {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    padding-left: 5px;
+    position: relative;
+    top: 5px;
+}

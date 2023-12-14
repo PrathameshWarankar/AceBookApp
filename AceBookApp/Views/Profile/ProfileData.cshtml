@@ -1,0 +1,362 @@
+﻿
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+            integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
+            crossorigin="anonymous">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="~/js/Profile.js"></script>
+    <script type="text/JavaScript" src=" https://MomentJS.com/downloads/moment.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/css/Feed.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/Profile.css" />
+</head>
+
+<body style="visibility:hidden;">
+    <div class="myProfileHeaderDiv">
+        <div class="myProfileHeaderCover">
+            <div class="myProfileHeaderCoverDiv">
+                <img class="myProfileHeaderCoverImg" />
+            </div>
+            <div class="myProfileHeaderCoverEditBtnDiv">
+                <img class="myProfileHeaderCoverEditBtnImg" src="~/images/editcoverphotoimg.png" />
+                <span class="myProfileHeaderCoverEditBtn">Edit cover photo</span>
+                <form class="coverImgForm" asp-action="coverImgUpload" method="post" role="form" enctype="multipart/form-data">
+                    <input type="file" name="coverImg" class="myProfileHeaderCoverUpload" onchange="submit1()" hidden />
+                </form>
+            </div>
+        </div>
+
+        <div class="myProfileHeaderProfileDiv">
+            <div class="myProfileHeaderProfile">
+                <img class="myProfileHeaderProfileImg" />
+                <img class="myProfileHeaderProfieUploadImg" src="~/images/profilepicuploadimg.png" />
+                <form class="profileImgForm" asp-action="profileImgUpload" method="post" role="form" enctype="multipart/form-data">
+                    <input type="file" name="profileImg" class="myProfileHeaderProfieUpload" onchange="submit()" hidden />
+                </form>
+            </div>
+            <div class="myProfileHeaderMyDetails">
+                <div class="myProfileHeaderMyDetailsNameDiv">
+                    <h1 class="myProfileHeaderMyDetailsName"></h1>
+                </div>
+                <div class="myProfileHeaderMyDetailsFriendsCountDiv">
+                    <span class="myProfileHeaderMyDetailsFriendsCount"></span>
+                </div>
+            </div>
+            <div class="myProfileHeaderProfileAddEditDiv" style="display: flex;">
+                <div class="myProfileHeaderProfileAddFriendDiv">
+                    <img class="myProfileHeaderProfileEditBtnImg" src="~/images/AddFriendIcon.png" />
+                    <span class="myProfileHeaderProfileAddFriend">Add friend</span>
+                </div>
+                <div class="myProfileHeaderProfileCancelReqDiv">
+                    <img class="myProfileHeaderProfileCancelReqImg" src="~/images/cancelReqIcon.png" />
+                    <span class="myProfileHeaderProfileCancelReq">Cancel request</span>
+                </div>
+                <div class="myProfileHeaderProfileEditDiv" style="visibility:hidden;">
+                    <img class="myProfileHeaderProfileEditBtnImg" src="~/images/editprofileimg.png" />
+                    <span class="myProfileHeaderProfileEdit">Edit profile</span>
+                </div>
+                <div class="myProfileHeaderProfileFrndAcceptedDiv">
+                    <img class="myProfileHeaderProfileFrndAcceptedImg" src="~/images/friendacceptedicon.png" />
+                    <span class="myProfileHeaderProfileFrndAccepted">Friends</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="myProfileHeaderOptionsDiv">
+            <div class="myProfileHeaderOptionsPostsOuterDiv">
+                <div class="myProfileHeaderOptionsPostsDiv">
+                    <span class="myProfileHeaderOptionsPosts">Posts</span>
+                </div>
+            </div>
+            <div class="myProfileHeaderOptionsAboutOuterDiv">
+                <div class="myProfileHeaderOptionsAboutDiv">
+                    <span class="myProfileHeaderOptionsAbout">About</span>
+                </div>
+            </div>
+            <div class="myProfileHeaderOptionsFriendsOuterDiv">
+                <div class="myProfileHeaderOptionsFriendsDiv">
+                    <span class="myProfileHeaderOptionsFriends">Friends</span>
+                </div>
+            </div>
+            <div class="myProfileHeaderOptionsPhotosOuterDiv">
+                <div class="myProfileHeaderOptionsPhotosDiv">
+                    <span class="myProfileHeaderOptionsPhotos">Photos</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="aboutOptionDiv">
+        <div class="aboutSectionDiv">
+            <div class="aboutSectionLeftDiv">
+                <h1 class="aboutSectionLeftHeader">About</h1>
+                <h3 class="aboutSectionLeftOverview">Overview</h3>
+                <h3 class="aboutSectionLeftWork">Work and education</h3>
+                <h3 class="aboutSectionLeftPlace">Place lived</h3>
+                <h3 class="aboutSectionLeftContact">Contact and basic info</h3>
+                <h3 class="aboutSectionLeftFamily">Family and relationships</h3>
+            </div>
+
+            <div class="aboutSectionRightDiv">
+                <div class="aboutSectionRightOverviewDiv">
+                    <div class="aboutSectionRightOverviewWorkDiv">
+                        <img class="aboutSectionRightWorkResult1Img" src="~/images/workicon.png" />
+                        <span class="aboutSectionRightOverviewWork1aSpan"></span><br />
+                        <span class="aboutSectionRightOverviewWork1bSpan"></span><br />
+                    </div>
+                    <div class="aboutSectionRightOverviewCollegeDiv">
+                        <img class="aboutSectionRightWorkResult2Img" src="~/images/StudyIcon.png" />
+                        <span class="aboutSectionRightOverviewCollegeSpan"></span><br />
+                    </div>
+                    <div class="aboutSectionRightOverviewPlaceDiv">
+                        <img class="aboutSectionRightPlaceResult1Img" src="~/images/PlaceIcon.png" />
+                        <span class="aboutSectionRightOverviewPlaceSpan"></span><br />
+                    </div>
+                    <div class="aboutSectionRightOverviewContactDiv">
+                        <img class="aboutSectionRightContactResult1Img" src="~/images/ContactIcon.png" />
+                        <span class="aboutSectionRightOverviewContactSpan"></span><br />
+                    </div>
+                </div>
+
+                <div class="aboutSectionRightWorkDiv">
+                    <h3 class="aboutSectionRightWorkHeader">Work</h3>
+                    <div class="aboutSectionRightWorkAddDiv1">
+                        <img class="aboutSectionRightWorkAddImg" src="~/images/addimg.png" />
+                        <h3 class="aboutSectionRightWorkAdd">Add a workplace</h3>
+                    </div>
+                    <div class="aboutSectionRightWorkAddInput1Div">
+                        <input type="text" class="aboutSectionRightWorkAddInput11" placeholder="Company" /> <br />
+                        <input type="text" class="aboutSectionRightWorkAddInput12" placeholder="Position" /> <br />
+                        <input type="text" class="aboutSectionRightWorkAddInput13" placeholder="City" /><br />
+                        <input type="button" value="Cancel" class="aboutSectionRightWorkAddInput1a" />
+                        <input type="button" value="Save" class="aboutSectionRightWorkAddInput1b" />
+                    </div>
+                    <div class="aboutSectionRightWorkResultDiv1">
+                        <img class="aboutSectionRightWorkResult1Img" src="~/images/workicon.png" />
+                        <span class="aboutSectionRightWorkResult1aSpan"></span><br />
+                        <span class="aboutSectionRightWorkResult1bSpan"></span><br />
+                        @*<span class="aboutSectionRightWorkResult1cSpan"></span>*@
+                    </div>
+
+                    <h3 class="aboutSectionRightWorkHeader">College</h3>
+                    <div class="aboutSectionRightWorkAddDiv2">
+                        <img class="aboutSectionRightWorkAddImg" src="~/images/addimg.png" />
+                        <h3 class="aboutSectionRightWorkAdd">Add college</h3>
+                    </div>
+                    <div class="aboutSectionRightWorkAddInput2Div">
+                        <input type="text" class="aboutSectionRightWorkAddInput2" placeholder="College" /> <br />
+                        <input type="button" value="Cancel" class="aboutSectionRightWorkAddInput2a" />
+                        <input type="button" value="Save" class="aboutSectionRightWorkAddInput2b" />
+                    </div>
+                    <div class="aboutSectionRightWorkResultDiv2">
+                        <img class="aboutSectionRightWorkResult2Img" src="~/images/StudyIcon.png" />
+                        <span class="aboutSectionRightWorkResult2aSpan"></span><br />
+                    </div>
+
+                    <h3 class="aboutSectionRightWorkHeader">High school</h3>
+                    <div class="aboutSectionRightWorkAddDiv3">
+                        <img class="aboutSectionRightWorkAddImg" src="~/images/addimg.png" />
+                        <h3 class="aboutSectionRightWorkAdd">Add high school</h3>
+                    </div>
+                    <div class="aboutSectionRightWorkAddInput3Div">
+                        <input type="text" class="aboutSectionRightWorkAddInput3" placeholder="School" /> <br />
+                        <input type="button" value="Cancel" class="aboutSectionRightWorkAddInput3a" />
+                        <input type="button" value="Save" class="aboutSectionRightWorkAddInput3b" />
+                    </div>
+                    <div class="aboutSectionRightWorkResultDiv3">
+                        <img class="aboutSectionRightWorkResult3Img" src="~/images/StudyIcon.png" />
+                        <span class="aboutSectionRightWorkResult3aSpan"></span><br />
+                    </div>
+                </div>
+
+                <div class="aboutSectionRightPlaceDiv">
+                    <h3 class="aboutSectionRightPlaceHeader">Places lived</h3>
+                    <div class="aboutSectionRightPlaceAddDiv">
+                        <img class="aboutSectionRightPlaceAddImg" src="~/images/addimg.png" />
+                        <h3 class="aboutSectionRightPlaceAdd">Add city</h3>
+                    </div>
+                    <div class="aboutSectionRightPlaceAddInput1Div">
+                        <input type="text" class="aboutSectionRightPlaceAddInput1" placeholder="City" /> <br />
+                        <input type="button" value="Cancel" class="aboutSectionRightPlaceAddInput1a" />
+                        <input type="button" value="Save" class="aboutSectionRightPlaceAddInput1b" />
+                    </div>
+                    <div class="aboutSectionRightPlaceResultDiv1">
+                        <img class="aboutSectionRightPlaceResult1Img" src="~/images/PlaceIcon.png" />
+                        <span class="aboutSectionRightPlaceResult1aSpan"></span><br />
+                    </div>
+                </div>
+
+                <div class="aboutSectionRightContactDiv">
+                    <h3 class="aboutSectionRightContactHeader">Contact info</h3>
+                    <div class="aboutSectionRightContactAddDiv1">
+                        <img class="aboutSectionRightContactAddImg" src="~/images/addimg.png" />
+                        <h3 class="aboutSectionRightContactAdd">Add a phone number</h3>
+                    </div>
+                    <div class="aboutSectionRightContactAddInput1Div">
+                        <input type="text" class="aboutSectionRightContactAddInput1" placeholder="Phone number" /> <br />
+                        <input type="button" value="Cancel" class="aboutSectionRightContactAddInput1a" />
+                        <input type="button" value="Save" class="aboutSectionRightContactAddInput1b" />
+                    </div>
+                    <div class="aboutSectionRightContactResultDiv1">
+                        <img class="aboutSectionRightContactResult1Img" src="~/images/ContactIcon.png" />
+                        <span class="aboutSectionRightContactResult1aSpan"></span><br />
+                    </div>
+
+                    @*                <h3 class="aboutSectionRightContactHeader">Websites and social links</h3>
+                    <div class="aboutSectionRightContactAddDiv2">
+                    <img class="aboutSectionRightContactAddImg" src="~/images/addimg.png" />
+                    <h3 class="aboutSectionRightContactAdd">Add a website</h3>
+                    </div>
+                    <div class="aboutSectionRightContactAddInput2Div">
+                    <input type="text" class="aboutSectionRightContactAddInput2" placeholder="Website" /> <br />
+                    <input type="button" value="Cancel" class="aboutSectionRightContactAddInput2a" />
+                    <input type="button" value="Save" class="aboutSectionRightContactAddInput2b" />
+                    </div>*@
+
+                    <h3 class="aboutSectionRightContactHeader">Basic info</h3>
+                    <div class="aboutSectionRightContactGenderDiv">
+                        <div class="aboutSectionRightContactGenderMaleDiv">
+                            <img class="aboutSectionRightContactGenderMale" src="~/images/malegender.png" />
+                            <span class="aboutSectionRightContactGenderValue1Male">Male</span><br />
+                        </div>
+
+                        <div class="aboutSectionRightContactGenderFemaleDiv">
+                            <img class="aboutSectionRightContactGenderFemale" src="~/images/femaleGender.png" />
+                            <span class="aboutSectionRightContactGenderValue1Female">Female</span><br />
+                        </div>
+
+                        <span class="aboutSectionRightContactGenderValue2">Gender</span>
+                    </div>
+                    <div class="aboutSectionRightContactDOBDiv">
+                        <img class="aboutSectionRightContactDOBImg" src="~/images/dobicon.png" />
+                        <span class="aboutSectionRightContactDOB1aSpan"></span><br />
+                        <span class="aboutSectionRightContactDOB1bSpan">Birth date</span>
+                    </div>
+
+                </div>
+
+                <div class="aboutSectionRightFamilyDiv">
+                    <h3 class="aboutSectionRightFamilyHeader">Relationship</h3>
+                    <div class="aboutSectionRightFamilyAddDiv">
+                        <img class="aboutSectionRightFamilyAddImg" src="~/images/addimg.png" />
+                        <h3 class="aboutSectionRightFamilyAdd">Add relationship status</h3>
+                    </div>
+
+                    <h3 class="aboutSectionRightFamilyHeader">Family members</h3>
+                    <div class="aboutSectionRightFamilyAddDiv">
+                        <img class="aboutSectionRightFamilyAddImg" src="~/images/addimg.png" />
+                        <h3 class="aboutSectionRightFamilyAdd">Add family member</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="aboutSectionRightFriendsDiv">
+            <div class="aboutSectionRightFriendsHeaderDiv">
+                <span class="aboutSectionRightFriendsHeader">Friends</span>
+                <div class="aboutSectionRightFriendsHeaderFrndReqDiv">
+                    <span class="aboutSectionRightFriendsHeaderFrndReq">Friend Requests</span>
+                </div>
+            </div>
+            <div class="aboutSectionRightFriendsOptionsDiv">
+                <div class="aboutSectionRightFriendsOptions1Div">
+                    <span class="aboutSectionRightFriendsOptions1">All friends</span>
+                </div>
+            </div>
+            <div class="aboutSectionRightFriendsListDiv">
+            </div>
+        </div>
+        <div class="aboutSectionRightPhotosDiv">
+            <div class="aboutSectionRightPhotosHeaderDiv">
+                <span class="aboutSectionRightPhotosHeader">Photos</span>
+            </div>
+            <div class="aboutSectionRightPhotosOptionsDiv">
+                <div class="aboutSectionRightPhotosOptions1Div">
+                    <span class="aboutSectionRightPhotosOptions1">All photos</span>
+                </div>
+            </div>
+            <div class="aboutSectionRightPhotosListDiv"></div>
+        </div>
+    </div>
+
+    <div class="postOptionDiv">
+        <div class="postOptionLeftDiv">
+            <div class="postOptionLeftDiv1">
+                <div class="postOptionLeftHeaderDiv">
+                    <span class="postOptionLeftHeader">Intro</span>
+                </div>
+                <div class="postOptionLeftWorkDiv">
+                    <img class="postOptionLeftWorkImg" src="~/images/workicon.png" />
+                    <span class="postOptionLeftWork1aSpan"></span><br />
+                    <span class="postOptionLeftWork1bSpan"></span><br />
+                </div>
+                <div class="postOptionLeftCollegeDiv">
+                    <img class="postOptionLeftCollegeImg" src="~/images/StudyIcon.png" />
+                    <span class="postOptionLeftCollegeSpan"></span><br />
+                </div>
+                <div class="postOptionLeftPlaceDiv">
+                    <img class="postOptionLeftPlaceImg" src="~/images/PlaceIcon.png" />
+                    <span class="postOptionLeftPlaceSpan"></span><br />
+                </div>
+                <div class="postOptionLeftContactDiv">
+                    <img class="postOptionLeftContactImg" src="~/images/ContactIcon.png" />
+                    <span class="postOptionLeftContactSpan"></span><br />
+                </div>
+            </div>
+            <div class="postOptionLeftDiv2" >
+                <div class="postOptionLeftPhotosHeaderDiv">
+                    <span class="postOptionLeftPhotosHeader">Photos</span>
+                    <div class="postOptionLeftPhotosHeaderAllPhotosDiv">
+                        <span class="postOptionLeftPhotosHeaderAllPhotos">See all photos</span>
+                    </div>
+                </div>
+                <div class="postOptionLeftPhotosListDiv">
+                </div>
+            </div>
+            <div class="postOptionLeftDiv3">
+                <div class="postOptionLeftFriendsHeaderDiv">
+                    <span class="postOptionLeftFriendsHeader">Friends</span>
+                    <div class="postOptionLeftFriendsHeaderAllFrndDiv">
+                        <span class="postOptionLeftFriendsHeaderAllFrnd">See all friends</span>
+                    </div>
+                </div>
+                <div class="postOptionLeftFriendsCountDiv">
+                    <span class="postOptionLeftFriendsCount"></span>
+                </div>
+                <div class="postOptionLeftFriendsListDiv">
+                </div>
+            </div>
+        </div>
+        <div class="postOptionRightDiv" id="abc">
+        </div>
+    </div>
+
+    <div class="searchDiv">
+        <div id="searchFeed">
+            <div id="result"></div>
+            <input id="searchInput" name="Name" oninput="Search(this.value)" placeholder="Search Acebook" />
+            <img class="searchIcon" src="~/images/searchIcon.png" />
+            <img class="acebookLogo" src="~/images/acebookLogo-modified.png" />
+            <img class="homeIcon" src="~/images/homeicon.png" />
+            <img class="notiIcon" src="~/images/notiicon.png" />
+            <img class="myProfilelogoImgRight" />
+            <div class="searchFeedSettingDiv" style="visibility: hidden;">
+                <div class="searchFeedSettingProfileNameDiv">
+                    <img class="searchFeedSettingProfileImg" />
+                    <span class="searchFeedSettingProfileName"></span>
+                </div>
+                <div class="searchFeedSettingOptionDiv">
+                    <img class="searchFeedSettingOptionImg" src="~/images/settingicon.png" />
+                    <span class="searchFeedSettingOption">Setting & privacy</span>
+                </div>
+                <div class="searchFeedSettingLogoutOptionDiv">
+                    <img class="searchFeedSettingLogoutOptionImg" src="~/images/logouticon.png" />
+                    <span class="searchFeedSettingLogoutOption">Log out</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+
+

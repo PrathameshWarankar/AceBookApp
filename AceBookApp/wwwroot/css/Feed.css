@@ -1,0 +1,874 @@
+﻿body {
+    /*background-color: #e9ebee;*/
+    background-color: #F0F2F5;
+}
+
+#searchFeed {
+    height: 55px;
+    width: 100%;
+    background-color: white;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
+}
+
+#leftFeed {
+    height: 100%;
+    width: 350px;
+    /*background-color: #e9ebee;*/
+    background-color: #F0F2F5;
+    position: fixed;
+    top: 55px;
+    padding-top: 15px;
+}
+
+#centerFeed {
+    height: 100%;
+    width: 804px;
+    float: right;
+    position: absolute;
+    left: 358px;
+    top: 55px;
+    padding: 17px 105px 17px 105px;
+}
+
+#feedPostSection {
+    /*position: relative;*/
+}
+
+#rightFeed {
+    height: 100%;
+    /*background-color: #e9ebee;*/
+    background-color: #F0F2F5;
+    /*    float: right;*/
+    position: fixed;
+    top: 54px;
+    width: 350px;
+    left: 1162px;
+}
+
+#searchInput {
+    top: -7px;
+    height: 37px;
+    width: 240px;
+    position: relative;
+    left: 63px;
+    border: 0px;
+    border-radius: 30px;
+    /*background-color: #e9ebee;*/
+    background-color: #F0F2F5;
+    font-size: 15px;
+    color: #1d2129;
+    padding: 17px;
+    padding-left: 36px;
+    /*    font-family: Helvetica, Arial, sans-serif;*/
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    caret-color: #A0A0A0;
+}
+
+::placeholder {
+    color: dimgrey
+}
+
+#searchInput:focus, .searchResult:focus, #createPostInput, #caption:focus, #actualUploadbtn:hover, #cancelOption, .addComment:focus {
+    outline: none;
+    border: 0px;
+}
+
+/*.searchResult {
+    width: 315px;
+    background-color: white;
+    position: absolute;
+    top: 10px;
+    border: 0px;
+    overflow-y: auto;
+    padding-bottom: 8px;
+    -webkit-appearance: none;
+    border-radius: 5px;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
+}*/
+
+.searchImg {
+    height: 38px;
+    width: 38px;
+    border-radius: 19px;
+    position: relative;
+    top: -5px;
+}
+
+.searchResultNew {
+    display: flex;
+    padding-left: 16px;
+    padding-top: 10px;
+}
+
+.searchText {
+    padding-top: 3px;
+    padding-left: 15px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight:600;
+}
+
+#result {
+    z-index: 1;
+    position: absolute;
+    background-color: white;
+    width: 315px;
+    top: 55px;
+    padding-bottom: 20px;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
+    border-radius: 8px;
+}
+
+/*.emptyOutput {
+    height: 30px;
+    padding: 8px 8px 8px 70px;
+    margin: 0px 8px 0px 8px;
+}*/
+
+/*.searchOutput {
+    font-size: 15px;
+    font-weight: 600;
+    padding: 8px 8px 8px 70px;
+    margin: 0px 8px 0px 8px;
+    height: 30px;
+    border-radius: 8px;
+}*/
+
+.searchResultNew:hover, .contactDiv:hover{
+    background-color: #e9ebee;
+    cursor: pointer;
+}
+
+option:checked {
+    color: #e9ebee;
+    background: red !important;
+}
+
+.searchIcon {
+    width: 14px;
+    height: 14px;
+    top: 20px;
+    position: absolute;
+    left: 75px;
+}
+
+.acebookLogo {
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 15px;
+    top: 8px;
+}
+
+.homeIcon {
+    width: 110px;
+    height: 47px;
+    position: absolute;
+    left: 702px;
+    top: 9px;
+}
+
+#createPostFeed {
+    /*    margin: 15px 105px 15px 105px;*/
+    width: 570px;
+    height: 100px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
+}
+
+#createPostFeed1 {
+    height: 52px;
+    border-bottom: 1px solid lightgray;
+    /*    border-bottom: 1px solid #d1d3d6;*/
+}
+
+#createPostInput {
+    height: 41px;
+    width: 300px;
+    border-radius: 30px;
+    /*background-color: #e9ebee;*/
+    background-color: #F0F2F5;
+    font-size: 16px;
+    color: #1d2129;
+    padding: 18px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    border: 0px;
+    position: absolute;
+    left: 170px;
+    width: 510px;
+    top: 29px;
+    /*    caret-color: #A0A0A0;*/
+}
+
+.createPostInputPhotoImg {
+    height: 40px;
+    width: 40px;
+    position: relative;
+    left: 5px;
+    border-radius: 20px;
+}
+
+#createPostText {
+    position: relative;
+    top: -6px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    color: #65676b;
+    font-weight: 600;
+    left: 17px;
+}
+
+#createPostIcon {
+    position: relative;
+    top: 6px;
+    left: 15px;
+    height: 35px;
+}
+
+#createPostLabel{
+    background-color: white;
+    width: 180px;
+    position: relative;
+    top: 8px;
+    height: 42px;
+    left: 70px
+}
+
+#createPostLabel:hover, #activityLabel:hover, #actualUploadbtn, #cancelOption, #inputAreaSpan, .likeCount {
+    cursor: pointer;
+}
+
+#inputAreaSpan:hover {
+    background-color: #e9ebee;
+}
+
+#activityText {
+    float: right;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    color: #65676b;
+    font-weight: 600;
+    position: relative;
+    left: 25px;
+    top: 13px;
+}
+
+#activityicon {
+    float: right;
+    position: relative;
+    top: 6px;
+    right: 118px;
+    height: 35px;
+}
+
+#activityLabel {
+    background-color: white;
+    float: right;
+    position: relative;
+    top: -34px;
+    height: 42px;
+    right: 70px;
+    width: 170px;
+}
+
+#createPostDialog {
+    background-color: white;
+    width: 500px;
+    height: 470px;
+    position: absolute;
+    left: 150px;
+    top: 55px;
+    border-radius: 7px;
+    /*opacity: 1 !important;*/
+    box-shadow: 0 3px 10px rgb(0 0 0 / 0.15);
+}
+
+.createPostProfileImg {
+    height: 42px;
+    width: 42px;
+    border-radius: 21px;
+    position: relative;
+    left: 16px;
+    top: 10px;
+}
+
+#createLabel {
+    padding: 15px 170px;
+    border-bottom: 1px solid lightgray;
+    position: relative;
+    top: -5px;
+}
+
+label {
+    font-size: 20px;
+    font-weight: 600;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+}
+
+#Fullnamelabel {
+    padding: 10px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    position: relative;
+    left: 60px;
+    top: -40px;
+}
+
+#caption {
+    border: none;
+    font-size: 15px;
+    padding: 15px;
+    width: 500px;
+    position: relative;
+    top: -25px;
+}
+
+#inputArea {
+    background-color: white;
+    width: 453px;
+    height: 190px;
+    position: relative;
+    /*top: 50px;*/
+    left: 15px;
+    border-radius: 7px;
+    border: 1px solid lightgray;
+    padding: 8px;
+}
+
+#inputAreaSpan {
+    background-color: white;
+    height: 100%;
+    width: 100%;
+    border-radius: 7px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#inputAreaSpan .img1 {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#inputSpan {
+    position: relative;
+    top: 36%;
+    font-size: 17px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    right: 4%;
+}
+
+#createPostIcon2 {
+    position: relative;
+    top: 28%;
+    left: 12%;
+    height: 50px;
+    width: 50px;
+}
+
+#uploadbtn {
+    position: relative;
+    margin: 15px;
+    top: 5px;
+}
+
+#actualUploadbtn {
+    border: none;
+    width: 100%;
+    height: 35px;
+    background-color: #1877f2;
+    color: white;
+    font-size: 14px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    border-radius: 7px;
+}
+
+#cancelOption {
+    position: relative;
+    left: 295px;
+    top: 5px;
+    height: 25px;
+}
+
+a, a:visited, a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+#myProfile, #friends, #mostRecent {
+    padding: 15px 30px 15px 10px;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    height: 25px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: bold;
+}
+
+#myProfile:hover, #friends:hover, #mostRecent:hover {
+    background-color: #e9ebee;
+}
+
+#mostRecent {
+    border-bottom: 1px solid lightgray;
+}
+
+.friendslogoImg, .mostRecentlogoImg, .myProfilelogoImg {
+    height: 40px;
+    width: 40px;
+    position: relative;
+    top: -10px;
+    border-radius: 20px;
+}
+
+.myProfilelogoImgRight {
+    height: 40px;
+    width: 40px;
+    position: relative;
+    top: 7px;
+    left: 1145px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.friendsText, .mostRecentText, .myProfileText {
+    position: relative;
+    top: -40px;
+    padding-left: 50px;
+}
+
+.feedPost {
+    width: 593px;
+    background-color: white;
+    margin: 17px 0px 0px 0px;
+    border-radius: 8px;
+    box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
+    /*position: relative;*/
+}
+
+.feedPost .post {
+    width: 593px;
+    height: 593px;
+    object-fit: cover;
+}
+
+.post {
+    /*position: relative;*/
+}
+
+.postDetails {
+    height: 70px;
+}
+
+.postName {
+    padding: 10px 0px 0px 66px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    position: relative;
+    top: -37px;
+}
+
+.postCaption {
+    position: relative;
+    padding-left: 17px;
+    top: 8px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    position: relative;
+    top: -32px;
+}
+
+.postDate {
+    font-size: 12px;
+    padding: 3px 0px 0px 66px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    color: dimgrey;
+    position: relative;
+    top: -37px;
+}
+
+.feedPostPhoto {
+    height: 42px;
+    width: 42px;
+    /*padding: 13px 0px 0px 17px;*/
+    position: relative;
+    left: 16px;
+    top: 12px;
+    border-radius: 21px;
+    
+}
+
+.likeCommentCount {
+    height: 40px;
+}
+
+.likeComment {
+    /*padding: 9px 0px 10px 0px;*/
+    padding: 3px 0px 3px 0px;
+    margin: 0px 15px 0px 15px;
+    border-bottom: 1px solid lightgray;
+    border-top: 1px solid lightgray;
+    height: 33px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    color: #65676b;
+    font-weight:bold;
+    font-size: 15px;
+    /*position: relative;*/
+}
+
+.like {
+    padding-left: 117px;
+    /*padding: 9px 0px 10px 117px;*/
+}
+
+.comment {
+    position: relative;
+    top: -4px;
+    padding-left: 95px;
+
+}
+
+.likeBtnImg {
+    float: left;
+    height: 20px;
+    width: 24px;
+    position: relative;
+    left: 112px;
+    /*padding: 9px 0px 10px 117px;*/
+}
+
+.likeDiv, .commentDiv {
+    width: 280px;
+    height: 20px;
+    padding: 6px 0px 7px 0px;
+}
+
+.likeDiv:hover, .commentDiv:hover{
+    background-color: #ECECEC;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.commentBtnImg {
+/*    float: left;*/
+    height: 20px;
+    width: 22px;
+    position: relative;
+    left: 92px;
+    top: 2px;
+    /*padding: 9px 0px 10px 117px;*/
+}
+
+.commentDiv {
+    position: relative;
+    top: -33px;
+    float: right;
+}
+
+.likeCount {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    color: dimgrey;
+    font-size: 15px;
+    font-weight:100;
+    position: relative;
+    top: -47px;
+    left: 42px;
+    width: 125px;
+}
+
+.likeCount:hover {
+    text-decoration: underline;
+}
+
+.postLike {
+    height: 23px;
+    width: 23px;
+    padding: 10px 10px 10px 15px;
+}
+
+.likedNames {
+    position: absolute;
+    z-index: 1;
+    bottom: -8px;
+    background-color: rgba(0,0,0,.5);
+    left: 37px;
+    color: white;
+    padding: 5px 7px 5px 7px;
+    border-radius: 5px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+}
+
+.likedNamesParent {
+    position: relative;
+}
+
+.addComment {
+    height: 36px;
+    width: 521px;
+    position: relative;
+    border: 0px;
+    border-radius: 30px;
+    /*background-color: #e9ebee;*/
+    background-color: #F0F2F5;
+    font-size: 15px;
+    color: #1d2129;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    margin: 8px;
+    top: -35px;
+    left: 50px;
+    padding-left: 10px;
+}
+
+.addCommentDiv {
+    height: 50px;
+}
+
+.commentProfileImg {
+    height: 34px;
+    width: 34px;
+    border-radius: 17px;
+    position: relative;
+    top: 8px;
+    left: 15px;
+}
+
+.commentData {
+    padding: 10px;
+    background-color: #F0F2F5;
+    border-radius: 20px;
+    width: 470px;
+    position: relative;
+/*    left: 60px;*/
+    margin-bottom: 7px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+/*    word-wrap: break-word;*/
+}
+
+.commentName {
+    font-weight:600;
+    font-size: 13px;
+}
+
+.commentText {
+    font-size: 16px;
+    word-wrap: break-word;
+}
+
+.commentImg {
+    height: 34px;
+    width: 34px;
+    border-radius: 17px;
+}
+
+.commentImgDiv {
+    margin: 0px 10px 0px 15px;
+}
+
+.commentDetails {
+    display: flex;
+}
+
+.contacts {
+    position: relative;
+    top: 15px;
+    left: 12px;
+    font-size: 17px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    color: #65676b;
+}
+
+.conatctList {
+    padding: 20px 0px 0px 0px;
+}
+
+.contactData {
+    padding: 10px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.contactImg {
+    height: 40px;
+    width: 40px;
+    border-radius: 20px;
+}
+
+.contactDiv {
+    display: flex;
+    padding: 8px;
+}
+
+.onlineMarkerBG {
+    height: 13px;
+    width: 13px;
+    border-radius: 50%;
+    background-color: white;
+    position: relative;
+    top: -12px;
+    left: 30px;
+}
+
+.onlineMarker {
+    height: 9px;
+    width: 9px;
+    border-radius: 50%;
+    background-color: #31A24C;
+    position: relative;
+    top: 2px;
+    left: 2px;
+}
+
+/*#31A24C*/
+
+.searchFeedSettingDiv {
+    background-color: white;
+    position: absolute;
+    left: 1150px;
+    top: 55px;
+    width: 350px;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgb(0 0 0 / 0.20);
+    padding-bottom: 10px;
+}
+
+.searchFeedSettingProfileNameDiv {
+    display: flex;
+    background-color: white;
+    margin: 12px 12px 17px 12px;
+    border-radius: 8px;
+    padding: 15px 10px 15px 10px;
+    box-shadow: 0px 0px 8px rgb(0 0 0 / 0.25);
+}
+
+.searchFeedSettingProfileImg {
+    height: 37px;
+    width: 37px;
+    border-radius: 50%;
+}
+
+.searchFeedSettingProfileName {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    padding: 5px 0px 0px 8px;
+    font-size: 17px;
+}
+
+.searchFeedSettingOptionDiv, .searchFeedSettingLogoutOptionDiv {
+    padding: 8px 5px 8px 5px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    margin: 5px 10px 5px 10px;
+    border-radius: 8px;
+}
+
+.searchFeedSettingOptionDiv:hover, .searchFeedSettingLogoutOptionDiv:hover, .searchFeedSettingProfileNameDiv:hover {
+    background-color: #ECECEC;
+    cursor: pointer;
+}
+
+.searchFeedSettingOptionDiv, .searchFeedSettingLogoutOptionDiv {
+    display: flex;
+}
+
+.searchFeedSettingOptionImg, .searchFeedSettingLogoutOptionImg {
+    height: 35px;
+    width: 35px;
+}
+
+.searchFeedSettingOption, .searchFeedSettingLogoutOption {
+    position: relative;
+    left: 8px;
+    top: 8px;
+}
+
+.notiIcon {
+    height: 42px;
+    width: 42px;
+    position: relative;
+    top: 8px;
+    left: 1140px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.searchFeedNotiDiv {
+    background-color: white;
+    position: absolute;
+    top: 55px;
+    width: 340px;
+    left: 1140px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    box-shadow: 0px 3px 5px rgb(0 0 0 / 0.25);
+}
+
+.notifiedByImg {
+    height: 37px;
+    width: 37px;
+    border-radius: 50%;
+}
+
+.notiContent {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    margin: 0px 8px 0px 8px;
+    padding: 7px;
+    height: 100%;
+    cursor: pointer;
+    border-radius: 8px;
+}
+
+.notiContent:hover {
+    background-color: #ECECEC
+}
+
+.notifiedByName {
+    padding-left: 8px;
+    position: relative;
+    top: -35px;
+    left: 40px;
+    word-wrap: break-word;
+    width: 230px;
+}
+
+.searchFeedNotiMarkerDiv {
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    background-color: #FA3E3E;
+    position: absolute;
+    left: 1415px;
+    top: 7px;
+}
+
+.notiMarker {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    background-color: #1876F2;
+    position: relative;
+    top: -68px;
+    left: 295px;
+}
+
+.searchFeedNotiMarkerCountDiv {
+    font-size: 11px;
+    color: white;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    position: relative;
+    left: 1px;
+}
