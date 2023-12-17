@@ -18,7 +18,7 @@
             </div>
             <div class="myProfileText">
                 <a class="myProfileTextA" href='@Url.Action("ProfileData", "Profile", new {email = ViewBag.Email})'>@ViewBag.Fullname</a>
-            </div>          
+            </div>
         </div>
         <div id="friends">
             <div class="friendsImg">
@@ -26,7 +26,7 @@
             </div>
             <div class="friendsText">
                 <a class="friendsTextA" href='@Url.Action("Friends", "Profile", new {email = ViewBag.Email} )'>Friends</a>
-            </div>           
+            </div>
         </div>
         <div id="mostRecent">
             <div class="mostRecentImg">
@@ -45,8 +45,8 @@
                     <img class="createPostInputPhotoImg" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
                 </div>
                 <div>
-                    <input id="createPostInput" placeholder= "What's on your mind, @ViewBag.Firstname?" /> 
-                </div>                           
+                    <input id="createPostInput" placeholder="What's on your mind, @ViewBag.Firstname?" />
+                </div>
             </div>
             <div id="createPostFeed2">
                 <div id="createPostLabel" onclick="ShowCreatePost()">
@@ -71,15 +71,15 @@
         <div id="feedPostSection">
             @{
                 int c = 0;
-                
+
                 @foreach (var post in ViewBag.Posts)
                 {
                     string p = "http://127.0.0.1:8080/" + @post.Imagepath.Substring(64);
-                    
+
                     TimeSpan time = DateTime.Now.Subtract(post.Date);
 
                     <div class="feedPost" id="@post.PostId">
-                        
+
                         <div class="postDetails">
                             <div>
                                 <img class="feedPostPhoto" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.FeedPostProfileUrl[c].Substring(64))" />
@@ -92,7 +92,7 @@
                                 {
                                     <text>@Math.Floor(time.TotalMinutes)m</text>
                                 }
-                                else if(Math.Floor(time.TotalHours) > 24)
+                                else if (Math.Floor(time.TotalHours) > 24)
                                 {
                                     <text>@time.ToString("%d")d</text>
                                 }
@@ -117,21 +117,21 @@
                         <div class="likeCommentCount">
                             @if (ViewBag.PostLikeCount[c] == 0)
                             {
-                                <img class="postLike" src="~/images/white-solid-color.jpg"/>
+                                <img class="postLike" src="~/images/white-solid-color.jpg" />
                                 <h3 class="likeCount"></h3>
                             }
                             else if (ViewBag.PostLikeCount[c] == 1)
                             {
-                                <img class="postLike" src="~/images/postLike.png"/>
+                                <img class="postLike" src="~/images/postLike.png" />
                                 <h3 class="likeCount" onmouseover="DisplayLikes(@post.PostId)" onmouseout="DisplayLikesHide(@post.PostId)">@ViewBag.PostLikeCount[c] other</h3>
                             }
                             else
                             {
                                 <img onclick="test()" class="postLike" src="~/images/postLike.png" />
                                 <h3 class="likeCount" onmouseover="DisplayLikes(@post.PostId)" onmouseout="DisplayLikesHide(@post.PostId)">@ViewBag.PostLikeCount[c] others</h3>
-                            }                     
-                        </div> 
-                        
+                            }
+                        </div>
+
                         <div class="likeComment">
                             <div class="likeDiv">
                                 <img class="likeBtnImg" src="~/images/likebutton.png" />
@@ -140,7 +140,7 @@
                             <div class="commentDiv" onclick="ShowComments(@post.PostId); addingComment(@post.PostId);">
                                 <img class="commentBtnImg" src="~/images/commentbutton.png" />
                                 <span class="comment">Comment</span>
-                            </div>                           
+                            </div>
                         </div>
 
                         <div class="commentSection" style="display: none;">
@@ -149,7 +149,6 @@
                                 <input class="addComment" placeholder="Write a comment..." />
                             </div>
                             <div class="CommentsList">
-                                
                             </div>
                         </div>
                     </div>
@@ -159,36 +158,36 @@
         </div>
         <div id="createPostDialog" style="display: none;">
             <div id="createLabel">
-                <img id="cancelOption"src="~/images/canceloption.png" onclick="cancel()"/>
+                <img id="cancelOption" src="~/images/canceloption.png" onclick="cancel()" />
                 <label>Create post</label>
-            </div>          
+            </div>
             <div>
                 <form asp-action="FeedData" method="post" role="form" enctype="multipart/form-data">
                     <div>
                         <img class="createPostProfileImg" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
                     </div>
                     <div id="Fullnamelabel">
-                        <span>@ViewBag.Fullname</span>                       
+                        <span>@ViewBag.Fullname</span>
                     </div>
                     <div class="col-md-5">
                         <input id="caption" asp-for="Caption" class="form-control" placeholder="What's on your mind, @ViewBag.Firstname?" required />
                     </div>
                     <div id="inputArea">
                         <div id="inputAreaSpan">
-                            <img id="createPostIcon2"src="~/images/createposticon2.png" />
+                            <img id="createPostIcon2" src="~/images/createposticon2.png" />
                             <span id="inputSpan">
                                 Add Photos
                             </span>
                         </div>
-                        <input type="file" name="imgfile" id="fileInput" hidden/>
+                        <input type="file" name="imgfile" id="fileInput" hidden />
                     </div>
                     <div id="uploadbtn" col-md-5">
                         <input type="submit" id="actualUploadbtn" value="Upload" />
                     </div>
                 </form>
-            </div>          
+            </div>
         </div>
- 
+
     </div>
 
     <div id="rightFeed">
@@ -220,7 +219,6 @@
                 </div>
             </div>
             <div class="searchFeedNotiDiv" style="visibility:hidden">
-
             </div>
             <div class="searchFeedNotiMarkerDiv" style="visibility:hidden">
                 <span class="searchFeedNotiMarkerCountDiv"></span>
@@ -234,16 +232,16 @@
     let btn = document.getElementById("inputAreaSpan");
     let input = document.getElementById("fileInput")
 
-    btn.onclick = function(){
+    btn.onclick = function () {
         input.click();
     }
 
     let file;
 
-    input.addEventListener('change', function(){
+    input.addEventListener('change', function () {
         file = this.files[0];
         //file = event.dataTransfer.files[0];
-        
+
         let fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = () => {
@@ -262,7 +260,7 @@
             var imgSrc = document.getElementById(this.parentNode.parentNode.id);
             if (imgSrc.getElementsByClassName("likeBtnImg")[0].src == "https://" + location.host + "/images/likebutton.png") {
                 imgSrc.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
-                
+
                 if (imgSrc.getElementsByClassName("likeCount")[0].textContent == "") {
                     imgSrc.getElementsByClassName("likeCount")[0].textContent = "You"
                     imgSrc.getElementsByClassName("postLike")[0].src = "https://" + location.host + "/images/postLike.png"
@@ -277,7 +275,7 @@
             }
             else {
                 imgSrc.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likebutton.png"
-                
+
                 if (imgSrc.getElementsByClassName("likeCount")[0].textContent == "You") {
                     imgSrc.getElementsByClassName("likeCount")[0].textContent = ""
                     imgSrc.getElementsByClassName("postLike")[0].src = "https://" + location.host + "/images/white-solid-color.jpg"

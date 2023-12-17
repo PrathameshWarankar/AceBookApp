@@ -47,6 +47,6 @@ namespace AceBookApp.Models
         [DataType(DataType.ImageUrl)]
         public string? CoverImagePath { get; set; }
 
-        public string Status { get; set; }
+        public string? Status { get; set; }
     }
 }

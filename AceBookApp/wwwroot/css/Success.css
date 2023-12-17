@@ -1,0 +1,46 @@
+﻿
+body {
+    background-color: #e9ebee;
+}
+
+.SuccessMsgDiv {
+    position: relative;
+    top: 40px;
+    border: 1px solid #1877f2;
+    width: 450px;
+    left: 550px;
+    border-radius: 8px;
+    padding: 10px 10px 0px 10px;
+    background-color: white;
+    /*background-color: #1877f235;*/
+}
+
+.SuccessMsg1 {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    color: #1877f2;
+    position: relative;
+    left: 60px;
+}
+
+.SuccessMsg2 {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    position: relative;
+    color: #00800095;
+    text-shadow: 0 0 0.1px #00800097;
+    left: 46px;
+    top: -10px;
+}
+
+.backToLoginBtn {
+    position: relative;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    top: -8px;
+    left: 155px;
+    border: none;
+    color: #1877f2;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+

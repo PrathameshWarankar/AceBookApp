@@ -1,0 +1,45 @@
+﻿
+body {
+    background-color: #e9ebee;
+}
+
+.FailureMsgDiv {
+    position: relative;
+    top: 40px;
+    border: 1px solid #FF0000;
+    width: 500px;
+    left: 550px;
+    border-radius: 8px;
+    padding: 10px 10px 0px 10px;
+    background-color: white;
+}
+
+.FailureMsg1 {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    color: #FF0000;
+    position: relative;
+    left: 25px;
+    text-shadow: 0 0 1px black;
+}
+
+.FailureMsg2 {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 500;
+    position: relative;
+    color: #FF000095;
+    text-shadow: 0 0 0.1px #00800097;
+    /*color: #1877f2;*/
+    left: 85px;
+    top: -10px;
+}
+
+.backToLoginBtn {
+    position: relative;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    top: -8px;
+    left: 175px;
+    border: none;
+    color: #1877f2;
+    cursor: pointer;
+}

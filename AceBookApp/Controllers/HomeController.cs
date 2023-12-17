@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AceBookApp.Controllers
 {
-    public class HomeController: Controller
+    public class HomeController : Controller
     {
 
         private readonly AppDbContext _context;
@@ -30,7 +30,7 @@ namespace AceBookApp.Controllers
 
             foreach (var date in DOBDate)
             {
-                model.DateList.Add(new SelectListItem { Text = date.ToString()});
+                model.DateList.Add(new SelectListItem { Text = date.ToString() });
             }
 
             foreach (var month in DOBMonth)
@@ -52,7 +52,7 @@ namespace AceBookApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                if(acc.ProfileImagePath == null && acc.Gender == "Male")
+                if (acc.ProfileImagePath == null && acc.Gender == "Male")
                 {
                     acc.ProfileImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "maleProfilePhotoDefault.PNG";
                 }
@@ -78,8 +78,9 @@ namespace AceBookApp.Controllers
             else
             {
                 return View(acc);
-            } 
+            }
         }
+
 
         public IActionResult Success()
         {
@@ -97,14 +98,14 @@ namespace AceBookApp.Controllers
             var loggedAccount = _context.Accounts.Find(email);
             if (loggedAccount != null)
             {
-                if(loggedAccount.Password == password)
+                if (loggedAccount.Password == password)
                 {
-                    postData.Email= email;
+                    postData.Email = email;
                     postData.PostId = loggedAccount.FirstName.Substring(0, 3) + loggedAccount.Surname.Substring(0, 3);
 
                     var account = (from acc in _context.Accounts
-                                  where acc.Email == email
-                                  select acc).First();
+                                   where acc.Email == email
+                                   select acc).First();
 
                     account.Status = "Online";
 
@@ -121,7 +122,7 @@ namespace AceBookApp.Controllers
             {
                 return RedirectToAction("Failure", "Home");
             }
-            
+
         }
 
         public IActionResult ForgetPassword()

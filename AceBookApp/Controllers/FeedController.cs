@@ -248,7 +248,7 @@ namespace AceBookApp.Controllers
 
             Notification noti = new Notification();
 
-            if(p.Email != HomeController.postData.Email)
+            if (p.Email != HomeController.postData.Email)
             {
                 noti.NotifiedBy = HomeController.postData.Email;
                 noti.NotifiedTo = p.Email;
@@ -302,7 +302,7 @@ namespace AceBookApp.Controllers
 
         public IActionResult UpdateNotificatioStatus(string type, string id)
         {
-            if(type == "Add Friend")
+            if (type == "Add Friend")
             {
                 _context.Notifications
                     .Where(noti => noti.NotiType == type && noti.NotifiedBy == id && noti.NotifiedTo == HomeController.postData.Email)

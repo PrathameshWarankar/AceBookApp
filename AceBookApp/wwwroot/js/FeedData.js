@@ -26,7 +26,7 @@ function Search(data) {
         //}
         success: function (data) {
             var result = '';
-;            for (var i = 0; i < data.length; i++) {
+            ; for (var i = 0; i < data.length; i++) {
                 result = result + '<div class="searchResultNew"><div class="searchImgDiv"><img class="searchImg" src="' + 'http://127.0.0.1:8080/' + data[i].profileImagePath.substr(64) + '"/></div><div class="searchText"><a class="searchTextA" href="/Profile/ProfileData?email=' + data[i].email + '">' + data[i].firstName + " " + data[i].surname + '</a></div></div>'
             }
             document.getElementById("result").innerHTML = result;
@@ -113,7 +113,7 @@ function ShowComments(myData) {
     else {
         document.getElementById(myData.id).getElementsByClassName("commentSection")[0].style.display = "block";
     }
-    
+
     document.getElementById(myData.id).getElementsByClassName("commentSection")[0].getElementsByClassName("addComment")[0].focus();
     /*console.log("clicked")*/
 }
@@ -133,7 +133,7 @@ function getCommentList(myData) {
                 //console.log(data[i])
                 result = result + '<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="' + 'http://127.0.0.1:8080/' + data[i].commentedByImagepath + '"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/' + data[i].commentedBy + '">' + data[i].commentedByName + '</a></br><span class="commentText"> ' + data[i].commentedText + '</span ></div></div></div>'
             }
-            
+
             //console.log(document.getElementById(myData.id))
             document.getElementById(myData.id).getElementsByClassName("CommentsList")[0].innerHTML = result
             //console.log(data.length);
@@ -145,7 +145,7 @@ function getCommentList(myData) {
 function addingComment(myData) {
 
     getCommentList(myData);
-    var input = document.getElementById(myData.id).getElementsByClassName("commentSection")[0].getElementsByClassName("addComment")[0];  
+    var input = document.getElementById(myData.id).getElementsByClassName("commentSection")[0].getElementsByClassName("addComment")[0];
 
     input.addEventListener("keyup", (event) => {
         if (event.key == "Enter") {
@@ -163,9 +163,9 @@ function addingComment(myData) {
                         //console.log("Success");
                         input.value = '';
                         setTimeout(getCommentList(myData), 750);
-                    }                    
-                })              
-            }   
+                    }
+                })
+            }
         }
     });
 }
@@ -355,7 +355,7 @@ $(document).ready(function () {
                     }
                     //    console.log(document.getElementsByClassName("notiContent")[i].style.height);
                 }
-            }   
+            }
 
             if (notiCount == 0) {
                 document.getElementsByClassName("searchFeedNotiMarkerDiv")[0].style.visibility = "hidden";

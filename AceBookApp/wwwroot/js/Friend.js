@@ -62,7 +62,7 @@ function ConfirmBtn(email) {
 function DeleteBtn(email) {
     var len = email.length
     var value = {
-        "fromRequest": email.substr(0,len-4),
+        "fromRequest": email.substr(0, len - 4),
         "toRequest": $(location).attr('href').substr(46)
     }
     $.post({
@@ -80,7 +80,7 @@ function DeleteBtn(email) {
 }
 
 function frndProfileDisplay(email) {
-    
+
     var modEmail = '/Profile/ProfileData?email=' + email
     document.getElementById("profileLoader").setAttribute('data', modEmail);
     $('.FriendProfileDiv').show();
@@ -145,7 +145,7 @@ $(document).ready(function () {
         document.getElementsByClassName("FriendsMenuRequestsDiv")[0].style.backgroundColor = "#ECECEC";
         document.getElementsByClassName("FriendsMenuAllFriendsDiv")[0].style.backgroundColor = "white";
         $('.backArrow').hide();
-        
+
         var value = {
             "email": $(location).attr('href').substr(46)
         }
@@ -156,7 +156,7 @@ $(document).ready(function () {
             async: false,
             success: function (data) {
                 var result = '';
-                for (var i = 0; i < data.length; i++){
+                for (var i = 0; i < data.length; i++) {
                     var value = {
                         "email": data[i].fromRequest
                     }
@@ -240,7 +240,7 @@ $(document).ready(function () {
                         data: value,
                         async: false,
                         success: function (data1) {
-                            result = result + '<div class="frndAcc" id="' + data1[0].email + '" onclick="frndProfileDisplay(this.id)"><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.substr(64) +'"/></div><div class="frndAccNameDiv"><span class="frndAccName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div>'
+                            result = result + '<div class="frndAcc" id="' + data1[0].email + '" onclick="frndProfileDisplay(this.id)"><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.substr(64) + '"/></div><div class="frndAccNameDiv"><span class="frndAccName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div>'
                         }
                     });
                 }

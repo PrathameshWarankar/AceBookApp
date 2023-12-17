@@ -10,6 +10,7 @@
     position: fixed;
     top: 0px;
     left: 0px;
+    z-index: 1;
     box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
 }
 
@@ -108,7 +109,7 @@
     padding-top: 3px;
     padding-left: 15px;
     font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
-    font-weight:600;
+    font-weight: 600;
 }
 
 #result {
@@ -137,7 +138,7 @@
     border-radius: 8px;
 }*/
 
-.searchResultNew:hover, .contactDiv:hover{
+.searchResultNew:hover, .contactDiv:hover {
     background-color: #e9ebee;
     cursor: pointer;
 }
@@ -231,7 +232,7 @@ option:checked {
     height: 35px;
 }
 
-#createPostLabel{
+#createPostLabel {
     background-color: white;
     width: 180px;
     position: relative;
@@ -240,13 +241,13 @@ option:checked {
     left: 70px
 }
 
-#createPostLabel:hover, #activityLabel:hover, #actualUploadbtn, #cancelOption, #inputAreaSpan, .likeCount {
-    cursor: pointer;
-}
+    #createPostLabel:hover, #activityLabel:hover, #actualUploadbtn, #cancelOption, #inputAreaSpan, .likeCount {
+        cursor: pointer;
+    }
 
-#inputAreaSpan:hover {
-    background-color: #e9ebee;
-}
+        #inputAreaSpan:hover {
+            background-color: #e9ebee;
+        }
 
 #activityText {
     float: right;
@@ -351,11 +352,11 @@ label {
     vertical-align: middle;
 }
 
-#inputAreaSpan .img1 {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    #inputAreaSpan .img1 {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
 #inputSpan {
     position: relative;
@@ -414,9 +415,9 @@ a, a:visited, a:active {
     font-weight: bold;
 }
 
-#myProfile:hover, #friends:hover, #mostRecent:hover {
-    background-color: #e9ebee;
-}
+    #myProfile:hover, #friends:hover, #mostRecent:hover {
+        background-color: #e9ebee;
+    }
 
 #mostRecent {
     border-bottom: 1px solid lightgray;
@@ -455,11 +456,11 @@ a, a:visited, a:active {
     /*position: relative;*/
 }
 
-.feedPost .post {
-    width: 593px;
-    height: 593px;
-    object-fit: cover;
-}
+    .feedPost .post {
+        width: 593px;
+        height: 593px;
+        object-fit: cover;
+    }
 
 .post {
     /*position: relative;*/
@@ -505,7 +506,6 @@ a, a:visited, a:active {
     left: 16px;
     top: 12px;
     border-radius: 21px;
-    
 }
 
 .likeCommentCount {
@@ -521,7 +521,7 @@ a, a:visited, a:active {
     height: 33px;
     font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
     color: #65676b;
-    font-weight:bold;
+    font-weight: bold;
     font-size: 15px;
     /*position: relative;*/
 }
@@ -535,7 +535,6 @@ a, a:visited, a:active {
     position: relative;
     top: -4px;
     padding-left: 95px;
-
 }
 
 .likeBtnImg {
@@ -553,14 +552,14 @@ a, a:visited, a:active {
     padding: 6px 0px 7px 0px;
 }
 
-.likeDiv:hover, .commentDiv:hover{
-    background-color: #ECECEC;
-    border-radius: 3px;
-    cursor: pointer;
-}
+    .likeDiv:hover, .commentDiv:hover {
+        background-color: #ECECEC;
+        border-radius: 3px;
+        cursor: pointer;
+    }
 
 .commentBtnImg {
-/*    float: left;*/
+    /*    float: left;*/
     height: 20px;
     width: 22px;
     position: relative;
@@ -579,16 +578,16 @@ a, a:visited, a:active {
     font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
     color: dimgrey;
     font-size: 15px;
-    font-weight:100;
+    font-weight: 100;
     position: relative;
     top: -47px;
     left: 42px;
     width: 125px;
 }
 
-.likeCount:hover {
-    text-decoration: underline;
-}
+    .likeCount:hover {
+        text-decoration: underline;
+    }
 
 .postLike {
     height: 23px;
@@ -649,14 +648,14 @@ a, a:visited, a:active {
     border-radius: 20px;
     width: 470px;
     position: relative;
-/*    left: 60px;*/
+    /*    left: 60px;*/
     margin-bottom: 7px;
     font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
-/*    word-wrap: break-word;*/
+    /*    word-wrap: break-word;*/
 }
 
 .commentName {
-    font-weight:600;
+    font-weight: 600;
     font-size: 13px;
 }
 
@@ -775,10 +774,10 @@ a, a:visited, a:active {
     border-radius: 8px;
 }
 
-.searchFeedSettingOptionDiv:hover, .searchFeedSettingLogoutOptionDiv:hover, .searchFeedSettingProfileNameDiv:hover {
-    background-color: #ECECEC;
-    cursor: pointer;
-}
+    .searchFeedSettingOptionDiv:hover, .searchFeedSettingLogoutOptionDiv:hover, .searchFeedSettingProfileNameDiv:hover {
+        background-color: #ECECEC;
+        cursor: pointer;
+    }
 
 .searchFeedSettingOptionDiv, .searchFeedSettingLogoutOptionDiv {
     display: flex;
@@ -832,9 +831,9 @@ a, a:visited, a:active {
     border-radius: 8px;
 }
 
-.notiContent:hover {
-    background-color: #ECECEC
-}
+    .notiContent:hover {
+        background-color: #ECECEC
+    }
 
 .notifiedByName {
     padding-left: 8px;

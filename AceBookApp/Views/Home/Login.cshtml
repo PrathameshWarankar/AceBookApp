@@ -11,19 +11,19 @@
 </div>
 <div id="login">
     <form asp-action="Login" method="post" role="form" id="loginform">
-            <div class="col-md-5">
-                <input asp-for="Email" class="form-control" type="email" placeholder="Email address" id="email" />
-            </div>
-            <div class="col-md-5">
-                <input asp-for="Password" class="form-control" type="password" placeholder="Password" id="password" onclick="CheckBlank()"/>
-            </div>
+        <div class="col-md-5">
+            <input asp-for="Email" class="form-control" type="email" placeholder="Email address" id="email" />
+        </div>
+        <div class="col-md-5">
+            <input asp-for="Password" class="form-control" type="password" placeholder="Password" id="password" onclick="CheckBlank()" />
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-5">
-                <input type="submit" class="btn btn-primary" value="Log in" id="loginbtn" onclick="CheckField()"/>
+                <input type="submit" class="btn btn-primary" value="Log in" id="loginbtn" onclick="CheckField()" />
             </div>
         </div>
         <div id="forgotpass">
-            <a asp-controller="Home" asp-action="ForgetPassword" >Forgotten password?</a>
+            <a asp-controller="Home" asp-action="ForgetPassword">Forgotten password?</a>
         </div>
     </form>
     <div id="createbtndiv">

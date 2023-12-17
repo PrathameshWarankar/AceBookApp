@@ -6,7 +6,7 @@ using System.Xml.Linq;
 
 namespace AceBookApp.Controllers
 {
-    public class ProfileController: Controller
+    public class ProfileController : Controller
     {
         private readonly AppDbContext _context;
         private readonly IHostEnvironment _host;
@@ -39,7 +39,7 @@ namespace AceBookApp.Controllers
                     _context.SaveChanges();
                     return new EmptyResult();
                 }
-                
+
                 fr.FromRequest = fromRequest;
                 fr.ToRequest = toRequest;
                 fr.SentDate = DateTime.Now;
@@ -55,7 +55,7 @@ namespace AceBookApp.Controllers
                 else
                 {
                     var res = query.First().RequestID.ToString();
-                    fr.RequestID = "Req" + Convert.ToString(Convert.ToInt32(res.Substring(3, 1)) + 1) + " - " + fr.FromRequest.Substring(0,3) + fr.ToRequest.Substring(0,3);
+                    fr.RequestID = "Req" + Convert.ToString(Convert.ToInt32(res.Substring(3, 1)) + 1) + " - " + fr.FromRequest.Substring(0, 3) + fr.ToRequest.Substring(0, 3);
                 }
 
                 _context.FriendRequests.Add(fr);
@@ -170,7 +170,7 @@ namespace AceBookApp.Controllers
             AdditionAccountDetail details = new AdditionAccountDetail();
             var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
 
-            if(!isEntry.Any())
+            if (!isEntry.Any())
             {
                 details.Loggedemail = HomeController.postData.Email;
                 details.WorkInfo1 = i1;
@@ -180,9 +180,9 @@ namespace AceBookApp.Controllers
             }
             else
             {
-                isEntry.First().WorkInfo1= i1;
-                isEntry.First().WorkInfo2= i2;
-                isEntry.First().WorkInfo3= i3;
+                isEntry.First().WorkInfo1 = i1;
+                isEntry.First().WorkInfo2 = i2;
+                isEntry.First().WorkInfo3 = i3;
             }
 
             _context.SaveChanges();
@@ -193,10 +193,10 @@ namespace AceBookApp.Controllers
         public IActionResult AddAdditionalDetailsNew(string type, string i1)
         {
             AdditionAccountDetail details = new AdditionAccountDetail();
-            if(type == "College")
+            if (type == "College")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
-                if(!isEntry.Any())
+                if (!isEntry.Any())
                 {
                     details.Loggedemail = HomeController.postData.Email;
                     details.CollegeInfo = i1;
@@ -285,7 +285,7 @@ namespace AceBookApp.Controllers
             return new EmptyResult();
         }
 
-        public IActionResult GetAdditionalDetails (string email) 
+        public IActionResult GetAdditionalDetails(string email)
         {
             if (email == null)
             {
@@ -354,24 +354,24 @@ namespace AceBookApp.Controllers
         public IActionResult GetPostsLikedByMe()
         {
             var result = from like in _context.Likes
-                          where like.LikedBy == HomeController.postData.Email
-                          select like.PostId;
-           
+                         where like.LikedBy == HomeController.postData.Email
+                         select like.PostId;
+
             return Json(result);
         }
 
         public IActionResult profileImgUpload(IFormFile profileImg)
         {
             var account = (from acc in _context.Accounts
-                          where acc.Email == HomeController.postData.Email
-                          select acc).First();
+                           where acc.Email == HomeController.postData.Email
+                           select acc).First();
 
             string path = ImgPath(profileImg);
             account.ProfileImagePath = path;
 
             _context.SaveChanges();
 
-            return RedirectToAction("ProfileData", "Profile", new { email = HomeController.postData.Email});
+            return RedirectToAction("ProfileData", "Profile", new { email = HomeController.postData.Email });
         }
 
         public IActionResult coverImgUpload(IFormFile coverImg)
@@ -429,8 +429,8 @@ namespace AceBookApp.Controllers
         public IActionResult Settings(string email)
         {
             var account = (from acc in _context.Accounts
-                          where acc.Email == HomeController.postData.Email
-                          select acc).First();
+                           where acc.Email == HomeController.postData.Email
+                           select acc).First();
 
             return View(account);
         }
@@ -440,10 +440,10 @@ namespace AceBookApp.Controllers
             Account account = new Account();
 
             var myAcc = (from acc in _context.Accounts
-                        where acc.Email == HomeController.postData.Email
-                        select acc).First();
+                         where acc.Email == HomeController.postData.Email
+                         select acc).First();
 
-            if(type == "name")
+            if (type == "name")
             {
                 myAcc.FirstName = value1;
                 myAcc.Surname = value2;
@@ -525,13 +525,13 @@ namespace AceBookApp.Controllers
             return new EmptyResult();
         }
 
-        public string UpdatePassword (string currPass, string newPass)
+        public string UpdatePassword(string currPass, string newPass)
         {
             var myAcc = (from acc in _context.Accounts
                          where acc.Email == HomeController.postData.Email
                          select acc).First();
 
-            if(myAcc.Password != currPass)
+            if (myAcc.Password != currPass)
             {
                 return "Wrong Password";
             }
@@ -540,7 +540,7 @@ namespace AceBookApp.Controllers
                 myAcc.Password = newPass;
                 _context.SaveChanges();
                 return "Success";
-            }             
+            }
         }
 
         public void Logout()

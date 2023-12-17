@@ -10,7 +10,7 @@
         success: function (data) {
             var result = '';
             for (var i = 0; i < data.length; i++) {
-                result = result + '<div class="searchResultNew"><div class="searchImgDiv"><img class="searchImg" src="' + 'http://127.0.0.1:8080/' + data[i].profileImagePath.split('Uploads\\')[1] + '"/></div><div class="searchText"><a class="searchTextA" href="/Profile/ProfileData/' + data[i].email + '">' + data[i].firstName + " " + data[i].surname + '</a></div></div>'
+                result = result + '<div class="searchResultNew"><div class="searchImgDiv"><img class="searchImg" src="' + 'http://127.0.0.1:8080/' + data[i].profileImagePath.split('Uploads\\')[1] + '"/></div><div class="searchText"><a class="searchTextA" href="/Profile/ProfileData?email=' + data[i].email + '">' + data[i].firstName + " " + data[i].surname + '</a></div></div>'
             }
             document.getElementById("result").innerHTML = result;
 
@@ -164,7 +164,7 @@ $(document).ready(function () {
         document.getElementsByClassName("myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
         document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "none"
         document.getElementsByClassName("myProfileHeaderOptionsFriendsOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "none"       
+        document.getElementsByClassName("myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "none"
     })
 
     $('.myProfileHeaderOptionsFriendsDiv').click(function () {
@@ -237,7 +237,7 @@ $(document).ready(function () {
         success: function (data) {
             console.log(data[0].profileImagePath.split('Uploads\\')[1])
             document.getElementsByClassName("myProfilelogoImgRight")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.split('Uploads\\')[1];
-            document.getElementsByClassName("myProfileHeaderCoverImg")[0].src = "http://127.0.0.1:8080/" + data[0].coverImagePath.split('Uploads\\')[1]; 
+            document.getElementsByClassName("myProfileHeaderCoverImg")[0].src = "http://127.0.0.1:8080/" + data[0].coverImagePath.split('Uploads\\')[1];
             document.getElementsByClassName("myProfileHeaderProfileImg")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.split('Uploads\\')[1];
             document.getElementsByClassName("myProfileHeaderMyDetailsName")[0].textContent = data[0].firstName + " " + data[0].surname;
         }
@@ -688,7 +688,7 @@ $(document).ready(function () {
         })
     });
 
-//----------------------------------------------------------------------------------------
+    //----------------------------------------------------------------------------------------
 
     $('.aboutSectionLeftWork').click(function () {
         document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#65676B"
@@ -904,7 +904,7 @@ $(document).ready(function () {
         }, 500);
     })
 
-//--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
 
     $('.aboutSectionLeftPlace').click(function () {
         document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#65676B"
@@ -1001,7 +1001,7 @@ $(document).ready(function () {
         }, 500);
     })
 
-//--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
 
     $('.aboutSectionLeftContact').click(function () {
         document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#65676B"
@@ -1147,7 +1147,7 @@ $(document).ready(function () {
         $('.aboutSectionRightContactAddInput2')[0].value = "";
     })
 
-//--------------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------------
 
     $('.aboutSectionLeftFamily').click(function () {
         document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#65676B"
@@ -1172,7 +1172,7 @@ $(document).ready(function () {
         $('.aboutSectionRightFamilyDiv').show();
     });
 
-//------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------
 
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
@@ -1241,13 +1241,13 @@ $(document).ready(function () {
                         document.getElementsByClassName("myPostName")[i].textContent = data1[0].firstName + " " + data1[0].surname;
 
                         if (date1.diff(date2, 'hours') == 0) {
-                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'minutes')
+                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'minutes') + "m"
                         }
                         else if (date1.diff(date2, 'hours') > 24) {
                             document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'days') + 'd';
                         }
                         else {
-                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'hours') 
+                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'hours')
                         }
 
                         document.getElementsByClassName("myCommentProfileImg")[i].src = "http://127.0.0.1:8080/" + data1[0].profileImagePath.split('Uploads\\')[1];
@@ -1308,33 +1308,33 @@ $(document).ready(function () {
     var value = {
     }
     $.post({
-            url: 'https://' + location.host + '/Profile/GetPostsLikedByMe',
-            method: 'Post',
-            data: value,
-            async: false,
-            success: function (data) {
-                for (var i = 0; i < data.length; i++) {
-                    var op = data[i];
-                    var likedByMe = document.getElementById(op);
-                    if (likedByMe == null) {
-                        continue
+        url: 'https://' + location.host + '/Profile/GetPostsLikedByMe',
+        method: 'Post',
+        data: value,
+        async: false,
+        success: function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var op = data[i];
+                var likedByMe = document.getElementById(op);
+                if (likedByMe == null) {
+                    continue
+                }
+                else {
+                    likedByMe.getElementsByClassName("myLikeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
+
+                    if (likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0] == "1") {
+                        likedByMe.getElementsByClassName("myLikeCount")[0].textContent = "You"
+                    }
+                    else if (likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0] == "2") {
+                        likedByMe.getElementsByClassName("myLikeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0]) - 1) + " other";
                     }
                     else {
-                        likedByMe.getElementsByClassName("myLikeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
-
-                        if (likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0] == "1") {
-                            likedByMe.getElementsByClassName("myLikeCount")[0].textContent = "You"
-                        }
-                        else if (likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0] == "2") {
-                            likedByMe.getElementsByClassName("myLikeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0]) - 1) + " other";
-                        }
-                        else {
-                            likedByMe.getElementsByClassName("myLikeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0]) - 1) + " others";
-                        }
+                        likedByMe.getElementsByClassName("myLikeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0]) - 1) + " others";
                     }
-
                 }
+
             }
+        }
     });
 
     let currentprofileImg = document.getElementsByClassName("myProfileHeaderProfileImg")[0];
@@ -1386,7 +1386,7 @@ $(document).ready(function () {
             }
         })
     })
-    
+
     document.getElementById("result").style.padding = "0px"
 
     if (document.getElementsByClassName("postOptionLeftDiv2")[0].offsetHeight == 213) {
@@ -1400,7 +1400,7 @@ $(document).ready(function () {
         document.getElementsByTagName('body')[0].style.visibility = "visible"
     }, 5)
 
-    
+
     setTimeout(function () {
         if ($(location).attr('href').substr(35 + location.host.length).split('#').length == 2) {
             document.getElementById($(location).attr('href').substr(35 + location.host.length).split('#')[1]).scrollIntoView(true)
@@ -1408,7 +1408,7 @@ $(document).ready(function () {
 
         if ($(location).attr('href').substr(35 + location.host.length).split('#').length == 3) {
             document.getElementById($(location).attr('href').substr(35 + location.host.length).split('#')[1]).getElementsByClassName("myCommentDiv")[0].click();
-        } 
+        }
     }, 250)
 });
 

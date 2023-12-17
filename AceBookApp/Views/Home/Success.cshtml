@@ -3,5 +3,15 @@
 *@
 @{
 }
-<h2>Success</h2>
-<button type="button" onclick="location.href='@Url.Action("Login","Home")'">Back to Login</button>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/Success.css" />
+</head>
+<body>
+    <div class="SuccessMsgDiv">
+        <h2 class="SuccessMsg1">Thank you for joining Acebook</h2>
+        <h3 class="SuccessMsg2">Your account has been created successfully!</h3>
+        <h4 class="backToLoginBtn" type="button" onclick="location.href='@Url.Action("Login","Home")'">Back to login page</h4>
+    </div>
+</body>
+</html>

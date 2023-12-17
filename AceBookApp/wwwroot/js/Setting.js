@@ -64,7 +64,7 @@ function CheckPassword2(val) {
 
 $(document).ready(function () {
 
-    
+
     $(".rightSettingName1EditDiv").hide();
     $(".rightSettingName2EditDiv").hide();
     $(".rightSettingNameEditBtnDiv").show();
@@ -198,7 +198,7 @@ $(document).ready(function () {
                 async: false,
                 success: function (data) {
                     if (data == "Wrong Password") {
-                        alert ("Password is incorrect")
+                        alert("Password is incorrect")
                     }
                     else if (data == "Success") {
                         alert("Password changed successfully")

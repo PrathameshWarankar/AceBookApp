@@ -16,9 +16,9 @@
 .FriendsMenuHeaderA {
     font-family: Arial;
     font-stretch: semi-expanded;
-    font-weight:700;
+    font-weight: 700;
     font-size: 24px;
-    margin:0px 0px 0px 10px;
+    margin: 0px 0px 0px 10px;
 }
 
 .FriendsMenuRequestsDiv, .FriendsMenuAllFriendsDiv {
@@ -38,7 +38,7 @@
     padding-top: 2px;
 }
 
-.FriendsMenuRequestsDiv:hover, .FriendsMenuAllFriendsDiv:hover{
+.FriendsMenuRequestsDiv:hover, .FriendsMenuAllFriendsDiv:hover {
     background-color: #ECECEC;
     cursor: pointer;
 }
@@ -78,7 +78,7 @@
 .FriendsResultHeader {
     font-size: 20px;
     font-family: Arial;
-    font-weight:700;
+    font-weight: 700;
     position: relative;
     top: 36px;
     left: 36px;
@@ -130,19 +130,19 @@
     color: black;
 }
 
-.confirmBtn:hover, .deleteBtn:hover {
-    cursor: pointer;
-}
+    .confirmBtn:hover, .deleteBtn:hover {
+        cursor: pointer;
+    }
 
-.frndAcc{
+.frndAcc {
     display: flex;
     padding: 8px;
     padding-left: 12px;
 }
 
-.frndAcc:hover {
-    cursor: pointer;
-}
+    .frndAcc:hover {
+        cursor: pointer;
+    }
 
 .frndAccImg {
     height: 50px;
@@ -190,6 +190,6 @@
     left: 5px;
 }
 
-.backArrow:hover{
-    cursor: pointer;
-}
+    .backArrow:hover {
+        cursor: pointer;
+    }

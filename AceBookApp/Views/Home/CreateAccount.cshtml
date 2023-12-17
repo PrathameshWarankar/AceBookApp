@@ -12,17 +12,17 @@
         <h5>It's quick and easy.</h5>
         <div id="actualform">
             <div class="col-md-5">
-                <input asp-for="FirstName" class="form-control" placeholder="First Name" id="fname" required/>
+                <input asp-for="FirstName" class="form-control" placeholder="First Name" id="fname" required />
             </div>
-           
+
             <div class="col-md-5">
-                <input asp-for="Surname" class="form-control" placeholder="Surname" id="sname" onclick="CheckBlank()" required/>
-            </div>
-            <div class="col-md-5">
-                <input asp-for="Email" class="form-control" type="email" id="email" placeholder="Email address" onclick="CheckBlank()" required/>
+                <input asp-for="Surname" class="form-control" placeholder="Surname" id="sname" onclick="CheckBlank()" required />
             </div>
             <div class="col-md-5">
-                <input asp-for="Password" class="form-control" type="password" id="pass" placeholder="Password"  onclick="CheckBlank()" required/>
+                <input asp-for="Email" class="form-control" type="email" id="email" placeholder="Email address" onclick="CheckBlank()" required />
+            </div>
+            <div class="col-md-5">
+                <input asp-for="Password" class="form-control" type="password" id="pass" placeholder="Password" onclick="CheckBlank()" required />
             </div>
             <div>
                 <h3>Date of birth</h3>
@@ -40,9 +40,9 @@
                 <label asp-for="Gender" class="col-md-2 control-label" id="gender">Gender</label>
                 <div class="col-md-5">
                     <label asp-for="Gender" id="male">Male</label>
-                    <input asp-for="Gender" type="radio" value="Male" name="gender" id="maleradio"/>
+                    <input asp-for="Gender" type="radio" value="Male" name="gender" id="maleradio" />
                     <label asp-for="Gender" id="female">Female</label>
-                    <input asp-for="Gender" type="radio" value="Female" name="gender" id="femaleradio"/>
+                    <input asp-for="Gender" type="radio" value="Female" name="gender" id="femaleradio" />
                 </div>
             </div>
             <h3 id="terms1a">
@@ -52,7 +52,7 @@
                 to Acebook.
             </h3>
             <h3 id="terms2a">
-                By clicking Sign Up, you agree to our Terms, Privacy Policy and Cookies Policy. 
+                By clicking Sign Up, you agree to our Terms, Privacy Policy and Cookies Policy.
             </h3>
             <h3 id="terms2b">
                 You may receive SMS notifications from us and can opt out at any time.
