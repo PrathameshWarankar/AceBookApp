@@ -1,32 +1,6 @@
-﻿function Search(data) {
-    var value = {
-        "name": data
-    }
-    $.post({
-        url: 'https://' + location.host + '/Feed/SearchBy',
-        method: 'Post',
-        data: value,
-        success: function (data) {
-            var result = '';
-            for (var i = 0; i < data.length; i++) {
-                result = result + '<div class="searchResultNew"><div class="searchImgDiv"><img class="searchImg" src="' + 'http://127.0.0.1:8080/' + data[i].profileImagePath.substr(64) + '"/></div><div class="searchText"><a class="searchTextA" href="/Profile/ProfileData/' + data[i].email + '">' + data[i].firstName + " " + data[i].surname + '</a></div></div>'
-            }
-            document.getElementById("result").innerHTML = result;
-
-            if (data.length < 1) {
-                document.getElementById("result").style.padding = "0px"
-            } else if (data.length >= 1) {
-                document.getElementById("result").style.paddingBottom = "15px"
-                $('.searchResultNew').click(function () {
-                    $(this)[0].getElementsByClassName("searchTextA")[0].click();
-                });
-            }
-        }
-    })
-}
-
+﻿
+//method to accept friend request
 function ConfirmBtn(email) {
-
     var value = {
         "fromRequest": email,
         "toRequest": $(location).attr('href').substr(46)
@@ -59,6 +33,7 @@ function ConfirmBtn(email) {
     });
 }
 
+//method to delete friend request
 function DeleteBtn(email) {
     var len = email.length
     var value = {
@@ -79,8 +54,8 @@ function DeleteBtn(email) {
     });
 }
 
-function frndProfileDisplay(email) {
-
+//display friend's' profile when clicked on account name
+function FrndProfileDisplay(email) {
     var modEmail = '/Profile/ProfileData?email=' + email
     document.getElementById("profileLoader").setAttribute('data', modEmail);
     $('.FriendProfileDiv').show();
@@ -92,7 +67,6 @@ function frndProfileDisplay(email) {
         document.getElementsByClassName("FriendProfileDiv")[0].getElementsByTagName("object")[0].contentDocument.getElementsByTagName("body")[0].style.left = "-165px";
         document.getElementsByClassName("FriendProfileDiv")[0].getElementsByTagName("object")[0].contentDocument.getElementsByTagName("body")[0].style.left = "-165px";
     }, 120);
-
 }
 
 $(document).ready(function () {
@@ -101,6 +75,7 @@ $(document).ready(function () {
     $('.FriendProfileDiv').hide();
     $('.backArrow').hide();
 
+    //loads friends page
     var value = {
         "email": $(location).attr('href').substr(46)
     }
@@ -141,6 +116,7 @@ $(document).ready(function () {
         }
     })
 
+    //method that provides functionality to friend requests button inside friends page
     $('.FriendsMenuRequestsDiv').click(function () {
         document.getElementsByClassName("FriendsMenuRequestsDiv")[0].style.backgroundColor = "#ECECEC";
         document.getElementsByClassName("FriendsMenuAllFriendsDiv")[0].style.backgroundColor = "white";
@@ -185,6 +161,7 @@ $(document).ready(function () {
         $('.FriendsResultDiv').show();
     });
 
+    //method that provides functionality to all friend button inside friends page
     $('.FriendsMenuAllFriendsDiv').click(function () {
         document.getElementsByClassName("FriendsMenuAllFriendsDiv")[0].style.backgroundColor = "#ECECEC";
         document.getElementsByClassName("FriendsMenuRequestsDiv")[0].style.backgroundColor = "white";
@@ -240,7 +217,7 @@ $(document).ready(function () {
                         data: value,
                         async: false,
                         success: function (data1) {
-                            result = result + '<div class="frndAcc" id="' + data1[0].email + '" onclick="frndProfileDisplay(this.id)"><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.substr(64) + '"/></div><div class="frndAccNameDiv"><span class="frndAccName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div>'
+                            result = result + '<div class="frndAcc" id="' + data1[0].email + '" onclick="FrndProfileDisplay(this.id)"><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.substr(64) + '"/></div><div class="frndAccNameDiv"><span class="frndAccName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div>'
                         }
                     });
                 }
@@ -253,6 +230,7 @@ $(document).ready(function () {
         });
     });
 
+    //method to go back from all friends page
     $('.backArrow').click(function () {
         location.reload();
     })

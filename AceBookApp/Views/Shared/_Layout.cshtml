@@ -1,0 +1,55 @@
+﻿<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="~/css/SearchBar.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <script src="~/js/SearchBar.js"></script>
+    </head>
+    <body>
+        <div id="searchBarDiv">
+            <div id="acebookLogoDiv">
+                <img class="acebookLogo" src="~/images/acebookLogo-modified.png" />
+            </div>
+
+            <div id="searchResult">
+                <input id="searchInput" name="Name" oninput="Search(this.value)" placeholder="Search Acebook" />
+                <img class="searchIcon" src="~/images/searchIcon.png" />
+                <div id="result"></div>
+            </div>
+
+            <div id="homeIconDiv">
+                <a href="https://localhost:44353/Feed/FeedData"><img class="homeIcon" src="~/images/homeicon.png" /></a>
+            </div>
+
+            <div id="notiIconDiv">
+                <img class="notiIcon" src="~/images/notiicon.png" />
+            </div>
+
+            <div class="searchFeedNotiDiv" style="visibility:hidden"></div>
+
+            <div class="searchFeedNotiMarkerDiv" style="visibility:hidden">
+                <span class="searchFeedNotiMarkerCountDiv"></span>
+            </div>
+
+            <div id="profileImgDiv">
+                <img class="myProfilelogoImgRight" />
+            </div>
+
+            <div class="settingDiv" style="visibility: hidden;">
+                <div class="searchFeedSettingProfileNameDiv">
+                    <img class="searchFeedSettingProfileImg" />
+                    <span class="searchFeedSettingProfileName"></span>
+                </div>
+                <div class="searchFeedSettingOptionDiv">
+                    <img class="searchFeedSettingOptionImg" src="~/images/settingicon.png" />
+                    <span class="searchFeedSettingOption">Setting & privacy</span>
+                </div>
+                <div class="searchFeedSettingLogoutOptionDiv">
+                    <img class="searchFeedSettingLogoutOptionImg" src="~/images/logouticon.png" />
+                    <span class="searchFeedSettingLogoutOption">Log out</span>
+                </div>
+            </div>
+        </div>
+        
+        @RenderBody()
+    </body>
+</html>

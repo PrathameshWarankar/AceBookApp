@@ -1,42 +1,49 @@
 ﻿@model AceBookApp.Models.Account;
 
+@{
+    Layout = "";
+}
+
 <head>
     <link rel="stylesheet" type="text/css" href="~/css/CreateAccount.css" />
     <script type="text/javascript" src="~/js/CreateaAccount.js"></script>
 </head>
 
+<!--create account page-->
 <div id="createacc">
+    
     <form asp-action="CreateAccount" method="post" role="form">
         <h2>Sign Up</h2>
         <img onclick="location.href='@Url.Action("Login","Home")'" />
         <h5>It's quick and easy.</h5>
+
+        <!--fields to be entered-->
         <div id="actualform">
-            <div class="col-md-5">
+            <div class="col-md-5" id="firstNameDiv">
                 <input asp-for="FirstName" class="form-control" placeholder="First Name" id="fname" required />
             </div>
-
-            <div class="col-md-5">
+            <div class="col-md-5" id="lastNameDiv">
                 <input asp-for="Surname" class="form-control" placeholder="Surname" id="sname" onclick="CheckBlank()" required />
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5" id="emailDiv">
                 <input asp-for="Email" class="form-control" type="email" id="email" placeholder="Email address" onclick="CheckBlank()" required />
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5" id="passwordDiv">
                 <input asp-for="Password" class="form-control" type="password" id="pass" placeholder="Password" onclick="CheckBlank()" required />
             </div>
-            <div>
+            <div id="dobHeaderDiv">
                 <h3>Date of birth</h3>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5" id="dateDiv">
                 <select asp-for="DOBDate" asp-items="Model.DateList" class="dob" id="date" onclick="CheckBlank()"></select>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5" id="monthDiv">
                 <select class="dob" asp-items="Model.MonthList" asp-for="DOBMon" id="mon"></select>
             </div>
-            <div class="col-md-5">
+            <div class="col-md-5" id="yearDiv">
                 <select class="dob" asp-items="Model.YearList" asp-for="DOBYear" id="year"></select>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="genderDiv">
                 <label asp-for="Gender" class="col-md-2 control-label" id="gender">Gender</label>
                 <div class="col-md-5">
                     <label asp-for="Gender" id="male">Male</label>
@@ -45,6 +52,7 @@
                     <input asp-for="Gender" type="radio" value="Female" name="gender" id="femaleradio" />
                 </div>
             </div>
+            <!--terms and conditions-->
             <h3 id="terms1a">
                 People who use our service may have uploaded your contact information
             </h3>
@@ -57,6 +65,8 @@
             <h3 id="terms2b">
                 You may receive SMS notifications from us and can opt out at any time.
             </h3>
+            
+            <!--signup button-->
             <div class="btn">
                 <div class="col-md-offset-2 col-md-5">
                     <input type="submit" id="submitbtn" value="Sign Up" onclick="CheckField()" />

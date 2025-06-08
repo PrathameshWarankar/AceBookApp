@@ -10,7 +10,9 @@
     <link rel="stylesheet" type="text/css" href="~/css/Feed.css" />
 </head>
 
+<!--entire user feed-->
 <div id="feed">
+    <!--left feed - Account information-->
     <div id="leftFeed">
         <div id="myProfile">
             <div class="myProfileImg">
@@ -37,8 +39,10 @@
             </div>
         </div>
     </div>
-
+    
+    <!--center feed - User posts-->
     <div id="centerFeed">
+        <!--section for uploading new post-->
         <div id="createPostFeed">
             <div id="createPostFeed1">
                 <div class="createPostInputPhoto">
@@ -68,6 +72,7 @@
             </div>
         </div>
 
+        <!--section containing user posts-->
         <div id="feedPostSection">
             @{
                 int c = 0;
@@ -114,7 +119,7 @@
                             <div class="likedNames" runat="server" style="display: none;"></div>
                         </div>
 
-                        <div class="likeCommentCount">
+                        <div class="likeCommentCount" onclick="GetCommentsCount(@post.PostId)">
                             @if (ViewBag.PostLikeCount[c] == 0)
                             {
                                 <img class="postLike" src="~/images/white-solid-color.jpg" />
@@ -129,7 +134,10 @@
                             {
                                 <img onclick="test()" class="postLike" src="~/images/postLike.png" />
                                 <h3 class="likeCount" onmouseover="DisplayLikes(@post.PostId)" onmouseout="DisplayLikesHide(@post.PostId)">@ViewBag.PostLikeCount[c] others</h3>
-                            }
+                            }                            
+                            <div class="commentCountDiv">
+                                <h3 class="commentCount"></h3>
+                            </div>
                         </div>
 
                         <div class="likeComment">
@@ -137,7 +145,7 @@
                                 <img class="likeBtnImg" src="~/images/likebutton.png" />
                                 <span class="like">Like</span>
                             </div>
-                            <div class="commentDiv" onclick="ShowComments(@post.PostId); addingComment(@post.PostId);">
+                            <div class="commentDiv" onclick="ShowComments(@post.PostId); AddingComment(@post.PostId);">
                                 <img class="commentBtnImg" src="~/images/commentbutton.png" />
                                 <span class="comment">Comment</span>
                             </div>
@@ -156,13 +164,15 @@
                 }
             }
         </div>
+
+        <!--window for uploading new post-->
         <div id="createPostDialog" style="display: none;">
             <div id="createLabel">
-                <img id="cancelOption" src="~/images/canceloption.png" onclick="cancel()" />
+                <img id="cancelOption" src="~/images/canceloption.png" onclick="Cancel()" />
                 <label>Create post</label>
             </div>
             <div>
-                <form asp-action="FeedData" method="post" role="form" enctype="multipart/form-data">
+                <form asp-action="FeedData" method="post" role="form" enctype="multipart/form-data" id="createPostForm">
                     <div>
                         <img class="createPostProfileImg" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
                     </div>
@@ -179,52 +189,20 @@
                                 Add Photos
                             </span>
                         </div>
-                        <input type="file" name="imgfile" id="fileInput" hidden />
+                        <input type="file" name="imgfile" id="fileInput" hidden/>
                     </div>
                     <div id="uploadbtn" col-md-5">
-                        <input type="submit" id="actualUploadbtn" value="Upload" />
+                        <input type="submit" id="actualUploadbtn" value="Upload" onmouseover="CheckCreatePostInput()" />
                     </div>
                 </form>
             </div>
         </div>
-
     </div>
 
+    <!--right feed - Contacts-->
     <div id="rightFeed">
         <text class="contacts">Contacts</text>
         <div class="conatctList"></div>
-    </div>
-
-    <div class="searchDiv">
-        <div id="searchFeed">
-            <div id="result"></div>
-            <input id="searchInput" name="Name" oninput="Search(this.value)" placeholder="Search Acebook" />
-            <img class="searchIcon" src="~/images/searchIcon.png" />
-            <img class="acebookLogo" src="~/images/acebookLogo-modified.png" />
-            <img class="homeIcon" src="~/images/homeicon.png" />
-            <img class="notiIcon" src="~/images/notiicon.png" />
-            <img class="myProfilelogoImgRight" />
-            <div class="searchFeedSettingDiv" style="visibility: hidden;">
-                <div class="searchFeedSettingProfileNameDiv">
-                    <img class="searchFeedSettingProfileImg" />
-                    <span class="searchFeedSettingProfileName"></span>
-                </div>
-                <div class="searchFeedSettingOptionDiv">
-                    <img class="searchFeedSettingOptionImg" src="~/images/settingicon.png" />
-                    <span class="searchFeedSettingOption">Setting & privacy</span>
-                </div>
-                <div class="searchFeedSettingLogoutOptionDiv">
-                    <img class="searchFeedSettingLogoutOptionImg" src="~/images/logouticon.png" />
-                    <span class="searchFeedSettingLogoutOption">Log out</span>
-                </div>
-            </div>
-            <div class="searchFeedNotiDiv" style="visibility:hidden">
-            </div>
-            <div class="searchFeedNotiMarkerDiv" style="visibility:hidden">
-                <span class="searchFeedNotiMarkerCountDiv"></span>
-            </div>
-
-        </div>
     </div>
 </div>
 
@@ -240,13 +218,11 @@
 
     input.addEventListener('change', function () {
         file = this.files[0];
-        //file = event.dataTransfer.files[0];
 
         let fileReader = new FileReader();
         fileReader.readAsDataURL(file);
         fileReader.onload = () => {
             let fileURL = fileReader.result;
-            console.log(fileURL);
             let imgTag = `<img class="img1" src="${fileURL}">`
             btn.innerHTML = imgTag;
         }
@@ -254,7 +230,6 @@
 
     $(document).ready(function () {
         $(".likeDiv").click(function () {
-            //event.preventDefault();
             $.post('@Url.Action("Liked","Feed")?id=' + this.parentNode.parentNode.id);
 
             var imgSrc = document.getElementById(this.parentNode.parentNode.id);
@@ -296,20 +271,15 @@
         for (var i = 0; i < jsonObj.length; i++) {
             var op = jsonObj[i];
             var likedByMe = document.getElementById(op);
-            //console.log(likedByMe.getElementsByClassName("likeBtnImg")[0].src)
             likedByMe.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
-            //console.log(likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0]);
             if (likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "1") {
                 likedByMe.getElementsByClassName("likeCount")[0].textContent = "You"
-                //likedByMe.getElementsByClassName("likeCommentCount")[0].style.height = "40px";
             }
             else if (likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "2") {
                 likedByMe.getElementsByClassName("likeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0]) - 1) + " other";
-                //likedByMe.getElementsByClassName("likeCommentCount")[0].style.height = "40px";
             }
             else {
                 likedByMe.getElementsByClassName("likeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0]) - 1) + " others";
-                //likedByMe.getElementsByClassName("likeCommentCount")[0].style.height = "40px";
             }
 
         }

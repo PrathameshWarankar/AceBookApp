@@ -1,36 +1,9 @@
-﻿function Search(data) {
-    var value = {
-        "name": data
-    }
-    $.post({
-        url: 'https://' + location.host + '/Feed/SearchBy',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            var result = '';
-            for (var i = 0; i < data.length; i++) {
-                result = result + '<div class="searchResultNew"><div class="searchImgDiv"><img class="searchImg" src="' + 'http://127.0.0.1:8080/' + data[i].profileImagePath.split('Uploads\\')[1] + '"/></div><div class="searchText"><a class="searchTextA" href="/Profile/ProfileData?email=' + data[i].email + '">' + data[i].firstName + " " + data[i].surname + '</a></div></div>'
-            }
-            document.getElementById("result").innerHTML = result;
-
-            if (data.length < 1) {
-                document.getElementById("result").style.padding = "0px"
-            } else if (data.length >= 1) {
-                document.getElementById("result").style.paddingBottom = "15px"
-                $('.searchResultNew').click(function () {
-                    $(this)[0].getElementsByClassName("searchTextA")[0].click();
-                });
-            }
-        }
-    })
-}
-
+﻿
+//method to display all likes for particular post when mouse hovered over likes
 function DisplayLikes(myData) {
     var value = {
         "id": myData
     }
-
     $.post({
         url: 'https://' + location.host + '/Feed/GetLikesBy',
         method: 'Post',
@@ -39,24 +12,20 @@ function DisplayLikes(myData) {
         success: function (data) {
             var result = '';
             for (var i = 0; i < data.length; i++) {
-                //console.log(data[i])
                 result = result + '<span class="myLikedEmail">' + data[i].likedByName + '</span>' + '</br>'
             }
-            //document.getElementById(myData).getElementsByClassName("myLikedNames")[pos].style.display = "block";
-            //document.getElementById(myData).getElementsByClassName("myLikedNames")[pos].innerHTML = result
             document.getElementById(myData).getElementsByClassName("myLikedNames")[0].style.display = "block";
             document.getElementById(myData).getElementsByClassName("myLikedNames")[0].innerHTML = result;
-            //document.getElementById(myData).childNodes[2].childNodes[0].style.display = "block";
-            //document.getElementById(myData).childNodes[2].childNodes[0].innerHTML = result;
-            //console.log(document.getElementById(myData.id))
         }
     })
 }
 
+//method to hide all likes for particular post when mouse removed over likes
 function DisplayLikesHide(myData) {
     document.getElementById(myData).getElementsByClassName("myLikedNames")[0].style.display = "none";
 }
 
+//method to show comments section
 function ShowComments(myData) {
     if (document.getElementById(myData).getElementsByClassName("myCommentSection")[0].style.display == "block") {
         document.getElementById(myData).getElementsByClassName("myCommentSection")[0].style.display = "none";
@@ -66,14 +35,13 @@ function ShowComments(myData) {
     }
 
     document.getElementById(myData).getElementsByClassName("myCommentSection")[0].getElementsByClassName("myAddComment")[0].focus();
-    /*console.log("clicked")*/
 }
 
-function getCommentList(myData) {
+//method to display all previous comments for a particular post
+function GetCommentList(myData) {
     var value1 = {
         "id": myData
     }
-
     $.post({
         url: 'https://' + location.host + '/Feed/GetCommentsBy',
         method: 'Post',
@@ -83,34 +51,39 @@ function getCommentList(myData) {
             for (var i = 0; i < data.length; i++) {
                 result = result + '<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="' + 'http://127.0.0.1:8080/' + data[i].commentedByImagepath + '"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/' + data[i].commentedBy + '">' + data[i].commentedByName + '</a></br><span class="commentText"> ' + data[i].commentedText + '</span ></div></div></div>'
             }
-
             document.getElementById(myData).getElementsByClassName("myCommentsList")[0].innerHTML = result
+            //GetCommentsCount();
         }
     })
 }
 
-function addingComment(myData) {
+//method to display previous comments and adds new comment when entered by user
+function AddingComment(myData) {
+    var val;
 
-    getCommentList(myData);
-    var input = document.getElementById(myData).getElementsByClassName("myCommentSection")[0].getElementsByClassName("myAddComment")[0];
+    if (myData.postId == undefined) {
+        val = myData.id
+    } else {
+        val = myData.postId
+    }
+
+    GetCommentList(val);
+    var input = document.getElementById(val).getElementsByClassName("myCommentSection")[0].getElementsByClassName("myAddComment")[0];
 
     input.addEventListener("keyup", (event) => {
         if (event.key == "Enter") {
             var value = {
-                "id": myData,
+                "id": val,
                 "text": input.value
             }
-            //console.log(input.value)
             if (input.value !== '') {
                 $.post({
                     url: 'https://' + location.host + '/Feed/Commented',
                     method: 'Post',
                     data: value,
-                    async: false,
                     success: function (data) {
-                        //console.log("Success");
                         input.value = '';
-                        setTimeout(getCommentList(myData), 750);
+                        setTimeout(() => GetCommentList(val), 750);
                     }
                 })
             }
@@ -118,16 +91,17 @@ function addingComment(myData) {
     });
 }
 
-function submit() {
+//method to update profile photo
+function Submit() {
     document.getElementsByClassName("profileImgForm")[0].submit();
 }
 
-function submit1() {
+//method to update cover photo
+function Submit1() {
     document.getElementsByClassName("coverImgForm")[0].submit();
 }
 
 $(document).ready(function () {
-
     var myEmail;
 
     $('.myProfileHeaderProfileEditDiv').hide();
@@ -222,10 +196,7 @@ $(document).ready(function () {
         document.getElementsByClassName("myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "none"
     });
 
-    console.log($(location).attr('href').substr(35 + location.host.length).split('#')[0])
-    console.log(location.host)
-
-    //GetProfileDetails
+    //method to get logged user details and display on profile page
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
@@ -235,15 +206,13 @@ $(document).ready(function () {
         data: value,
         async: false,
         success: function (data) {
-            console.log(data[0].profileImagePath.split('Uploads\\')[1])
-            document.getElementsByClassName("myProfilelogoImgRight")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.split('Uploads\\')[1];
             document.getElementsByClassName("myProfileHeaderCoverImg")[0].src = "http://127.0.0.1:8080/" + data[0].coverImagePath.split('Uploads\\')[1];
             document.getElementsByClassName("myProfileHeaderProfileImg")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.split('Uploads\\')[1];
             document.getElementsByClassName("myProfileHeaderMyDetailsName")[0].textContent = data[0].firstName + " " + data[0].surname;
         }
     })
 
-    //GetFriendListCount
+    //method to display friends count on profile page
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
@@ -257,6 +226,7 @@ $(document).ready(function () {
         }
     });
 
+    //method to display friends count inside friends section
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
@@ -270,27 +240,25 @@ $(document).ready(function () {
         }
     });
 
-    //GetMyProfileDetails
+    //method to get logged user details to populate multiple fields
     var value = {}
     $.post({
-        url: 'https://' + location.host + '/Profile/GetMyProfileDetails',
+        url: 'https://' + location.host + '/Profile/GetProfileDetails',
         method: 'Post',
         data: value,
         async: false,
         success: function (data) {
             myEmail = data[0].email;
-            document.getElementsByClassName("searchFeedSettingProfileName")[0].textContent = data[0].firstName + " " + data[0].surname;
-            document.getElementsByClassName("searchFeedSettingProfileImg")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.split('Uploads\\')[1]
 
+            //if profile is not of logged user
             if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
                 $('.myProfileHeaderProfileEditDiv').hide();
-                //$('.myProfileHeaderProfileCancelReqDiv').hide();
                 $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
-                //$('.myProfileHeaderProfileAddFriendDiv').show();
                 document.getElementsByClassName("myProfileHeaderCoverEditBtnDiv")[0].style.visibility = "hidden";
                 document.getElementsByClassName("myProfileHeaderProfieUploadImg")[0].style.visibility = "hidden";
                 document.getElementsByClassName("myProfileHeaderProfieUpload")[0].style.visibility = "hidden";
             }
+            //if profile is of logged user
             else {
                 $('.myProfileHeaderProfileCancelReqDiv').hide();
                 $('.myProfileHeaderProfileAddFriendDiv').hide();
@@ -306,7 +274,7 @@ $(document).ready(function () {
         }
     })
 
-    //GetAdditionalDetails
+    //method to populate additional details (Overview) of user
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
@@ -352,6 +320,7 @@ $(document).ready(function () {
         }
     })
 
+    //method to populate additional details (Work, College, Place, Contact) of user
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
@@ -397,7 +366,7 @@ $(document).ready(function () {
         }
     })
 
-    //IsReqSent
+    //page to display when request is sent to a user
     var value = {
         "toRequest": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
@@ -408,8 +377,6 @@ $(document).ready(function () {
         async: false,
         success: function (data) {
             if (data == "Yes") {
-                //document.getElementsByClassName("myProfileHeaderProfileCancelReqDiv")[0].style.display = "block";
-                //document.getElementsByClassName("myProfileHeaderProfileAddFriendDiv")[0].style.display = "none";
                 $('.myProfileHeaderProfileCancelReqDiv').show();
                 $('.myProfileHeaderProfileAddFriendDiv').hide();
                 $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
@@ -422,8 +389,6 @@ $(document).ready(function () {
                 $('.myProfileHeaderProfileEditDiv').show();
             }
             else {
-                //document.getElementsByClassName("myProfileHeaderProfileCancelReqDiv")[0].style.display = "none";
-                //document.getElementsByClassName("myProfileHeaderProfileAddFriendDiv")[0].style.display = "block";
                 $('.myProfileHeaderProfileCancelReqDiv').hide();
                 $('.myProfileHeaderProfileAddFriendDiv').show();
                 $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
@@ -432,7 +397,7 @@ $(document).ready(function () {
         }
     })
 
-    //IsFriend
+    //page to display when user is a friend
     var value = {
         "toRequest": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
@@ -443,8 +408,6 @@ $(document).ready(function () {
         async: false,
         success: function (data) {
             if (data == "Yes") {
-                //document.getElementsByClassName("myProfileHeaderProfileCancelReqDiv")[0].style.display = "block";
-                //document.getElementsByClassName("myProfileHeaderProfileAddFriendDiv")[0].style.display = "none";
                 $('.myProfileHeaderProfileCancelReqDiv').hide();
                 $('.myProfileHeaderProfileAddFriendDiv').hide();
                 $('.myProfileHeaderProfileFrndAcceptedDiv').show();
@@ -457,15 +420,13 @@ $(document).ready(function () {
                 $('.myProfileHeaderProfileEditDiv').show();
             }
             else {
-                //document.getElementsByClassName("myProfileHeaderProfileCancelReqDiv")[0].style.display = "none";
-                //document.getElementsByClassName("myProfileHeaderProfileAddFriendDiv")[0].style.display = "block";
                 $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
             }
         }
 
     })
 
-    //GetFriendList
+    //method to populate friends when friends tab is clicked 
     var result = '';
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
@@ -501,6 +462,7 @@ $(document).ready(function () {
         }
     });
 
+    //method to populate friends when posts tab is clicked 
     var result = '';
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
@@ -547,13 +509,13 @@ $(document).ready(function () {
         window.location.href = '/Profile/Friends?email=' + $(location).attr('href').substr(35 + location.host.length).split('#')[0];
     });
 
-    //GetPhotosList
+    //method to populate posts when about tab is clicked 
     var result = '';
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
     $.post({
-        url: 'https://' + location.host + '/Profile/GetPhotosList',
+        url: 'https://' + location.host + '/Profile/GetPostsList',
         method: 'Post',
         data: value,
         async: false,
@@ -565,12 +527,13 @@ $(document).ready(function () {
         }
     });
 
+    //method to populate posts when photos tab is clicked 
     var result = '';
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
     $.post({
-        url: 'https://' + location.host + '/Profile/GetPhotosList',
+        url: 'https://' + location.host + '/Profile/GetPostsList',
         method: 'Post',
         data: value,
         async: false,
@@ -589,6 +552,7 @@ $(document).ready(function () {
         }
     });
 
+    //methods to be executed when each of the button is clicked
     $('.myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileCancelReqDiv').click(function () {
         var value = {
             "fromRequest": myEmail,
@@ -1174,6 +1138,7 @@ $(document).ready(function () {
 
     //------------------------------------------------------------------------------------------------
 
+    //populates the each of the posts and its details in post tab
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
@@ -1190,7 +1155,6 @@ $(document).ready(function () {
                 postDiv.innerHTML = result
                 document.getElementsByClassName("postOptionRightDiv")[0].appendChild(postDiv);
 
-                //document.getElementsByClassName("postOptionRightDiv")[0].innerHTML += result;
                 document.getElementsByClassName("myPostCaption")[i].textContent = data[i].caption;
                 document.getElementsByClassName("myActualPost")[i].src = "http://127.0.0.1:8080/" + data[i].imagepath.split('Uploads\\')[1];
                 document.getElementsByClassName("myLikeBtnImg")[i].src = "https://" + location.host + "/images/likebutton.png";
@@ -1199,7 +1163,7 @@ $(document).ready(function () {
                 const val = i
                 document.getElementsByClassName("myCommentDiv")[i].addEventListener("click", function () {
                     ShowComments(data[val].postId);
-                    addingComment(data[val].postId);
+                    AddingComment(data[val]);
                 });
 
                 if (data[i].likes == 0) {
@@ -1257,8 +1221,8 @@ $(document).ready(function () {
         }
     });
 
+    //method to be executed when like button is clicked for a particular post
     $(".myLikeDiv").click(function () {
-        //event.preventDefault();
         var value = {
             "id": this.parentNode.parentNode.parentNode.id
         }
@@ -1270,8 +1234,7 @@ $(document).ready(function () {
             success: function (data) { }
         });
 
-        //$.post('@Url.Action("Liked","Feed")?id=' + this.parentNode.parentNode.id);
-
+        //method to be executed when like button - updates the image for liked/unliked
         var imgSrc = document.getElementById(this.parentNode.parentNode.parentNode.id);
         if (imgSrc.getElementsByClassName("myLikeBtnImg")[0].src == "https://" + location.host + "/images/likebutton.png") {
             imgSrc.getElementsByClassName("myLikeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
@@ -1305,6 +1268,7 @@ $(document).ready(function () {
         }
     });
 
+    //populates the likes section (section above likes and comments)
     var value = {
     }
     $.post({
@@ -1350,43 +1314,6 @@ $(document).ready(function () {
         input1.click();
     }
 
-    $(".myProfilelogoImgRight").click(function () {
-        if (document.getElementsByClassName("searchFeedSettingDiv")[0].style.visibility == "hidden") {
-            document.getElementsByClassName("searchFeedSettingDiv")[0].style.visibility = "visible"
-        } else if (document.getElementsByClassName("searchFeedSettingDiv")[0].style.visibility == "visible") {
-            document.getElementsByClassName("searchFeedSettingDiv")[0].style.visibility = "hidden"
-        }
-    })
-
-    $(".searchFeedSettingProfileNameDiv").click(function () {
-        //window.location.href = 
-        $.post({
-            url: 'https://' + location.host + '/Profile/GetMyProfileDetails',
-            method: 'Post',
-            data: value,
-            async: false,
-            success: function (data) {
-                window.location.href = "https://" + window.location.host + "/Profile/ProfileData?email=" + data[0].email;
-            }
-        })
-    })
-
-    $(".searchFeedSettingLogoutOptionDiv").click(function () {
-        window.location.href = "https://" + window.location.host
-    })
-
-    $(".searchFeedSettingOptionDiv").click(function () {
-        $.post({
-            url: 'https://' + location.host + '/Profile/GetMyProfileDetails',
-            method: 'Post',
-            data: value,
-            async: false,
-            success: function (data) {
-                window.location.href = "https://" + window.location.host + "/Profile/Settings";
-            }
-        })
-    })
-
     document.getElementById("result").style.padding = "0px"
 
     if (document.getElementsByClassName("postOptionLeftDiv2")[0].offsetHeight == 213) {
@@ -1399,7 +1326,6 @@ $(document).ready(function () {
     setTimeout(function () {
         document.getElementsByTagName('body')[0].style.visibility = "visible"
     }, 5)
-
 
     setTimeout(function () {
         if ($(location).attr('href').substr(35 + location.host.length).split('#').length == 2) {

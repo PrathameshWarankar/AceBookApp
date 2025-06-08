@@ -8,56 +8,53 @@ namespace AceBookApp.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IHostEnvironment _host;
+
         public static FriendRequest frData = new FriendRequest();
         static string fullname;
         static string profileImage;
 
+        //initializes AppDbContext
         public FeedController(AppDbContext context, IHostEnvironment host)
         {
             _context = context;
             _host = host;
         }
 
+        //loads user's feed
         public IActionResult FeedData()
         {
-            //var query = from post in _context.Posts
-            //            orderby post.Date descending
-            //            select post.Imagepath;
-            var query = from post in _context.Posts
-                        orderby post.Date descending
-                        select post;
+            //return all the user posts present in database
+            var allPostQuery = from post in _context.Posts
+                               orderby post.Date descending
+                               select post;
 
-            //string[] imageFiles = query.ToArray();
-            Post[] posts = query.ToArray();
+            Post[] posts = allPostQuery.ToArray();
 
             List<string> names = new List<string>();
             List<string> emails = new List<string>();
             List<string> feedPostProfileUrl = new List<string>();
             List<int> postLikeCount = new List<int>();
+
             foreach (var post in posts)
             {
-                var query2 = from acc in _context.Accounts
-                             where acc.Email == post.Email
-                             select acc;
-                //select acc.FirstName + " " + acc.Surname;
-
-                //var query3 = from acc in _context.Accounts
-                //             where acc.Email != post.Email
-                //             select acc.ProfileImagePath;
+                //fetch account details of post owners
+                var postOwnerQuery = from acc in _context.Accounts
+                                     where acc.Email == post.Email
+                                     select acc;
 
                 postLikeCount.Add(post.Likes);
-                names.Add(query2.First().FirstName + " " + query2.First().Surname);
-                emails.Add(query2.First().Email);
-                feedPostProfileUrl.Add(query2.First().ProfileImagePath);
+                names.Add(postOwnerQuery.First().FirstName + " " + postOwnerQuery.First().Surname);
+                emails.Add(postOwnerQuery.First().Email);
+                feedPostProfileUrl.Add(postOwnerQuery.First().ProfileImagePath);
             }
 
-            var likedByMe = from likes in _context.Likes
+            //get list of posts already liked by logged user
+            var likedByMeQuery = from likes in _context.Likes
                             where likes.LikedBy == HomeController.postData.Email
                             select likes.PostId;
 
-            ViewBag.LikedByMe = likedByMe.ToArray();
+            ViewBag.LikedByMe = likedByMeQuery.ToArray();
 
-            //ViewBag.ImageFiles = imageFiles;
             ViewBag.Names = names;
             ViewBag.Posts = posts;
             ViewBag.PostEmails = emails;
@@ -66,21 +63,24 @@ namespace AceBookApp.Controllers
 
             ViewBag.Email = HomeController.postData.Email;
 
-            var query1 = from account in _context.Accounts
-                         where account.Email == HomeController.postData.Email
-                         select account;
-            ViewBag.Firstname = query1.First().FirstName;
-            ViewBag.Lastname = query1.First().Surname;
-            ViewBag.Fullname = query1.First().FirstName + " " + query1.First().Surname;
-            fullname = query1.First().FirstName + " " + query1.First().Surname;
-            ViewBag.ProfileUrl = query1.First().ProfileImagePath;
-            profileImage = query1.First().ProfileImagePath;
+            //get account details of logged user
+            var loggedAccountDetailsQuery = from account in _context.Accounts
+                                            where account.Email == HomeController.postData.Email
+                                            select account;
+
+            ViewBag.Firstname = loggedAccountDetailsQuery.First().FirstName;
+            ViewBag.Lastname = loggedAccountDetailsQuery.First().Surname;
+            ViewBag.Fullname = loggedAccountDetailsQuery.First().FirstName + " " + loggedAccountDetailsQuery.First().Surname;
+            fullname = loggedAccountDetailsQuery.First().FirstName + " " + loggedAccountDetailsQuery.First().Surname;
+            ViewBag.ProfileUrl = loggedAccountDetailsQuery.First().ProfileImagePath;
+            profileImage = loggedAccountDetailsQuery.First().ProfileImagePath;
             ViewData["Host"] = Request.Host;
 
             ViewBag.FriendReqList = FriendReqList();
             return View();
         }
 
+        //method executed when new post is created
         [HttpPost]
         public IActionResult FeedData(Post p, IFormFile imgfile)
         {
@@ -94,6 +94,7 @@ namespace AceBookApp.Controllers
             }
             else
             {
+                //add new post's data in database
                 post.Email = HomeController.postData.Email;
                 Random r = new Random();
                 post.PostId = HomeController.postData.PostId + r.Next();
@@ -109,6 +110,7 @@ namespace AceBookApp.Controllers
 
         }
 
+        //save the new post's image in local folder and then return its path
         public string ImgPath(IFormFile file)
         {
             Random r = new Random();
@@ -147,6 +149,7 @@ namespace AceBookApp.Controllers
             return path;
         }
 
+        //return results for Search functionality
         [HttpPost]
         public IActionResult SearchBy(string name)
         {
@@ -154,6 +157,7 @@ namespace AceBookApp.Controllers
             return Json(result);
         }
 
+        //returns profile page of acebook users
         [Route("Feed/Profile/{email}")]
         public IActionResult Profile(string email)
         {
@@ -162,27 +166,35 @@ namespace AceBookApp.Controllers
             return View();
         }
 
+        //returns list of friend requests
         public List<SelectListItem> FriendReqList()
         {
-            List<SelectListItem> ReqList = new List<SelectListItem>();
+            List<SelectListItem> reqList = new List<SelectListItem>();
 
-            var query = from item in _context.FriendRequests
+            var friendReqQuery = from item in _context.FriendRequests
                         where item.ToRequest == HomeController.postData.Email
                         select item.FromRequest;
 
-            foreach (var item in query.ToList())
+            foreach (var item in friendReqQuery.ToList())
             {
-                ReqList.Add(new SelectListItem { Text = item.ToString() });
+                reqList.Add(new SelectListItem { Text = item.ToString() });
             }
 
-            return ReqList;
+            return reqList;
         }
 
+        //method to return all posts id
+        public ActionResult AllPostIds()
+        {
+            var postIds = (from post in _context.Posts
+                          select post.PostId).ToList();
+            return Json(postIds);
+        }
+
+        //method to be executed with a post is liked/unliked
         public ActionResult Liked(string id)
         {
             Like like = new Like();
-
-            //_context.SaveChanges();
 
             Post p = (from post in _context.Posts
                       where post.PostId == id
@@ -191,6 +203,7 @@ namespace AceBookApp.Controllers
             var isLike = _context.Likes.Where(_ => (_.LikedBy == HomeController.postData.Email && _.PostId == id));
             var isNoti = _context.Notifications.Where(_ => (_.NotifiedBy == HomeController.postData.Email && _.PostId == id && _.NotiType == "Like"));
 
+            //if post was not liked previously by logged user
             if (!isLike.Any())
             {
                 p.Likes += 1;
@@ -199,6 +212,7 @@ namespace AceBookApp.Controllers
                 like.LikedByName = fullname;
                 _context.Likes.Add(like);
 
+                //send notification for liked post to post owner
                 Notification noti = new Notification();
                 if (p.Email != HomeController.postData.Email)
                 {
@@ -208,13 +222,19 @@ namespace AceBookApp.Controllers
                     noti.PostId = id;
                     noti.NotiStatus = "Unread";
                     _context.Notifications.Add(noti);
+                    _context.SaveChanges();
                 }
             }
+            //if post was already liked previously by logged user
             else
             {
                 p.Likes -= 1;
                 _context.Likes.Remove(isLike.First());
-                _context.Notifications.Remove(isNoti.First());
+
+                if (p.Email != HomeController.postData.Email)
+                {
+                    _context.Notifications.Remove(isNoti.First());
+                }
             }
 
             _context.SaveChanges();
@@ -222,13 +242,14 @@ namespace AceBookApp.Controllers
             return new EmptyResult();
         }
 
+        //returns all the likes for a given post
         public IActionResult GetLikesBy(string id)
         {
-            //var result = _context.Accounts.Where(x => (x.FirstName.StartsWith(name) || x.Surname.StartsWith(name))).ToList();
-            var result = _context.Likes.Where(x => x.PostId == id).ToList();
-            return Json(result);
+            var getLikesQuery = _context.Likes.Where(x => x.PostId == id).ToList();
+            return Json(getLikesQuery);
         }
 
+        //method to be executed when there is new comment on a post
         public ActionResult Commented(string id, string text)
         {
             Comment comment = new Comment();
@@ -248,6 +269,7 @@ namespace AceBookApp.Controllers
 
             Notification noti = new Notification();
 
+            //send notification for commented post to post owner
             if (p.Email != HomeController.postData.Email)
             {
                 noti.NotifiedBy = HomeController.postData.Email;
@@ -262,44 +284,45 @@ namespace AceBookApp.Controllers
             return Json("success");
         }
 
+        //returns all the comments for a given post
         public IActionResult GetCommentsBy(string id)
         {
-            //var result = _context.Accounts.Where(x => (x.FirstName.StartsWith(name) || x.Surname.StartsWith(name))).ToList();
-            //var result1 = _context.Comments.Where(x => x.PostId == id).ToList();
-
-            var result = (from cmt in _context.Comments
+            var getCommentsQuery = (from cmt in _context.Comments
                           where cmt.PostId == id
                           orderby cmt.CommentedDate descending
                           select cmt).ToList();
 
-            return Json(result);
+            return Json(getCommentsQuery);
         }
 
+        //returns all the friends of logged user
         public IActionResult GetContacts()
         {
-            var result = (from acc in _context.Friends
+            var getFriendsQuery1 = (from acc in _context.Friends
                           where acc.ToRequest == HomeController.postData.Email
                           select acc.FromRequest).ToList();
 
-            var result1 = (from acc in _context.Friends
+            var getFriendsQuery2 = (from acc in _context.Friends
                            where acc.FromRequest == HomeController.postData.Email
                            select acc.ToRequest).ToList();
 
-            result.AddRange(result1);
+            getFriendsQuery1.AddRange(getFriendsQuery2);
 
-            return Json(result);
+            return Json(getFriendsQuery1);
         }
 
+        //returns all notications of logged user
         public IActionResult GetMyNotifications()
         {
-            var result = from noti in _context.Notifications
+            var getMyNotiQuery = from noti in _context.Notifications
                          where noti.NotifiedTo == HomeController.postData.Email
                          orderby noti descending
                          select noti;
 
-            return Json(result);
+            return Json(getMyNotiQuery);
         }
 
+        //method to update notification status if it has been read
         public IActionResult UpdateNotificatioStatus(string type, string id)
         {
             if (type == "Add Friend")
@@ -316,8 +339,6 @@ namespace AceBookApp.Controllers
                     .ToList()
                     .ForEach(entry => entry.NotiStatus = "Read");
             }
-
-            //result.NotiStatus = "Read";
 
             _context.SaveChanges();
 

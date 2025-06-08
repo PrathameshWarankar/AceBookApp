@@ -1,8 +1,6 @@
 ﻿using AceBookApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Security.Cryptography.X509Certificates;
-using System.Xml.Linq;
+using Microsoft.Extensions.Hosting;
 
 namespace AceBookApp.Controllers
 {
@@ -11,6 +9,7 @@ namespace AceBookApp.Controllers
         private readonly AppDbContext _context;
         private readonly IHostEnvironment _host;
 
+        //initializes AppDbContext
         public ProfileController(AppDbContext context, IHostEnvironment host)
         {
             _context = context;
@@ -19,21 +18,24 @@ namespace AceBookApp.Controllers
 
         public static FriendRequest frData = new FriendRequest();
 
+        //method to send/delete friend request
         public IActionResult SendRequest(string toRequest, string fromRequest)
         {
             if (ModelState.IsValid)
             {
                 FriendRequest fr = new FriendRequest();
 
-                var query1 = from entry in _context.FriendRequests
-                             where entry.FromRequest == fromRequest && entry.ToRequest == toRequest
-                             select entry;
+                //query to check if friend req already exists
+                var existingReqCheckQuery = from entry in _context.FriendRequests
+                                            where entry.FromRequest == fromRequest && entry.ToRequest == toRequest
+                                            select entry;
 
                 var isNoti = _context.Notifications.Where(_ => (_.NotifiedBy == HomeController.postData.Email && _.NotiType == "Add Friend"));
 
-                if (query1.Any())
+                //if friend req already exists, delete the req
+                if (existingReqCheckQuery.Any())
                 {
-                    _context.FriendRequests.Remove(query1.SingleOrDefault());
+                    _context.FriendRequests.Remove(existingReqCheckQuery.SingleOrDefault());
                     _context.Notifications.Remove(isNoti.First());
 
                     _context.SaveChanges();
@@ -44,22 +46,26 @@ namespace AceBookApp.Controllers
                 fr.ToRequest = toRequest;
                 fr.SentDate = DateTime.Now;
 
-                var query = from entry in _context.FriendRequests
-                            orderby entry.SentDate descending
-                            select entry;
+                var frndReqListQuery = from entry in _context.FriendRequests
+                                       orderby entry.SentDate descending
+                                       select entry;
 
-                if (query == null || query.Count() == 0)
+                //create request id for first entry
+                if (frndReqListQuery == null || frndReqListQuery.Count() == 0)
                 {
                     fr.RequestID = string.Concat("Req1 - ", fr.FromRequest.AsSpan(0, 3), fr.ToRequest.AsSpan(0, 3));
                 }
+                //create request id for subsequent entry
                 else
                 {
-                    var res = query.First().RequestID.ToString();
+                    var res = frndReqListQuery.First().RequestID.ToString();
                     fr.RequestID = "Req" + Convert.ToString(Convert.ToInt32(res.Substring(3, 1)) + 1) + " - " + fr.FromRequest.Substring(0, 3) + fr.ToRequest.Substring(0, 3);
                 }
 
+                //add request to friend request
                 _context.FriendRequests.Add(fr);
 
+                //add notification
                 Notification noti = new Notification();
                 noti.NotifiedBy = fromRequest;
                 noti.NotifiedTo = toRequest;
@@ -78,13 +84,14 @@ namespace AceBookApp.Controllers
 
         }
 
+        //confirm if request sent, used to update the view
         public string IsReqSent(string toRequest)
         {
-            var query = from entry in _context.FriendRequests
-                        where entry.FromRequest == HomeController.postData.Email && entry.ToRequest == toRequest
-                        select entry;
+            var reqCheckQuery = from entry in _context.FriendRequests
+                                where entry.FromRequest == HomeController.postData.Email && entry.ToRequest == toRequest
+                                select entry;
 
-            if (query.Any())
+            if (reqCheckQuery.Any())
             {
                 return "Yes";
             }
@@ -94,13 +101,14 @@ namespace AceBookApp.Controllers
             }
         }
 
+        //confirm if friend, used to update the view
         public string IsFriend(string toRequest)
         {
-            var query = from entry in _context.Friends
-                        where (entry.FromRequest == HomeController.postData.Email && entry.ToRequest == toRequest) || (entry.ToRequest == HomeController.postData.Email && entry.FromRequest == toRequest)
-                        select entry;
+            var frndCheckQuery = from entry in _context.Friends
+                                 where (entry.FromRequest == HomeController.postData.Email && entry.ToRequest == toRequest) || (entry.ToRequest == HomeController.postData.Email && entry.FromRequest == toRequest)
+                                 select entry;
 
-            if (query.Any())
+            if (frndCheckQuery.Any())
             {
                 return "Yes";
             }
@@ -110,6 +118,7 @@ namespace AceBookApp.Controllers
             }
         }
 
+        //method executed when friend req accepted
         public IActionResult AddFriend(string toRequest, string fromRequest)
         {
             Friend fr = new Friend();
@@ -118,17 +127,19 @@ namespace AceBookApp.Controllers
             fr.ToRequest = toRequest;
             fr.SentDate = DateTime.Now;
 
-            var query = from entry in _context.Friends
-                        orderby entry.SentDate descending
-                        select entry;
+            var frndListQuery = from entry in _context.Friends
+                                orderby entry.SentDate descending
+                                select entry;
 
-            if (query == null || query.Count() == 0)
+            //create friend id for first entry
+            if (frndListQuery == null || frndListQuery.Count() == 0)
             {
                 fr.RequestID = string.Concat("FrndID1 - ", fr.FromRequest.AsSpan(0, 3), fr.ToRequest.AsSpan(0, 3));
             }
+            //create friend id for subsequent entry
             else
             {
-                var res = query.First().RequestID.ToString();
+                var res = frndListQuery.First().RequestID.ToString();
                 fr.RequestID = "FrndID" + Convert.ToString(Convert.ToInt32(res.Substring(6, 1)) + 1) + " - " + fr.FromRequest.Substring(0, 3) + fr.ToRequest.Substring(0, 3);
             }
 
@@ -138,38 +149,41 @@ namespace AceBookApp.Controllers
             return new EmptyResult();
         }
 
+        //returns view of profile
         public IActionResult ProfileData(string email)
         {
-            //frData.ToRequest = email;
-            //ViewData["Email"] = email;
             return View();
         }
 
+        //method to fetch account details of user
         public IActionResult GetProfileDetails(string email)
         {
             if (email == null)
             {
-                var result = _context.Accounts.Where(x => x.Email == HomeController.postData.Email);
-                return Json(result);
+                var myAccDetailsQuery = _context.Accounts.Where(x => x.Email == HomeController.postData.Email);
+                return Json(myAccDetailsQuery);
             }
             else
             {
-                var result = _context.Accounts.Where(x => x.Email == email);
-                return Json(result);
+                var accDetailsQuery = _context.Accounts.Where(x => x.Email == email);
+                return Json(accDetailsQuery);
             }
         }
 
-        public IActionResult GetMyProfileDetails()
+        //method to get logged user's account details
+        /*public IActionResult GetMyProfileDetails()
         {
-            var result = _context.Accounts.Where(x => x.Email == HomeController.postData.Email);
-            return Json(result);
-        }
+            var myAccDetailsQuery = _context.Accounts.Where(x => x.Email == HomeController.postData.Email);
+            return Json(myAccDetailsQuery);
+        }*/
 
+        //method to additional account's work details in database
         public IActionResult AddAdditionalDetails(string i1, string i2, string i3)
         {
             AdditionAccountDetail details = new AdditionAccountDetail();
             var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
 
+            //if details do not exists previously
             if (!isEntry.Any())
             {
                 details.Loggedemail = HomeController.postData.Email;
@@ -178,6 +192,7 @@ namespace AceBookApp.Controllers
                 details.WorkInfo3 = i3;
                 _context.additionAccountDetails.Add(details);
             }
+            //if details exists previously
             else
             {
                 isEntry.First().WorkInfo1 = i1;
@@ -190,18 +205,21 @@ namespace AceBookApp.Controllers
 
         }
 
+        //method to additional account's non work details in database
         public IActionResult AddAdditionalDetailsNew(string type, string i1)
         {
             AdditionAccountDetail details = new AdditionAccountDetail();
             if (type == "College")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
+                //if college details do not exists previously
                 if (!isEntry.Any())
                 {
                     details.Loggedemail = HomeController.postData.Email;
                     details.CollegeInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+                //if college details exists previously
                 else
                 {
                     isEntry.First().CollegeInfo = i1;
@@ -214,12 +232,14 @@ namespace AceBookApp.Controllers
             if (type == "School")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
+                //if school details do not exists previously
                 if (!isEntry.Any())
                 {
                     details.Loggedemail = HomeController.postData.Email;
                     details.SchoolInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+                //if school details exists previously
                 else
                 {
                     isEntry.First().SchoolInfo = i1;
@@ -232,12 +252,14 @@ namespace AceBookApp.Controllers
             if (type == "City")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
+                //if city details do not exists previously
                 if (!isEntry.Any())
                 {
                     details.Loggedemail = HomeController.postData.Email;
                     details.PlaceInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+                //if city details exists previously
                 else
                 {
                     isEntry.First().PlaceInfo = i1;
@@ -250,12 +272,14 @@ namespace AceBookApp.Controllers
             if (type == "Contact")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
+                //if contact details do not exists previously
                 if (!isEntry.Any())
                 {
                     details.Loggedemail = HomeController.postData.Email;
                     details.PhoneInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+                //if contact details exists previously
                 else
                 {
                     isEntry.First().PhoneInfo = i1;
@@ -268,12 +292,14 @@ namespace AceBookApp.Controllers
             if (type == "Website")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
+                //if website details do not exists previously
                 if (!isEntry.Any())
                 {
                     details.Loggedemail = HomeController.postData.Email;
                     details.SocialAccInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+                //if website details exists previously
                 else
                 {
                     isEntry.First().SocialAccInfo = i1;
@@ -285,25 +311,28 @@ namespace AceBookApp.Controllers
             return new EmptyResult();
         }
 
+        //method to fetch additional details of user from database
         public IActionResult GetAdditionalDetails(string email)
         {
             if (email == null)
             {
-                var result = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
-                return Json(result);
+                var myDetailsQuery = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.postData.Email);
+                return Json(myDetailsQuery);
             }
             else
             {
-                var result = _context.additionAccountDetails.Where(x => x.Loggedemail == email);
-                return Json(result);
+                var userDetailsQuery = _context.additionAccountDetails.Where(x => x.Loggedemail == email);
+                return Json(userDetailsQuery);
             }
         }
 
+        //returns friends page view
         public IActionResult Friends(string email)
         {
             return View();
         }
 
+        //method to get list of friend requests received
         public IActionResult GetFriendReq(string email)
         {
             var query = from req in _context.FriendRequests
@@ -313,54 +342,60 @@ namespace AceBookApp.Controllers
             return Json(query);
         }
 
+        //method to delete friend req
         public IActionResult DeleteReq(string fromRequest, string toRequest)
         {
-            var query = from req in _context.FriendRequests
-                        where req.FromRequest == fromRequest && req.ToRequest == toRequest
-                        select req;
+            var reqQuery = from req in _context.FriendRequests
+                            where req.FromRequest == fromRequest && req.ToRequest == toRequest
+                            select req;
 
-            _context.FriendRequests.Remove(query.SingleOrDefault());
+            _context.FriendRequests.Remove(reqQuery.SingleOrDefault());
             _context.SaveChanges();
 
             return new EmptyResult();
         }
 
+        //method to get list of friend
         public IActionResult GetFriendList(string email)
         {
-            var query = from req in _context.Friends
-                        where req.ToRequest == email || req.FromRequest == email
-                        orderby req.SentDate descending
-                        select req;
-            return Json(query);
+            var frndListQuery = from req in _context.Friends
+                                where req.ToRequest == email || req.FromRequest == email
+                                orderby req.SentDate descending
+                                select req;
+            return Json(frndListQuery);
         }
 
-        public IActionResult GetPhotosList(string email)
-        {
-            var query = from req in _context.Posts
-                        where req.Email == email
-                        select req;
-            return Json(query);
-        }
+        //method to get all posts of particular user
+        //public IActionResult GetPhotosList(string email)
+        //{
+        //    var postsQuery = from post in _context.Posts
+        //                      where post.Email == email
+        //                      select post;
+        //   return Json(postsQuery);
+        //}
 
+        //method to get all posts of particular user
         public IActionResult GetPostsList(string email)
         {
-            var result = from post in _context.Posts
+            var postsQuery = from post in _context.Posts
                          where post.Email == email
                          select post;
 
-            return Json(result);
+            return Json(postsQuery);
         }
 
+        //method to get posts like by logged user
         public IActionResult GetPostsLikedByMe()
         {
-            var result = from like in _context.Likes
-                         where like.LikedBy == HomeController.postData.Email
-                         select like.PostId;
+            var myLikedPostsQuery = from like in _context.Likes
+                                    where like.LikedBy == HomeController.postData.Email
+                                    select like.PostId;
 
-            return Json(result);
+            return Json(myLikedPostsQuery);
         }
 
-        public IActionResult profileImgUpload(IFormFile profileImg)
+        //method to update profile photo of logged user
+        public IActionResult ProfileImgUpload(IFormFile profileImg)
         {
             var account = (from acc in _context.Accounts
                            where acc.Email == HomeController.postData.Email
@@ -374,7 +409,8 @@ namespace AceBookApp.Controllers
             return RedirectToAction("ProfileData", "Profile", new { email = HomeController.postData.Email });
         }
 
-        public IActionResult coverImgUpload(IFormFile coverImg)
+        //method to update cover photo of logged user
+        public IActionResult CoverImgUpload(IFormFile coverImg)
         {
             var account = (from acc in _context.Accounts
                            where acc.Email == HomeController.postData.Email
@@ -388,6 +424,7 @@ namespace AceBookApp.Controllers
             return RedirectToAction("ProfileData", "Profile", new { email = HomeController.postData.Email });
         }
 
+        //method to generate path of profile/cover photo
         public string ImgPath(IFormFile file)
         {
             Random r = new Random();
@@ -426,6 +463,7 @@ namespace AceBookApp.Controllers
             return path;
         }
 
+        //return settings page of logged user
         public IActionResult Settings(string email)
         {
             var account = (from acc in _context.Accounts
@@ -435,6 +473,7 @@ namespace AceBookApp.Controllers
             return View(account);
         }
 
+        //method to update account details
         public IActionResult EditAccountDetails(string type, string value1, string value2)
         {
             Account account = new Account();
@@ -525,6 +564,7 @@ namespace AceBookApp.Controllers
             return new EmptyResult();
         }
 
+        //method to update account password
         public string UpdatePassword(string currPass, string newPass)
         {
             var myAcc = (from acc in _context.Accounts
@@ -543,6 +583,7 @@ namespace AceBookApp.Controllers
             }
         }
 
+        //method to logout user
         public void Logout()
         {
             var account = (from acc in _context.Accounts
@@ -552,6 +593,5 @@ namespace AceBookApp.Controllers
             account.Status = "Offline";
             _context.SaveChanges();
         }
-
     }
 }

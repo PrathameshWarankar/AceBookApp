@@ -1,31 +1,42 @@
 ﻿@model AceBookApp.Models.Account
 
+@{
+    Layout = "";
+}
+
 <head>
     <link rel="stylesheet" type="text/css" href="~/css/Login.css" />
     <script type="text/javascript" src="~/js/Login.js"></script>
 </head>
+
+<!--left side - acebook logo and text-->
 <div id="sidetext">
     <h2>acebook</h2>
     <h3 id="note1">Acebook helps you connect and share</h3>
     <h3 id="note2">with the people in your life.</h3>
 </div>
+
+<!--right side - login section-->
 <div id="login">
+    <!--fields to be entered-->
     <form asp-action="Login" method="post" role="form" id="loginform">
-        <div class="col-md-5">
-            <input asp-for="Email" class="form-control" type="email" placeholder="Email address" id="email" />
+        <div class="col-md-5" id="emailDiv">
+            <input asp-for="Email" class="form-control" type="email" placeholder="Email address" id="email" required/>
         </div>
-        <div class="col-md-5">
-            <input asp-for="Password" class="form-control" type="password" placeholder="Password" id="password" onclick="CheckBlank()" />
+        <div class="col-md-5" id="passwordDiv">
+            <input asp-for="Password" class="form-control" type="password" placeholder="Password" id="password" onclick="CheckBlank()" required />
         </div>
-        <div class="form-group">
+        <div class="form-group" id="loginBtnDiv">
             <div class="col-md-offset-2 col-md-5">
-                <input type="submit" class="btn btn-primary" value="Log in" id="loginbtn" onclick="CheckField()" />
+                <input type="submit" class="btn btn-primary" value="Log in" id="loginbtn" onclick="CheckField()"/>
             </div>
         </div>
         <div id="forgotpass">
             <a asp-controller="Home" asp-action="ForgetPassword">Forgotten password?</a>
         </div>
     </form>
+
+    <!--create new account-->
     <div id="createbtndiv">
         <button type="button" id="createbtn" onclick="location.href='@Url.Action("CreateAccount","Home")'">Create New Account</button>
     </div>

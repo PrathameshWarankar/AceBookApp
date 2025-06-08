@@ -11,12 +11,14 @@ namespace AceBookApp.Controllers
         private readonly IHostEnvironment _host;
         public static Post postData = new Post();
 
+        //initializes AppDbContext
         public HomeController(AppDbContext context, IHostEnvironment host)
         {
             _context = context;
             _host = host;
         }
 
+        //returns view of create account page
         public IActionResult CreateAccount()
         {
             var DOBDate = DateOfBirthController.GetAllDate();
@@ -46,7 +48,7 @@ namespace AceBookApp.Controllers
             return View(model);
         }
 
-
+        //adds created account's details in database
         [HttpPost]
         public IActionResult CreateAccount(Account acc)
         {
@@ -81,17 +83,19 @@ namespace AceBookApp.Controllers
             }
         }
 
-
+        //returns success page
         public IActionResult Success()
         {
             return View();
         }
 
+        //returns login page
         public IActionResult Login()
         {
             return View();
         }
 
+        //checks if logged user is a valid user or not
         [HttpPost]
         public IActionResult Login(string email, string password)
         {
@@ -125,11 +129,13 @@ namespace AceBookApp.Controllers
 
         }
 
+        //returns forget password page
         public IActionResult ForgetPassword()
         {
             return View();
         }
 
+        //returns failure page
         public IActionResult Failure()
         {
             return View();

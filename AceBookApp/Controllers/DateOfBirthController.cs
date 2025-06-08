@@ -2,20 +2,22 @@
 {
     public static class DateOfBirthController
     {
+        //populates the dates in create account page
         public static List<string> GetAllDate()
         {
-            List<string> Date = new List<string>();
+            List<string> date = new List<string>();
             for (int i = 1; i <= 31; i++)
             {
-                Date.Add(i.ToString());
+                date.Add(i.ToString());
             }
 
-            return Date;
+            return date;
         }
 
+        //populates the months in create account page
         public static List<string> GetAllMonth()
         {
-            List<string> Month = new List<string>
+            List<string> month = new List<string>
             {
                 "January",
                 "February",
@@ -31,18 +33,19 @@
                 "December"
             };
 
-            return Month;
+            return month;
         }
 
+        //populates the years in create account page
         public static List<string> GetAllYear()
         {
-            List<string> Year = new List<string>();
+            List<string> year = new List<string>();
             for (int i = 1990; i <= DateTime.Now.Year; i++)
             {
-                Year.Add(i.ToString());
+                year.Add(i.ToString());
             }
 
-            return Year;
+            return year;
         }
     }
 }

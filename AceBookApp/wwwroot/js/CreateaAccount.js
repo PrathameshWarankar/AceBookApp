@@ -1,4 +1,6 @@
-﻿function CheckBlank() {
+﻿//validation for blank fields
+function CheckBlank() {
+    //name validation
     var isActive = document.getElementById('sname');
     if (isActive == document.activeElement) {
         var fname = document.getElementById('fname').value.trim();
@@ -12,6 +14,7 @@
         }
     }
 
+    //email validation
     isActive = document.getElementById('email');
     if (isActive == document.activeElement) {
         var fname = document.getElementById('fname').value.trim();
@@ -31,6 +34,8 @@
             return false;
         }
     }
+
+    //passowrd validation
     isActive = document.getElementById('pass');
     if (isActive == document.activeElement) {
         var fname = document.getElementById('fname').value.trim();
@@ -58,6 +63,8 @@
             return false;
         }
     }
+
+    //date validation
     isActive = document.getElementById('date');
     if (isActive == document.activeElement) {
         var fname = document.getElementById('fname').value.trim();
@@ -95,6 +102,7 @@
     }
 }
 
+//validation on submit button is clicked
 function CheckField() {
     var fname = document.getElementById('fname').value.trim();
     if (fname.length != 0) {

@@ -13,15 +13,21 @@
 </head>
 
 <body style="visibility:hidden">
+    <!--setting page-->
     <div class="parentDiv">
+        <!--left side - header-->
         <div class="leftDiv">
             <span class="leftHeading">Account Settings</span>
         </div>
+
+        <!--right side - settings-->
         <div class="rightDiv">
             <div class="rightHeadingDiv">
                 <span class="rightHeading">General Account Settings</span>
             </div>
+            
             <div class="rightSettingDiv">
+                <!--name-->
                 <div class="rightSettingNameDiv">
                     <div>
                         <div class="rightSettingNameDisplayDiv">
@@ -49,6 +55,8 @@
                         <input type="button" value="Edit" class="rightSettingNameEditBtn" />
                     </div>
                 </div>
+
+                <!--contact-->
                 <div class="rightSettingContactDiv">
                     <div>
                         <div class="rightSettingContactDisplayDiv">
@@ -72,6 +80,8 @@
                         <input type="button" value="Edit" class="rightSettingContactEditBtn" />
                     </div>
                 </div>
+
+                <!--password-->
                 <div class="rightSettingPasswordDiv">
                     <div>
                         <div class="rightSettingPasswordDisplayDiv">
@@ -107,31 +117,7 @@
             </div>
         </div>
     </div>
-    <div class="searchDiv">
-        <div id="searchFeed">
-            <div id="result"></div>
-            <input id="searchInput" name="Name" oninput="Search(this.value)" placeholder="Search Acebook" />
-            <img class="searchIcon" src="~/images/searchIcon.png" />
-            <img class="acebookLogo" src="~/images/acebookLogo-modified.png" />
-            <img class="homeIcon" src="~/images/homeicon.png" />
-            <img class="notiIcon" src="~/images/notiicon.png" />
-            <img class="myProfilelogoImgRight" />
-            <div class="searchFeedSettingDiv" style="visibility: hidden;">
-                <div class="searchFeedSettingProfileNameDiv">
-                    <img class="searchFeedSettingProfileImg" />
-                    <span class="searchFeedSettingProfileName"></span>
-                </div>
-                <div class="searchFeedSettingOptionDiv">
-                    <img class="searchFeedSettingOptionImg" src="~/images/settingicon.png" />
-                    <span class="searchFeedSettingOption">Setting & privacy</span>
-                </div>
-                <div class="searchFeedSettingLogoutOptionDiv">
-                    <img class="searchFeedSettingLogoutOptionImg" src="~/images/logouticon.png" />
-                    <span class="searchFeedSettingLogoutOption">Log out</span>
-                </div>
-            </div>
-        </div>
-    </div>
+
 </body>
 
 

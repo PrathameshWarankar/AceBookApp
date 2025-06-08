@@ -6,23 +6,31 @@
     <link href="~/css/friend.css" rel="stylesheet" />
 </head>
 
+<!--friends page-->
 <div class="FriendsDiv">
+    <!--left side - frineds menu-->
     <div class="FriendsMenuDiv">
         <div class="FriendsMenuHeaderDiv">
             <h1 class="FriendsMenuHeaderA">Friends</h1>
         </div>
+
+        <!--shows friend requests on right side-->
         <div class="FriendsMenuRequestsDiv">
             <img class="FriendsMenuRequestsImg" src="~/images/friendreqicon.png" />
             <a class="FriendsMenuRequestsA">Friend Requests</a>
         </div>
+
+        <!--shows all friends-->
         <div class="FriendsMenuAllFriendsDiv">
             <img class="FriendsMenuAllFriendsImg" src="~/images/allfriendsicon.png" />
             <a class="FriendsMenuAllFriendsA">All Friends</a>
         </div>
+
         <img class="backArrow" src="~/images/backarrowicon.png" />
         <div class="FriendsMenuFriendListDiv"></div>
     </div>
 
+    <!--right side - friend requests-->
     <div class="FriendsResultDiv">
         <span class="FriendsResultHeader">Friend Requests</span>
         <div class="FriendsResult"></div>
@@ -30,19 +38,5 @@
             <object id="profileLoader" data=" " style="width:100vw; height:100vh;"></object>
         </div>
         <div class="NoReq"></div>
-    </div>
-</div>
-
-
-<div class="searchDiv">
-    <div id="searchFeed">
-        <div id="result"></div>
-        <input id="searchInput" name="Name" oninput="Search(this.value)" placeholder="Search Acebook" />
-        <img class="searchIcon" src="~/images/searchIcon.png" />
-        <img class="acebookLogo" src="~/images/acebookLogo-modified.png" />
-        <a href="https://localhost:44353/Feed/FeedData">
-            <img class="homeIcon" src="~/images/homeicon.png" />
-        </a>
-        <img class="myProfilelogoImgRight" />
     </div>
 </div>

@@ -13,6 +13,7 @@
 
 <body style="visibility:hidden;">
     <div class="myProfileHeaderDiv">
+        <!--cover photo and edit option-->
         <div class="myProfileHeaderCover">
             <div class="myProfileHeaderCoverDiv">
                 <img class="myProfileHeaderCoverImg" />
@@ -20,20 +21,24 @@
             <div class="myProfileHeaderCoverEditBtnDiv">
                 <img class="myProfileHeaderCoverEditBtnImg" src="~/images/editcoverphotoimg.png" />
                 <span class="myProfileHeaderCoverEditBtn">Edit cover photo</span>
-                <form class="coverImgForm" asp-action="coverImgUpload" method="post" role="form" enctype="multipart/form-data">
-                    <input type="file" name="coverImg" class="myProfileHeaderCoverUpload" onchange="submit1()" hidden />
+                <form class="coverImgForm" asp-action="CoverImgUpload" method="post" role="form" enctype="multipart/form-data">
+                    <input type="file" name="coverImg" class="myProfileHeaderCoverUpload" onchange="Submit1()" hidden />
                 </form>
             </div>
         </div>
 
+        <!--profile name and details-->
         <div class="myProfileHeaderProfileDiv">
+            <!--profile photo-->
             <div class="myProfileHeaderProfile">
                 <img class="myProfileHeaderProfileImg" />
                 <img class="myProfileHeaderProfieUploadImg" src="~/images/profilepicuploadimg.png" />
-                <form class="profileImgForm" asp-action="profileImgUpload" method="post" role="form" enctype="multipart/form-data">
-                    <input type="file" name="profileImg" class="myProfileHeaderProfieUpload" onchange="submit()" hidden />
+                <form class="profileImgForm" asp-action="ProfileImgUpload" method="post" role="form" enctype="multipart/form-data">
+                    <input type="file" name="profileImg" class="myProfileHeaderProfieUpload" onchange="Submit()" hidden />
                 </form>
             </div>
+
+            <!--profile details-->
             <div class="myProfileHeaderMyDetails">
                 <div class="myProfileHeaderMyDetailsNameDiv">
                     <h1 class="myProfileHeaderMyDetailsName"></h1>
@@ -42,6 +47,8 @@
                     <span class="myProfileHeaderMyDetailsFriendsCount"></span>
                 </div>
             </div>
+
+            <!--option for - add friend, cancel request, edit profile, friends-->
             <div class="myProfileHeaderProfileAddEditDiv" style="display: flex;">
                 <div class="myProfileHeaderProfileAddFriendDiv">
                     <img class="myProfileHeaderProfileEditBtnImg" src="~/images/AddFriendIcon.png" />
@@ -62,22 +69,30 @@
             </div>
         </div>
 
+        <!--options for - posts, about, friends, photos-->
         <div class="myProfileHeaderOptionsDiv">
+            <!--post-->
             <div class="myProfileHeaderOptionsPostsOuterDiv">
                 <div class="myProfileHeaderOptionsPostsDiv">
                     <span class="myProfileHeaderOptionsPosts">Posts</span>
                 </div>
             </div>
+
+            <!--about-->
             <div class="myProfileHeaderOptionsAboutOuterDiv">
                 <div class="myProfileHeaderOptionsAboutDiv">
                     <span class="myProfileHeaderOptionsAbout">About</span>
                 </div>
             </div>
+
+            <!--friends-->
             <div class="myProfileHeaderOptionsFriendsOuterDiv">
                 <div class="myProfileHeaderOptionsFriendsDiv">
                     <span class="myProfileHeaderOptionsFriends">Friends</span>
                 </div>
             </div>
+
+            <!--photos-->
             <div class="myProfileHeaderOptionsPhotosOuterDiv">
                 <div class="myProfileHeaderOptionsPhotosDiv">
                     <span class="myProfileHeaderOptionsPhotos">Photos</span>
@@ -86,8 +101,10 @@
         </div>
     </div>
 
+    <!--about section-->
     <div class="aboutOptionDiv">
         <div class="aboutSectionDiv">
+            <!--left side - options in about section-->
             <div class="aboutSectionLeftDiv">
                 <h1 class="aboutSectionLeftHeader">About</h1>
                 <h3 class="aboutSectionLeftOverview">Overview</h3>
@@ -98,6 +115,7 @@
             </div>
 
             <div class="aboutSectionRightDiv">
+                <!--right side - overview result-->
                 <div class="aboutSectionRightOverviewDiv">
                     <div class="aboutSectionRightOverviewWorkDiv">
                         <img class="aboutSectionRightWorkResult1Img" src="~/images/workicon.png" />
@@ -118,7 +136,9 @@
                     </div>
                 </div>
 
+                <!--right side - work and eduction result-->
                 <div class="aboutSectionRightWorkDiv">
+                    <!--work-->
                     <h3 class="aboutSectionRightWorkHeader">Work</h3>
                     <div class="aboutSectionRightWorkAddDiv1">
                         <img class="aboutSectionRightWorkAddImg" src="~/images/addimg.png" />
@@ -135,9 +155,9 @@
                         <img class="aboutSectionRightWorkResult1Img" src="~/images/workicon.png" />
                         <span class="aboutSectionRightWorkResult1aSpan"></span><br />
                         <span class="aboutSectionRightWorkResult1bSpan"></span><br />
-                        @*<span class="aboutSectionRightWorkResult1cSpan"></span>*@
                     </div>
 
+                    <!--college-->
                     <h3 class="aboutSectionRightWorkHeader">College</h3>
                     <div class="aboutSectionRightWorkAddDiv2">
                         <img class="aboutSectionRightWorkAddImg" src="~/images/addimg.png" />
@@ -153,6 +173,7 @@
                         <span class="aboutSectionRightWorkResult2aSpan"></span><br />
                     </div>
 
+                    <!--high school-->
                     <h3 class="aboutSectionRightWorkHeader">High school</h3>
                     <div class="aboutSectionRightWorkAddDiv3">
                         <img class="aboutSectionRightWorkAddImg" src="~/images/addimg.png" />
@@ -169,6 +190,7 @@
                     </div>
                 </div>
 
+                <!--right side - places lived result-->
                 <div class="aboutSectionRightPlaceDiv">
                     <h3 class="aboutSectionRightPlaceHeader">Places lived</h3>
                     <div class="aboutSectionRightPlaceAddDiv">
@@ -186,7 +208,9 @@
                     </div>
                 </div>
 
+                <!--right side - contact and info result-->
                 <div class="aboutSectionRightContactDiv">
+                    <!--contact-->
                     <h3 class="aboutSectionRightContactHeader">Contact info</h3>
                     <div class="aboutSectionRightContactAddDiv1">
                         <img class="aboutSectionRightContactAddImg" src="~/images/addimg.png" />
@@ -202,29 +226,17 @@
                         <span class="aboutSectionRightContactResult1aSpan"></span><br />
                     </div>
 
-                    @*                <h3 class="aboutSectionRightContactHeader">Websites and social links</h3>
-                    <div class="aboutSectionRightContactAddDiv2">
-                    <img class="aboutSectionRightContactAddImg" src="~/images/addimg.png" />
-                    <h3 class="aboutSectionRightContactAdd">Add a website</h3>
-                    </div>
-                    <div class="aboutSectionRightContactAddInput2Div">
-                    <input type="text" class="aboutSectionRightContactAddInput2" placeholder="Website" /> <br />
-                    <input type="button" value="Cancel" class="aboutSectionRightContactAddInput2a" />
-                    <input type="button" value="Save" class="aboutSectionRightContactAddInput2b" />
-                    </div>*@
-
+                    <!--info-->
                     <h3 class="aboutSectionRightContactHeader">Basic info</h3>
                     <div class="aboutSectionRightContactGenderDiv">
                         <div class="aboutSectionRightContactGenderMaleDiv">
                             <img class="aboutSectionRightContactGenderMale" src="~/images/malegender.png" />
                             <span class="aboutSectionRightContactGenderValue1Male">Male</span><br />
                         </div>
-
                         <div class="aboutSectionRightContactGenderFemaleDiv">
                             <img class="aboutSectionRightContactGenderFemale" src="~/images/femaleGender.png" />
                             <span class="aboutSectionRightContactGenderValue1Female">Female</span><br />
                         </div>
-
                         <span class="aboutSectionRightContactGenderValue2">Gender</span>
                     </div>
                     <div class="aboutSectionRightContactDOBDiv">
@@ -232,16 +244,18 @@
                         <span class="aboutSectionRightContactDOB1aSpan"></span><br />
                         <span class="aboutSectionRightContactDOB1bSpan">Birth date</span>
                     </div>
-
                 </div>
 
+                <!--right side - family and relationship result-->
                 <div class="aboutSectionRightFamilyDiv">
+                    <!--relatinship-->
                     <h3 class="aboutSectionRightFamilyHeader">Relationship</h3>
                     <div class="aboutSectionRightFamilyAddDiv">
                         <img class="aboutSectionRightFamilyAddImg" src="~/images/addimg.png" />
                         <h3 class="aboutSectionRightFamilyAdd">Add relationship status</h3>
                     </div>
 
+                    <!--family-->
                     <h3 class="aboutSectionRightFamilyHeader">Family members</h3>
                     <div class="aboutSectionRightFamilyAddDiv">
                         <img class="aboutSectionRightFamilyAddImg" src="~/images/addimg.png" />
@@ -250,6 +264,8 @@
                 </div>
             </div>
         </div>
+
+        <!--friends section-->
         <div class="aboutSectionRightFriendsDiv">
             <div class="aboutSectionRightFriendsHeaderDiv">
                 <span class="aboutSectionRightFriendsHeader">Friends</span>
@@ -262,9 +278,11 @@
                     <span class="aboutSectionRightFriendsOptions1">All friends</span>
                 </div>
             </div>
-            <div class="aboutSectionRightFriendsListDiv">
-            </div>
+            <!--friends list-->
+            <div class="aboutSectionRightFriendsListDiv"></div>
         </div>
+
+        <!--photos section-->
         <div class="aboutSectionRightPhotosDiv">
             <div class="aboutSectionRightPhotosHeaderDiv">
                 <span class="aboutSectionRightPhotosHeader">Photos</span>
@@ -274,12 +292,15 @@
                     <span class="aboutSectionRightPhotosOptions1">All photos</span>
                 </div>
             </div>
+            <!--photos list-->
             <div class="aboutSectionRightPhotosListDiv"></div>
         </div>
     </div>
 
+    <!--posts section-->
     <div class="postOptionDiv">
         <div class="postOptionLeftDiv">
+            <!--left side - intro-->
             <div class="postOptionLeftDiv1">
                 <div class="postOptionLeftHeaderDiv">
                     <span class="postOptionLeftHeader">Intro</span>
@@ -302,6 +323,8 @@
                     <span class="postOptionLeftContactSpan"></span><br />
                 </div>
             </div>
+
+            <!--left side - photos-->
             <div class="postOptionLeftDiv2">
                 <div class="postOptionLeftPhotosHeaderDiv">
                     <span class="postOptionLeftPhotosHeader">Photos</span>
@@ -309,9 +332,11 @@
                         <span class="postOptionLeftPhotosHeaderAllPhotos">See all photos</span>
                     </div>
                 </div>
-                <div class="postOptionLeftPhotosListDiv">
-                </div>
+                <!--photos list-->
+                <div class="postOptionLeftPhotosListDiv"></div>
             </div>
+
+            <!--left side - friends-->
             <div class="postOptionLeftDiv3">
                 <div class="postOptionLeftFriendsHeaderDiv">
                     <span class="postOptionLeftFriendsHeader">Friends</span>
@@ -322,38 +347,13 @@
                 <div class="postOptionLeftFriendsCountDiv">
                     <span class="postOptionLeftFriendsCount"></span>
                 </div>
-                <div class="postOptionLeftFriendsListDiv">
-                </div>
+                <!--friends list-->
+                <div class="postOptionLeftFriendsListDiv"></div>
             </div>
         </div>
-        <div class="postOptionRightDiv" id="abc">
-        </div>
-    </div>
 
-    <div class="searchDiv">
-        <div id="searchFeed">
-            <div id="result"></div>
-            <input id="searchInput" name="Name" oninput="Search(this.value)" placeholder="Search Acebook" />
-            <img class="searchIcon" src="~/images/searchIcon.png" />
-            <img class="acebookLogo" src="~/images/acebookLogo-modified.png" />
-            <a href="https://localhost:44353/Feed/FeedData"><img class="homeIcon" src="~/images/homeicon.png" /></a>
-            <img class="notiIcon" src="~/images/notiicon.png" />
-            <img class="myProfilelogoImgRight" />
-            <div class="searchFeedSettingDiv" style="visibility: hidden;">
-                <div class="searchFeedSettingProfileNameDiv">
-                    <img class="searchFeedSettingProfileImg" />
-                    <span class="searchFeedSettingProfileName"></span>
-                </div>
-                <div class="searchFeedSettingOptionDiv">
-                    <img class="searchFeedSettingOptionImg" src="~/images/settingicon.png" />
-                    <span class="searchFeedSettingOption">Setting & privacy</span>
-                </div>
-                <div class="searchFeedSettingLogoutOptionDiv">
-                    <img class="searchFeedSettingLogoutOptionImg" src="~/images/logouticon.png" />
-                    <span class="searchFeedSettingLogoutOption">Log out</span>
-                </div>
-            </div>
-        </div>
+        <!--right side - posts-->
+        <div class="postOptionRightDiv" id="abc"></div>
     </div>
 
 </body>
