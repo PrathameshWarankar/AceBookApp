@@ -1,22 +1,38 @@
 ﻿body {
     background-color: #e9ebee;
-    overflow: hidden;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto;
+}
+
+#sidetext {
+    flex: 1;
+    min-width: 250px;
+    max-width: 500px;
+    margin-right: 80px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 #login {
     background-color: white;
-    position: relative;
-    top: -110px;
-    left: 840px;
-    height: 320px;
-    width: 370px;
-    padding: 15px;
+    padding: 24px 20px;
     border-radius: 5px;
     box-shadow: 0 3px 10px rgb(0 0 0 / 0.15);
+    width: 100%;
+    max-width: 370px;
+    min-width: 260px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .form-control {
-    position: relative;
     height: 50px;
     width: 100%;
     border: 1px solid #dddfe2;
@@ -25,12 +41,13 @@
     color: #1d2129;
     padding: 15px;
     font-family: Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
 }
 
-    .form-control:focus {
-        outline: none;
-        border: 1px solid #1877f2;
-    }
+.form-control:focus {
+    outline: none;
+    border: 1px solid #1877f2;
+}
 
 #password {
     margin-top: 15px;
@@ -70,7 +87,6 @@ a, a:visited, a:active {
 
 #createbtn {
     margin-top: 30px;
-    position: relative;
     background-color: #42b72a;
     color: white;
     font-weight: bold;
@@ -83,29 +99,50 @@ a, a:visited, a:active {
 }
 
 h2 {
-    font-size: 55px;
+    font-size: 3rem;
     color: #1877f2;
     font-family: SFProDisplay-Regular, Helvetica, Arial, sans-serif;
-    position: relative;
-    top: 190px;
-    left: 250px;
     font-weight: 900;
+    margin: 0 0 10px 0;
 }
 
-#note1 {
+#note1, #note2 {
     font-family: SFProDisplay-Regular, Helvetica, Arial, sans-serif;
-    position: relative;
-    top: 150px;
-    left: 250px;
-    font-size: 27px;
+    font-size: 1.7rem;
     font-weight: 100;
+    margin: 0px;
 }
 
-#note2 {
-    font-family: SFProDisplay-Regular, Helvetica, Arial, sans-serif;
-    position: relative;
-    top: 125px;
-    left: 250px;
-    font-size: 27px;
-    font-weight: 100;
+@media (max-width: 900px) {
+    body {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 20px;
+    }
+
+    #sidetext {
+        margin-right: 0;
+        align-items: center;
+        text-align: center;
+        max-width: 100%;
+    }
+
+    #login {
+        margin: 0 auto;
+        max-width: 80%;
+    }
+}
+
+@media (max-width: 600px) {
+    h2 {
+        font-size: 2rem;
+    }
+
+    #note1, #note2 {
+        font-size: 1rem;
+    }
+
+    #login {
+        padding: 16px 8px;
+    }
 }
