@@ -55,22 +55,12 @@ namespace AceBookApp.Controllers
             if (ModelState.IsValid)
             {
                 if (acc.ProfileImagePath == null && acc.Gender == "Male")
-                {
                     acc.ProfileImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "maleProfilePhotoDefault.PNG";
-                }
                 else if (acc.ProfileImagePath == null && acc.Gender == "Female")
-                {
                     acc.ProfileImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "femaleProfilePhotoDefault.PNG";
-                }
 
-                if (acc.CoverImagePath == null && acc.Gender == "Male")
-                {
-                    acc.CoverImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "maleProfilePhotoDefault.PNG";
-                }
-                else if (acc.CoverImagePath == null && acc.Gender == "Female")
-                {
-                    acc.CoverImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "femaleProfilePhotoDefault.PNG";
-                }
+                if (acc.CoverImagePath == null)
+                    acc.CoverImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "coverPhotoDefault.JPG";
 
                 acc.Status = "Offline";
                 _context.Accounts.Add(acc);
@@ -78,9 +68,7 @@ namespace AceBookApp.Controllers
                 return RedirectToAction("Success", "Home");
             }
             else
-            {
                 return View(acc);
-            }
         }
 
         //returns success page
@@ -118,15 +106,10 @@ namespace AceBookApp.Controllers
                     return RedirectToAction("FeedData", "Feed");
                 }
                 else
-                {
                     return RedirectToAction("Failure", "Home");
-                }
             }
             else
-            {
                 return RedirectToAction("Failure", "Home");
-            }
-
         }
 
         //returns forget password page
