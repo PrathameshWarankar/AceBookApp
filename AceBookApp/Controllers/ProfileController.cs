@@ -52,9 +52,8 @@ namespace AceBookApp.Controllers
 
                 //create request id for first entry
                 if (frndReqListQuery == null || frndReqListQuery.Count() == 0)
-                {
                     fr.RequestID = string.Concat("Req1 - ", fr.FromRequest.AsSpan(0, 3), fr.ToRequest.AsSpan(0, 3));
-                }
+
                 //create request id for subsequent entry
                 else
                 {
@@ -78,10 +77,7 @@ namespace AceBookApp.Controllers
                 return new EmptyResult();
             }
             else
-            {
                 return RedirectToAction("Failure", "Home");
-            }
-
         }
 
         //confirm if request sent, used to update the view
@@ -92,13 +88,9 @@ namespace AceBookApp.Controllers
                                 select entry;
 
             if (reqCheckQuery.Any())
-            {
                 return "Yes";
-            }
             else
-            {
                 return "No";
-            }
         }
 
         //confirm if friend, used to update the view
@@ -109,13 +101,9 @@ namespace AceBookApp.Controllers
                                  select entry;
 
             if (frndCheckQuery.Any())
-            {
                 return "Yes";
-            }
             else
-            {
                 return "No";
-            }
         }
 
         //method executed when friend req accepted
@@ -133,9 +121,8 @@ namespace AceBookApp.Controllers
 
             //create friend id for first entry
             if (frndListQuery == null || frndListQuery.Count() == 0)
-            {
                 fr.RequestID = string.Concat("FrndID1 - ", fr.FromRequest.AsSpan(0, 3), fr.ToRequest.AsSpan(0, 3));
-            }
+
             //create friend id for subsequent entry
             else
             {
@@ -202,7 +189,6 @@ namespace AceBookApp.Controllers
 
             _context.SaveChanges();
             return new EmptyResult();
-
         }
 
         //method to additional account's non work details in database
@@ -212,6 +198,7 @@ namespace AceBookApp.Controllers
             if (type == "College")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
+
                 //if college details do not exists previously
                 if (!isEntry.Any())
                 {
@@ -219,11 +206,10 @@ namespace AceBookApp.Controllers
                     details.CollegeInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+
                 //if college details exists previously
                 else
-                {
                     isEntry.First().CollegeInfo = i1;
-                }
 
                 _context.SaveChanges();
                 return new EmptyResult();
@@ -232,6 +218,7 @@ namespace AceBookApp.Controllers
             if (type == "School")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
+
                 //if school details do not exists previously
                 if (!isEntry.Any())
                 {
@@ -239,11 +226,10 @@ namespace AceBookApp.Controllers
                     details.SchoolInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+
                 //if school details exists previously
                 else
-                {
                     isEntry.First().SchoolInfo = i1;
-                }
 
                 _context.SaveChanges();
                 return new EmptyResult();
@@ -252,6 +238,7 @@ namespace AceBookApp.Controllers
             if (type == "City")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
+
                 //if city details do not exists previously
                 if (!isEntry.Any())
                 {
@@ -259,11 +246,10 @@ namespace AceBookApp.Controllers
                     details.PlaceInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+
                 //if city details exists previously
                 else
-                {
                     isEntry.First().PlaceInfo = i1;
-                }
 
                 _context.SaveChanges();
                 return new EmptyResult();
@@ -272,6 +258,7 @@ namespace AceBookApp.Controllers
             if (type == "Contact")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
+
                 //if contact details do not exists previously
                 if (!isEntry.Any())
                 {
@@ -279,11 +266,10 @@ namespace AceBookApp.Controllers
                     details.PhoneInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+
                 //if contact details exists previously
                 else
-                {
                     isEntry.First().PhoneInfo = i1;
-                }
 
                 _context.SaveChanges();
                 return new EmptyResult();
@@ -292,6 +278,7 @@ namespace AceBookApp.Controllers
             if (type == "Website")
             {
                 var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
+
                 //if website details do not exists previously
                 if (!isEntry.Any())
                 {
@@ -299,11 +286,10 @@ namespace AceBookApp.Controllers
                     details.SocialAccInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
+
                 //if website details exists previously
                 else
-                {
                     isEntry.First().SocialAccInfo = i1;
-                }
 
                 _context.SaveChanges();
                 return new EmptyResult();
@@ -339,6 +325,7 @@ namespace AceBookApp.Controllers
                         where req.ToRequest == email
                         orderby req.SentDate descending
                         select req;
+
             return Json(query);
         }
 
@@ -346,8 +333,8 @@ namespace AceBookApp.Controllers
         public IActionResult DeleteReq(string fromRequest, string toRequest)
         {
             var reqQuery = from req in _context.FriendRequests
-                            where req.FromRequest == fromRequest && req.ToRequest == toRequest
-                            select req;
+                           where req.FromRequest == fromRequest && req.ToRequest == toRequest
+                           select req;
 
             _context.FriendRequests.Remove(reqQuery.SingleOrDefault());
             _context.SaveChanges();
@@ -362,6 +349,7 @@ namespace AceBookApp.Controllers
                                 where req.ToRequest == email || req.FromRequest == email
                                 orderby req.SentDate descending
                                 select req;
+
             return Json(frndListQuery);
         }
 
@@ -378,8 +366,8 @@ namespace AceBookApp.Controllers
         public IActionResult GetPostsList(string email)
         {
             var postsQuery = from post in _context.Posts
-                         where post.Email == email
-                         select post;
+                             where post.Email == email
+                             select post;
 
             return Json(postsQuery);
         }

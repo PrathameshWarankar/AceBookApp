@@ -50,8 +50,8 @@ namespace AceBookApp.Controllers
 
             //get list of posts already liked by logged user
             var likedByMeQuery = from likes in _context.Likes
-                            where likes.LikedBy == HomeController.loggedUser.Email
-                            select likes.PostId;
+                                 where likes.LikedBy == HomeController.loggedUser.Email
+                                 select likes.PostId;
 
             ViewBag.LikedByMe = likedByMeQuery.ToArray();
 
@@ -165,8 +165,8 @@ namespace AceBookApp.Controllers
             List<SelectListItem> reqList = new List<SelectListItem>();
 
             var friendReqQuery = from item in _context.FriendRequests
-                                    where item.ToRequest == HomeController.loggedUser.Email
-                                    select item.FromRequest;
+                                 where item.ToRequest == HomeController.loggedUser.Email
+                                 select item.FromRequest;
 
             foreach (var item in friendReqQuery.ToList())
             {
@@ -180,7 +180,7 @@ namespace AceBookApp.Controllers
         public ActionResult AllPostIds()
         {
             var postIds = (from post in _context.Posts
-                          select post.PostId).ToList();
+                           select post.PostId).ToList();
             return Json(postIds);
         }
 
@@ -281,9 +281,9 @@ namespace AceBookApp.Controllers
         public IActionResult GetCommentsBy(string id)
         {
             var getCommentsQuery = (from cmt in _context.Comments
-                          where cmt.PostId == id
-                          orderby cmt.CommentedDate descending
-                          select cmt).ToList();
+                                    where cmt.PostId == id
+                                    orderby cmt.CommentedDate descending
+                                    select cmt).ToList();
 
             return Json(getCommentsQuery);
         }
@@ -292,12 +292,12 @@ namespace AceBookApp.Controllers
         public IActionResult GetContacts()
         {
             var getFriendsQuery1 = (from acc in _context.Friends
-                          where acc.ToRequest == HomeController.loggedUser.Email
-                          select acc.FromRequest).ToList();
+                                    where acc.ToRequest == HomeController.loggedUser.Email
+                                    select acc.FromRequest).ToList();
 
             var getFriendsQuery2 = (from acc in _context.Friends
-                           where acc.FromRequest == HomeController.loggedUser.Email
-                           select acc.ToRequest).ToList();
+                                    where acc.FromRequest == HomeController.loggedUser.Email
+                                    select acc.ToRequest).ToList();
 
             getFriendsQuery1.AddRange(getFriendsQuery2);
 
@@ -308,9 +308,9 @@ namespace AceBookApp.Controllers
         public IActionResult GetMyNotifications()
         {
             var getMyNotiQuery = from noti in _context.Notifications
-                         where noti.NotifiedTo == HomeController.loggedUser.Email
-                         orderby noti descending
-                         select noti;
+                                 where noti.NotifiedTo == HomeController.loggedUser.Email
+                                 orderby noti descending
+                                 select noti;
 
             return Json(getMyNotiQuery);
         }
@@ -336,7 +336,6 @@ namespace AceBookApp.Controllers
             _context.SaveChanges();
 
             return new EmptyResult();
-
         }
     }
 }
