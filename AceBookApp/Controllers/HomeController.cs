@@ -10,6 +10,7 @@ namespace AceBookApp.Controllers
         private readonly AppDbContext _context;
         private readonly IHostEnvironment _host;
         public static Post postData = new Post();
+        public static LoggedUser loggedUser = new LoggedUser();
 
         //initializes AppDbContext
         public HomeController(AppDbContext context, IHostEnvironment host)
@@ -92,8 +93,10 @@ namespace AceBookApp.Controllers
             {
                 if (loggedAccount.Password == password)
                 {
-                    postData.Email = email;
-                    postData.PostId = loggedAccount.FirstName.Substring(0, 3) + loggedAccount.Surname.Substring(0, 3);
+                    //postData.Email = email;
+                    loggedUser.Email = email;
+                    //postData.PostId = loggedAccount.FirstName.Substring(0, 3) + loggedAccount.Surname.Substring(0, 3);
+                    loggedUser.UserId = loggedAccount.FirstName.Substring(0, 3) + loggedAccount.Surname.Substring(0, 3);
 
                     var account = (from acc in _context.Accounts
                                    where acc.Email == email
