@@ -19,7 +19,7 @@
                 <img class="myProfilelogoImg" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
             </div>
             <div class="myProfileText">
-                <a class="myProfileTextA" href='@Url.Action("ProfileData", "Profile", new {email = ViewBag.Email})'>@ViewBag.Fullname</a>
+                <a class="myProfileTextA" href='@Url.Action("ProfileData", "Profile", new { email = ViewBag.Email })'>@ViewBag.Fullname</a>
             </div>
         </div>
         <div id="friends">
@@ -27,7 +27,7 @@
                 <img class="friendslogoImg" src="~/images/friendslogo.png" />
             </div>
             <div class="friendsText">
-                <a class="friendsTextA" href='@Url.Action("Friends", "Profile", new {email = ViewBag.Email} )'>Friends</a>
+                <a class="friendsTextA" href='@Url.Action("Friends", "Profile", new { email = ViewBag.Email })'>Friends</a>
             </div>
         </div>
         <div id="mostRecent">
@@ -39,7 +39,7 @@
             </div>
         </div>
     </div>
-    
+
     <!--center feed - User posts-->
     <div id="centerFeed">
         <!--section for uploading new post-->
@@ -48,9 +48,7 @@
                 <div class="createPostInputPhoto">
                     <img class="createPostInputPhotoImg" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
                 </div>
-                <div>
-                    <input id="createPostInput" placeholder="What's on your mind, @ViewBag.Firstname?" />
-                </div>
+                <input id="createPostInput" placeholder="What's on your mind, @ViewBag.Firstname?" />
             </div>
             <div id="createPostFeed2">
                 <div id="createPostLabel" onclick="ShowCreatePost()">
@@ -90,7 +88,7 @@
                                 <img class="feedPostPhoto" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.FeedPostProfileUrl[c].Substring(64))" />
                             </div>
                             <div class="postName">
-                                <a href='@Url.Action("ProfileData", "Profile", new {email = ViewBag.PostEmails[c]})'>@ViewBag.Names[c]</a>
+                                <a href='@Url.Action("ProfileData", "Profile", new { email = ViewBag.PostEmails[c] })'>@ViewBag.Names[c]</a>
                             </div>
                             <div class="postDate">
                                 @if (Math.Floor(time.TotalHours) == 0)
@@ -134,7 +132,7 @@
                             {
                                 <img onclick="test()" class="postLike" src="~/images/postLike.png" />
                                 <h3 class="likeCount" onmouseover="DisplayLikes(@post.PostId)" onmouseout="DisplayLikesHide(@post.PostId)">@ViewBag.PostLikeCount[c] others</h3>
-                            }                            
+                            }
                             <div class="commentCountDiv">
                                 <h3 class="commentCount"></h3>
                             </div>
@@ -189,7 +187,7 @@
                                 Add Photos
                             </span>
                         </div>
-                        <input type="file" name="imgfile" id="fileInput" hidden/>
+                        <input type="file" name="imgfile" id="fileInput" hidden />
                     </div>
                     <div id="uploadbtn" col-md-5">
                         <input type="submit" id="actualUploadbtn" value="Upload" onmouseover="CheckCreatePostInput()" />
@@ -230,7 +228,7 @@
 
     $(document).ready(function () {
         $(".likeDiv").click(function () {
-            $.post('@Url.Action("Liked","Feed")?id=' + this.parentNode.parentNode.id);
+            $.post('@Url.Action("Liked", "Feed")?id=' + this.parentNode.parentNode.id);
 
             var imgSrc = document.getElementById(this.parentNode.parentNode.id);
             if (imgSrc.getElementsByClassName("likeBtnImg")[0].src == "https://" + location.host + "/images/likebutton.png") {
