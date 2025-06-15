@@ -433,8 +433,8 @@ a, a:visited, a:active {
     width: 125px;
 }
 
-.commentCount {
-    left: 315px;
+.commentCountDiv {
+   margin-left: auto;
 }
 
 .likeCount:hover {
