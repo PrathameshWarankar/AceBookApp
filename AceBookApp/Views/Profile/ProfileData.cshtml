@@ -9,93 +9,96 @@
     <script type="text/JavaScript" src=" https://MomentJS.com/downloads/moment.js"></script>
     <link rel="stylesheet" type="text/css" href="~/css/Feed.css" />
     <link rel="stylesheet" type="text/css" href="~/css/Profile.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
 <body style="visibility:hidden;">
     <div class="myProfileHeaderDiv">
-        <!--cover photo and edit option-->
-        <div class="myProfileHeaderCover">
-            <div class="myProfileHeaderCoverDiv">
-                <img class="myProfileHeaderCoverImg" />
-            </div>
-            <div class="myProfileHeaderCoverEditBtnDiv">
-                <img class="myProfileHeaderCoverEditBtnImg" src="~/images/editcoverphotoimg.png" />
-                <span class="myProfileHeaderCoverEditBtn">Edit cover photo</span>
-                <form class="coverImgForm" asp-action="CoverImgUpload" method="post" role="form" enctype="multipart/form-data">
-                    <input type="file" name="coverImg" class="myProfileHeaderCoverUpload" onchange="Submit1()" hidden />
-                </form>
-            </div>
-        </div>
-
-        <!--profile name and details-->
-        <div class="myProfileHeaderProfileDiv">
-            <!--profile photo-->
-            <div class="myProfileHeaderProfile">
-                <img class="myProfileHeaderProfileImg" />
-                <img class="myProfileHeaderProfieUploadImg" src="~/images/profilepicuploadimg.png" />
-                <form class="profileImgForm" asp-action="ProfileImgUpload" method="post" role="form" enctype="multipart/form-data">
-                    <input type="file" name="profileImg" class="myProfileHeaderProfieUpload" onchange="Submit()" hidden />
-                </form>
-            </div>
-
-            <!--profile details-->
-            <div class="myProfileHeaderMyDetails">
-                <div class="myProfileHeaderMyDetailsNameDiv">
-                    <h1 class="myProfileHeaderMyDetailsName"></h1>
-                </div>
-                <div class="myProfileHeaderMyDetailsFriendsCountDiv">
-                    <span class="myProfileHeaderMyDetailsFriendsCount"></span>
+        <div class="myProfileHeaderContent">
+            <!--cover photo and edit option-->
+            <div class="myProfileHeaderCover">
+                <div class="myProfileHeaderCoverDiv">
+                    <img class="myProfileHeaderCoverImg" />
+                    <div class="myProfileHeaderCoverEditBtnDiv">
+                        <img class="myProfileHeaderCoverEditBtnImg" src="~/images/editcoverphotoimg.png" />
+                        <span class="myProfileHeaderCoverEditBtn">Edit cover photo</span>
+                        <form class="coverImgForm" asp-action="CoverImgUpload" method="post" role="form" enctype="multipart/form-data">
+                            <input type="file" name="coverImg" class="myProfileHeaderCoverUpload" onchange="Submit1()" hidden />
+                        </form>
+                    </div>
                 </div>
             </div>
 
-            <!--option for - add friend, cancel request, edit profile, friends-->
-            <div class="myProfileHeaderProfileAddEditDiv" style="display: flex;">
-                <div class="myProfileHeaderProfileAddFriendDiv">
-                    <img class="myProfileHeaderProfileEditBtnImg" src="~/images/AddFriendIcon.png" />
-                    <span class="myProfileHeaderProfileAddFriend">Add friend</span>
+            <!--profile name and details-->
+            <div class="myProfileHeaderProfileDiv">
+                <!--profile photo-->
+                <div class="myProfileHeaderProfile">
+                    <img class="myProfileHeaderProfileImg" />
+                    <img class="myProfileHeaderProfieUploadImg" src="~/images/profilepicuploadimg.png" />
+                    <form class="profileImgForm" asp-action="ProfileImgUpload" method="post" role="form" enctype="multipart/form-data">
+                        <input type="file" name="profileImg" class="myProfileHeaderProfieUpload" onchange="Submit()" hidden />
+                    </form>
                 </div>
-                <div class="myProfileHeaderProfileCancelReqDiv">
-                    <img class="myProfileHeaderProfileCancelReqImg" src="~/images/cancelReqIcon.png" />
-                    <span class="myProfileHeaderProfileCancelReq">Cancel request</span>
-                </div>
-                <div class="myProfileHeaderProfileEditDiv" style="visibility:hidden;">
-                    <img class="myProfileHeaderProfileEditBtnImg" src="~/images/editprofileimg.png" />
-                    <span class="myProfileHeaderProfileEdit">Edit profile</span>
-                </div>
-                <div class="myProfileHeaderProfileFrndAcceptedDiv">
-                    <img class="myProfileHeaderProfileFrndAcceptedImg" src="~/images/friendacceptedicon.png" />
-                    <span class="myProfileHeaderProfileFrndAccepted">Friends</span>
-                </div>
-            </div>
-        </div>
 
-        <!--options for - posts, about, friends, photos-->
-        <div class="myProfileHeaderOptionsDiv">
-            <!--post-->
-            <div class="myProfileHeaderOptionsPostsOuterDiv">
-                <div class="myProfileHeaderOptionsPostsDiv">
-                    <span class="myProfileHeaderOptionsPosts">Posts</span>
+                <!--profile details-->
+                <div class="myProfileHeaderMyDetails">
+                    <div class="myProfileHeaderMyDetailsNameDiv">
+                        <h1 class="myProfileHeaderMyDetailsName"></h1>
+                    </div>
+                    <div class="myProfileHeaderMyDetailsFriendsCountDiv">
+                        <span class="myProfileHeaderMyDetailsFriendsCount"></span>
+                    </div>
                 </div>
-            </div>
 
-            <!--about-->
-            <div class="myProfileHeaderOptionsAboutOuterDiv">
-                <div class="myProfileHeaderOptionsAboutDiv">
-                    <span class="myProfileHeaderOptionsAbout">About</span>
-                </div>
-            </div>
-
-            <!--friends-->
-            <div class="myProfileHeaderOptionsFriendsOuterDiv">
-                <div class="myProfileHeaderOptionsFriendsDiv">
-                    <span class="myProfileHeaderOptionsFriends">Friends</span>
+                <!--option for - add friend, cancel request, edit profile, friends-->
+                <div class="myProfileHeaderProfileAddEditDiv" style="display: flex;">
+                    <div class="myProfileHeaderProfileAddFriendDiv">
+                        <img class="myProfileHeaderProfileEditBtnImg" src="~/images/AddFriendIcon.png" />
+                        <span class="myProfileHeaderProfileAddFriend">Add friend</span>
+                    </div>
+                    <div class="myProfileHeaderProfileCancelReqDiv">
+                        <img class="myProfileHeaderProfileCancelReqImg" src="~/images/cancelReqIcon.png" />
+                        <span class="myProfileHeaderProfileCancelReq">Cancel request</span>
+                    </div>
+                    <div class="myProfileHeaderProfileEditDiv" style="visibility:hidden;">
+                        <img class="myProfileHeaderProfileEditBtnImg" src="~/images/editprofileimg.png" />
+                        <span class="myProfileHeaderProfileEdit">Edit profile</span>
+                    </div>
+                    <div class="myProfileHeaderProfileFrndAcceptedDiv">
+                        <img class="myProfileHeaderProfileFrndAcceptedImg" src="~/images/friendacceptedicon.png" />
+                        <span class="myProfileHeaderProfileFrndAccepted">Friends</span>
+                    </div>
                 </div>
             </div>
 
-            <!--photos-->
-            <div class="myProfileHeaderOptionsPhotosOuterDiv">
-                <div class="myProfileHeaderOptionsPhotosDiv">
-                    <span class="myProfileHeaderOptionsPhotos">Photos</span>
+            <!--options for - posts, about, friends, photos-->
+            <div class="myProfileHeaderOptionsDiv">
+                <!--post-->
+                <div class="myProfileHeaderOptionsPostsOuterDiv">
+                    <div class="myProfileHeaderOptionsPostsDiv">
+                        <span class="myProfileHeaderOptionsPosts">Posts</span>
+                    </div>
+                </div>
+
+                <!--about-->
+                <div class="myProfileHeaderOptionsAboutOuterDiv">
+                    <div class="myProfileHeaderOptionsAboutDiv">
+                        <span class="myProfileHeaderOptionsAbout">About</span>
+                    </div>
+                </div>
+
+                <!--friends-->
+                <div class="myProfileHeaderOptionsFriendsOuterDiv">
+                    <div class="myProfileHeaderOptionsFriendsDiv">
+                        <span class="myProfileHeaderOptionsFriends">Friends</span>
+                    </div>
+                </div>
+
+                <!--photos-->
+                <div class="myProfileHeaderOptionsPhotosOuterDiv">
+                    <div class="myProfileHeaderOptionsPhotosDiv">
+                        <span class="myProfileHeaderOptionsPhotos">Photos</span>
+                    </div>
                 </div>
             </div>
         </div>
