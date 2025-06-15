@@ -442,9 +442,9 @@ a, a:visited, a:active {
 }
 
 .postLike {
-    height: 23px;
-    width: 23px;
-    padding: 10px 10px 10px 15px;
+    height: 25px;
+    width: 25px;
+    margin: 8px 15px;
 }
 
 .likedNames {
@@ -482,10 +482,18 @@ a, a:visited, a:active {
     position: static;
     left: 0;
     top: 0;
+    margin: 0;
+    flex: 1 1 auto;
 }
 
 .addCommentDiv {
+    display: flex;
+    align-items: center;
     height: 50px;
+    padding-left: 0;
+    width: 100%;
+    max-width: 680px;
+    box-sizing: border-box;
 }
 
 .commentProfileImg {
@@ -495,6 +503,9 @@ a, a:visited, a:active {
     position: relative;
     top: 8px;
     left: 15px;
+    margin-left: 15px;
+    margin-right: 10px;
+    position: static;
 }
 
 .commentData {
@@ -520,7 +531,7 @@ a, a:visited, a:active {
 
 .commentImg {
     height: 34px;
-    width: 34px;
+    width: 38px;
     border-radius: 17px;
 }
 
@@ -530,6 +541,14 @@ a, a:visited, a:active {
 
 .commentDetails {
     display: flex;
+    max-width: 470px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.commentSection {
+    position: relative;
+    top: -30px;
 }
 
 /* --- Contacts --- */
