@@ -258,7 +258,7 @@ option:checked {
 
 #uploadbtn {
     position: relative;
-    margin: 15px 0 0 0;
+    margin: 15px 10px 0 10px;
     top: 5px;
 }
 
@@ -669,7 +669,7 @@ label {
 
     #centerFeed {
         margin: 0;
-        max-width: 100vw;
+        max-width: 90vw;
     }
 
     .commentSection {

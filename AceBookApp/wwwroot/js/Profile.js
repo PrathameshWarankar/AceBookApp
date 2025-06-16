@@ -104,23 +104,24 @@ function Submit1() {
 $(document).ready(function () {
     var myEmail;
 
-    $('.myProfileHeaderProfileEditDiv').hide();
-    $('.myProfileHeaderProfileCancelReqDiv').hide();
-    $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
-    $('.myProfileHeaderProfileAddFriendDiv').hide();
+    $('.myProfileHeaderProfileAddEditDiv').addClass('hidden');
+    $('.myProfileHeaderProfileEditDiv').addClass('hidden');
+    $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
+    $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+    $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
     document.getElementsByClassName("myProfileHeaderCoverEditBtnDiv")[0].style.visibility = "hidden";
 
     document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
     document.getElementsByClassName("myProfileHeaderOptionsPosts")[0].style.color = "#1876F2"
 
-    $('.aboutOptionDiv').hide();
+    $('.aboutOptionDiv').addClass('hidden');
 
     $('.myProfileHeaderOptionsAboutDiv').click(function () {
-        $('.aboutOptionDiv').show();
-        $('.aboutSectionDiv').show();
-        $('.aboutSectionRightFriendsDiv').show();
-        $('.aboutSectionRightPhotosDiv').show();
-        $('.postOptionDiv').hide();
+        $('.aboutOptionDiv').removeClass('hidden');
+        $('.aboutSectionDiv').removeClass('hidden');
+        $('.aboutSectionRightFriendsDiv').removeClass('hidden');
+        $('.aboutSectionRightPhotosDiv').removeClass('hidden');
+        $('.postOptionDiv').addClass('hidden');
 
         document.getElementsByClassName("myProfileHeaderOptionsAbout")[0].style.color = "#1876F2"
         document.getElementsByClassName("myProfileHeaderOptionsFriends")[0].style.color = "#65676B"
@@ -129,11 +130,11 @@ $(document).ready(function () {
 
         document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#1876F2"
         document.getElementsByClassName("aboutSectionLeftOverview")[0].style.backgroundColor = "#EFF3FF";
-        $('.aboutSectionRightWorkDiv').hide();
-        $('.aboutSectionRightPlaceDiv').hide();
-        $('.aboutSectionRightContactDiv').hide();
-        $('.aboutSectionRightFamilyDiv').hide();
-        $('.aboutSectionRightOverviewDiv').show();
+        $('.aboutSectionRightWorkDiv').addClass('hidden');
+        $('.aboutSectionRightPlaceDiv').addClass('hidden');
+        $('.aboutSectionRightContactDiv').addClass('hidden');
+        $('.aboutSectionRightFamilyDiv').addClass('hidden');
+        $('.aboutSectionRightOverviewDiv').removeClass('hidden');
 
         document.getElementsByClassName("myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
         document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "none"
@@ -147,17 +148,17 @@ $(document).ready(function () {
         document.getElementsByClassName("myProfileHeaderOptionsPosts")[0].style.color = "#65676B"
         document.getElementsByClassName("myProfileHeaderOptionsPhotos")[0].style.color = "#65676B"
 
-        $('.aboutOptionDiv').show();
-        $('.aboutSectionDiv').hide();
-        $('.aboutSectionRightFriendsDiv').show();
-        $('.aboutSectionRightPhotosDiv').hide();
+        $('.aboutOptionDiv').removeClass('hidden');
+        $('.aboutSectionDiv').addClass('hidden');
+        $('.aboutSectionRightFriendsDiv').removeClass('hidden');
+        $('.aboutSectionRightPhotosDiv').addClass('hidden');
 
         document.getElementsByClassName("myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "none"
         document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "none"
         document.getElementsByClassName("myProfileHeaderOptionsFriendsOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
         document.getElementsByClassName("myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "none"
 
-        $('.postOptionDiv').hide();
+        $('.postOptionDiv').addClass('hidden');
     });
 
     $('.myProfileHeaderOptionsPhotosDiv').click(function () {
@@ -166,29 +167,29 @@ $(document).ready(function () {
         document.getElementsByClassName("myProfileHeaderOptionsPosts")[0].style.color = "#65676B"
         document.getElementsByClassName("myProfileHeaderOptionsPhotos")[0].style.color = "#1876F2"
 
-        $('.aboutOptionDiv').show();
-        $('.aboutSectionDiv').hide();
-        $('.aboutSectionRightFriendsDiv').hide();
-        $('.aboutSectionRightPhotosDiv').show();
+        $('.aboutOptionDiv').removeClass('hidden');
+        $('.aboutSectionDiv').addClass('hidden');
+        $('.aboutSectionRightFriendsDiv').addClass('hidden');
+        $('.aboutSectionRightPhotosDiv').removeClass('hidden');
 
         document.getElementsByClassName("myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "none"
         document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "none"
         document.getElementsByClassName("myProfileHeaderOptionsFriendsOuterDiv")[0].style.borderBottom = "none"
         document.getElementsByClassName("myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
 
-        $('.postOptionDiv').hide();
+        $('.postOptionDiv').addClass('hidden');
 
     });
 
     $('.myProfileHeaderOptionsPostsDiv').click(function () {
-        $('.postOptionDiv').show();
+        $('.postOptionDiv').removeClass('hidden');
 
         document.getElementsByClassName("myProfileHeaderOptionsAbout")[0].style.color = "#65676B"
         document.getElementsByClassName("myProfileHeaderOptionsFriends")[0].style.color = "#65676B"
         document.getElementsByClassName("myProfileHeaderOptionsPosts")[0].style.color = "#1876F2"
         document.getElementsByClassName("myProfileHeaderOptionsPhotos")[0].style.color = "#65676B"
 
-        $('.aboutOptionDiv').hide();
+        $('.aboutOptionDiv').addClass('hidden');
 
         document.getElementsByClassName("myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "none"
         document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
@@ -252,18 +253,18 @@ $(document).ready(function () {
 
             //if profile is not of logged user
             if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-                $('.myProfileHeaderProfileEditDiv').hide();
-                $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
+                $('.myProfileHeaderProfileEditDiv').addClass('hidden');
+                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
                 document.getElementsByClassName("myProfileHeaderCoverEditBtnDiv")[0].style.visibility = "hidden";
                 document.getElementsByClassName("myProfileHeaderProfieUploadImg")[0].style.visibility = "hidden";
                 document.getElementsByClassName("myProfileHeaderProfieUpload")[0].style.visibility = "hidden";
             }
             //if profile is of logged user
             else {
-                $('.myProfileHeaderProfileCancelReqDiv').hide();
-                $('.myProfileHeaderProfileAddFriendDiv').hide();
-                $('.myProfileHeaderProfileEditDiv').show();
-                $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
+                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
+                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
+                $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
+                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
                 setTimeout(function () {
                     document.getElementsByClassName("myProfileHeaderCoverEditBtnDiv")[0].style.visibility = "visible";
                     document.getElementsByClassName("myProfileHeaderProfieUploadImg")[0].style.visibility = "visible";
@@ -286,7 +287,7 @@ $(document).ready(function () {
         success: function (data) {
             if (data[0] == undefined || data[0].workInfo1 == null) {
                 document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'No workplace to show';
-                $('.aboutSectionRightOverviewWork1bSpan').hide();
+                $('.aboutSectionRightOverviewWork1bSpan').addClass('hidden');
                 document.getElementsByClassName("aboutSectionRightOverviewWorkDiv")[0].style.height = "37px";
             }
             else {
@@ -332,7 +333,7 @@ $(document).ready(function () {
         success: function (data) {
             if (data[0] == undefined || data[0].workInfo1 == null) {
                 document.getElementsByClassName("postOptionLeftWork1aSpan")[0].innerHTML = 'No workplace to show';
-                $('.postOptionRightWork1bSpan').hide();
+                $('.postOptionRightWork1bSpan').addClass('hidden');
                 document.getElementsByClassName("postOptionLeftWorkDiv")[0].style.height = "37px";
             }
             else {
@@ -377,22 +378,24 @@ $(document).ready(function () {
         async: false,
         success: function (data) {
             if (data == "Yes") {
-                $('.myProfileHeaderProfileCancelReqDiv').show();
-                $('.myProfileHeaderProfileAddFriendDiv').hide();
-                $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
-                $('.myProfileHeaderProfileEditDiv').hide();
+                $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
+                $('.myProfileHeaderProfileCancelReqDiv').removeClass('hidden');
+                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
+                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                $('.myProfileHeaderProfileEditDiv').addClass('hidden');
             }
             else if (myEmail == $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-                $('.myProfileHeaderProfileCancelReqDiv').hide();
-                $('.myProfileHeaderProfileAddFriendDiv').hide();
-                $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
-                $('.myProfileHeaderProfileEditDiv').show();
+                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
+                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
+                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
             }
             else {
-                $('.myProfileHeaderProfileCancelReqDiv').hide();
-                $('.myProfileHeaderProfileAddFriendDiv').show();
-                $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
-                $('.myProfileHeaderProfileEditDiv').hide();
+                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
+                $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
+                $('.myProfileHeaderProfileAddFriendDiv').removeClass('hidden');
+                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                $('.myProfileHeaderProfileEditDiv').addClass('hidden');
             }
         }
     })
@@ -408,19 +411,20 @@ $(document).ready(function () {
         async: false,
         success: function (data) {
             if (data == "Yes") {
-                $('.myProfileHeaderProfileCancelReqDiv').hide();
-                $('.myProfileHeaderProfileAddFriendDiv').hide();
-                $('.myProfileHeaderProfileFrndAcceptedDiv').show();
-                $('.myProfileHeaderProfileEditDiv').hide();
+                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
+                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
+                $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
+                $('.myProfileHeaderProfileFrndAcceptedDiv').removeClass('hidden');
+                $('.myProfileHeaderProfileEditDiv').addClass('hidden');
             }
             else if (myEmail == $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-                $('.myProfileHeaderProfileCancelReqDiv').hide();
-                $('.myProfileHeaderProfileAddFriendDiv').hide();
-                $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
-                $('.myProfileHeaderProfileEditDiv').show();
+                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
+                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
+                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
             }
             else {
-                $('.myProfileHeaderProfileFrndAcceptedDiv').hide();
+                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
             }
         }
 
@@ -563,15 +567,17 @@ $(document).ready(function () {
             method: 'Post',
             data: value,
             success: function (data) {
-                if (document.getElementsByClassName("myProfileHeaderProfileCancelReqDiv")[0].style.display == "none") {
+                if ($('.myProfileHeaderProfileCancelReqDiv').hasClass('hidden')) {
                     //document.getElementsByClassName("myProfileHeaderProfileCancelReqDiv")[0].style.display = "block"
                     //document.getElementsByClassName("myProfileHeaderProfileAddFriendDiv")[0].style.display = "none"
-                    $('.myProfileHeaderProfileCancelReqDiv').show();
-                    $('.myProfileHeaderProfileAddFriendDiv').hide();
+                    $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
+                    $('.myProfileHeaderProfileCancelReqDiv').removeClass('hidden');
+                    $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
                 }
                 else {
-                    $('.myProfileHeaderProfileCancelReqDiv').hide();
-                    $('.myProfileHeaderProfileAddFriendDiv').show();
+                    $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
+                    $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
+                    $('.myProfileHeaderProfileAddFriendDiv').removeClass('hidden');
                 }
             }
         })
@@ -601,11 +607,11 @@ $(document).ready(function () {
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#65676B"
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "transparent"
 
-        $('.aboutSectionRightWorkDiv').hide();
-        $('.aboutSectionRightPlaceDiv').hide();
-        $('.aboutSectionRightContactDiv').hide();
-        $('.aboutSectionRightFamilyDiv').hide();
-        $('.aboutSectionRightOverviewDiv').show();
+        $('.aboutSectionRightWorkDiv').addClass('hidden');
+        $('.aboutSectionRightPlaceDiv').addClass('hidden');
+        $('.aboutSectionRightContactDiv').addClass('hidden');
+        $('.aboutSectionRightFamilyDiv').addClass('hidden');
+        $('.aboutSectionRightOverviewDiv').removeClass('hidden');
 
         var value = {
             "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
@@ -617,7 +623,7 @@ $(document).ready(function () {
             success: function (data) {
                 if (data[0] == undefined || data[0].workInfo1 == null) {
                     document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'No workplace to show';
-                    $('.aboutSectionRightOverviewWork1bSpan').hide();
+                    $('.aboutSectionRightOverviewWork1bSpan').addClass('hidden');
                     document.getElementsByClassName("aboutSectionRightOverviewWorkDiv")[0].style.height = "37px";
                 }
                 else {
@@ -670,22 +676,22 @@ $(document).ready(function () {
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#65676B"
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "transparent"
 
-        $('.aboutSectionRightPlaceDiv').hide();
-        $('.aboutSectionRightContactDiv').hide();
-        $('.aboutSectionRightFamilyDiv').hide();
-        $('.aboutSectionRightOverviewDiv').hide();
-        $('.aboutSectionRightWorkDiv').show();
-        $('.aboutSectionRightWorkAddInput1Div').hide();
-        $('.aboutSectionRightWorkAddInput2Div').hide();
-        $('.aboutSectionRightWorkAddInput3Div').hide();
+        $('.aboutSectionRightPlaceDiv').addClass('hidden');
+        $('.aboutSectionRightContactDiv').addClass('hidden');
+        $('.aboutSectionRightFamilyDiv').addClass('hidden');
+        $('.aboutSectionRightOverviewDiv').addClass('hidden');
+        $('.aboutSectionRightWorkDiv').removeClass('hidden');
+        $('.aboutSectionRightWorkAddInput1Div').addClass('hidden');
+        $('.aboutSectionRightWorkAddInput2Div').addClass('hidden');
+        $('.aboutSectionRightWorkAddInput3Div').addClass('hidden');
 
         if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-            $('.aboutSectionRightWorkAddDiv1').hide();
-            $('.aboutSectionRightWorkAddDiv2').hide();
-            $('.aboutSectionRightWorkAddDiv3').hide();
+            $('.aboutSectionRightWorkAddDiv1').addClass('hidden');
+            $('.aboutSectionRightWorkAddDiv2').addClass('hidden');
+            $('.aboutSectionRightWorkAddDiv3').addClass('hidden');
         }
         else {
-            $('.aboutSectionRightWorkAddDiv1').show();
+            $('.aboutSectionRightWorkAddDiv1').removeClass('hidden');
 
         }
 
@@ -699,7 +705,7 @@ $(document).ready(function () {
             success: function (data) {
                 if (data[0] == undefined || data[0].workInfo1 == null) {
                     document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'No workplace to show';
-                    $('.aboutSectionRightWorkResult1bSpan').hide();
+                    $('.aboutSectionRightWorkResult1bSpan').addClass('hidden');
                     document.getElementsByClassName("aboutSectionRightWorkResultDiv1")[0].style.height = "35px";
                 }
                 else {
@@ -727,13 +733,13 @@ $(document).ready(function () {
     });
 
     $('.aboutSectionRightWorkAddDiv1').click(function () {
-        $('.aboutSectionRightWorkAddInput1Div').show();
-        $('.aboutSectionRightWorkAddDiv1').hide();
+        $('.aboutSectionRightWorkAddInput1Div').removeClass('hidden');
+        $('.aboutSectionRightWorkAddDiv1').addClass('hidden');
     })
 
     $('.aboutSectionRightWorkAddInput1a').click(function () {
-        $('.aboutSectionRightWorkAddInput1Div').hide();
-        $('.aboutSectionRightWorkAddDiv1').hide();
+        $('.aboutSectionRightWorkAddInput1Div').addClass('hidden');
+        $('.aboutSectionRightWorkAddDiv1').addClass('hidden');
     })
 
     $('.aboutSectionRightWorkAddInput1b').click(function () {
@@ -753,8 +759,8 @@ $(document).ready(function () {
         $('.aboutSectionRightWorkAddInput11')[0].value = "";
         $('.aboutSectionRightWorkAddInput12')[0].value = "";
         $('.aboutSectionRightWorkAddInput13')[0].value = "";
-        $('.aboutSectionRightWorkAddInput1Div').hide();
-        $('.aboutSectionRightWorkAddDiv1').show();
+        $('.aboutSectionRightWorkAddInput1Div').addClass('hidden');
+        $('.aboutSectionRightWorkAddDiv1').removeClass('hidden');
 
         setTimeout(function () {
             var value = {
@@ -777,13 +783,13 @@ $(document).ready(function () {
     })
 
     $('.aboutSectionRightWorkAddDiv2').click(function () {
-        $('.aboutSectionRightWorkAddInput2Div').show();
-        $('.aboutSectionRightWorkAddDiv2').hide();
+        $('.aboutSectionRightWorkAddInput2Div').removeClass('hidden');
+        $('.aboutSectionRightWorkAddDiv2').addClass('hidden');
     })
 
     $('.aboutSectionRightWorkAddInput2a').click(function () {
-        $('.aboutSectionRightWorkAddInput2Div').hide();
-        $('.aboutSectionRightWorkAddDiv2').show();
+        $('.aboutSectionRightWorkAddInput2Div').addClass('hidden');
+        $('.aboutSectionRightWorkAddDiv2').removeClass('hidden');
     })
 
     $('.aboutSectionRightWorkAddInput2b').click(function () {
@@ -801,8 +807,8 @@ $(document).ready(function () {
             }
         })
         $('.aboutSectionRightWorkAddInput2')[0].value = "";
-        $('.aboutSectionRightWorkAddInput2Div').hide();
-        $('.aboutSectionRightWorkAddDiv2').show();
+        $('.aboutSectionRightWorkAddInput2Div').addClass('hidden');
+        $('.aboutSectionRightWorkAddDiv2').removeClass('hidden');
 
         setTimeout(function () {
             var value = {
@@ -823,13 +829,13 @@ $(document).ready(function () {
     })
 
     $('.aboutSectionRightWorkAddDiv3').click(function () {
-        $('.aboutSectionRightWorkAddInput3Div').show();
-        $('.aboutSectionRightWorkAddDiv3').hide();
+        $('.aboutSectionRightWorkAddInput3Div').removeClass('hidden');
+        $('.aboutSectionRightWorkAddDiv3').addClass('hidden');
     })
 
     $('.aboutSectionRightWorkAddInput3a').click(function () {
-        $('.aboutSectionRightWorkAddInput3Div').hide();
-        $('.aboutSectionRightWorkAddDiv3').show();
+        $('.aboutSectionRightWorkAddInput3Div').addClass('hidden');
+        $('.aboutSectionRightWorkAddDiv3').removeClass('hidden');
     })
 
     $('.aboutSectionRightWorkAddInput3b').click(function () {
@@ -847,8 +853,8 @@ $(document).ready(function () {
             }
         })
         $('.aboutSectionRightWorkAddInput3')[0].value = "";
-        $('.aboutSectionRightWorkAddInput3Div').hide();
-        $('.aboutSectionRightWorkAddDiv3').show();
+        $('.aboutSectionRightWorkAddInput3Div').addClass('hidden');
+        $('.aboutSectionRightWorkAddDiv3').removeClass('hidden');
 
         setTimeout(function () {
             var value = {
@@ -886,18 +892,18 @@ $(document).ready(function () {
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#65676B"
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "transparent"
 
-        $('.aboutSectionRightContactDiv').hide();
-        $('.aboutSectionRightFamilyDiv').hide();
-        $('.aboutSectionRightOverviewDiv').hide();
-        $('.aboutSectionRightWorkDiv').hide();
-        $('.aboutSectionRightPlaceDiv').show();
-        $('.aboutSectionRightPlaceAddInput1Div').hide();
+        $('.aboutSectionRightContactDiv').addClass('hidden');
+        $('.aboutSectionRightFamilyDiv').addClass('hidden');
+        $('.aboutSectionRightOverviewDiv').addClass('hidden');
+        $('.aboutSectionRightWorkDiv').addClass('hidden');
+        $('.aboutSectionRightPlaceDiv').removeClass('hidden');
+        $('.aboutSectionRightPlaceAddInput1Div').addClass('hidden');
 
         if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-            $('.aboutSectionRightPlaceAddDiv').hide();
+            $('.aboutSectionRightPlaceAddDiv').addClass('hidden');
         }
         else {
-            $('.aboutSectionRightPlaceAddDiv').show();
+            $('.aboutSectionRightPlaceAddDiv').removeClass('hidden');
         }
 
         var value = {
@@ -920,13 +926,13 @@ $(document).ready(function () {
     });
 
     $('.aboutSectionRightPlaceAddDiv').click(function () {
-        $('.aboutSectionRightPlaceAddInput1Div').show();
-        $('.aboutSectionRightPlaceAddDiv').hide();
+        $('.aboutSectionRightPlaceAddInput1Div').removeClass('hidden');
+        $('.aboutSectionRightPlaceAddDiv').addClass('hidden');
     })
 
     $('.aboutSectionRightPlaceAddInput1a').click(function () {
-        $('.aboutSectionRightPlaceAddInput1Div').hide();
-        $('.aboutSectionRightPlaceAddDiv').show();
+        $('.aboutSectionRightPlaceAddInput1Div').addClass('hidden');
+        $('.aboutSectionRightPlaceAddDiv').removeClass('hidden');
     })
 
     $('.aboutSectionRightPlaceAddInput1b').click(function () {
@@ -944,8 +950,8 @@ $(document).ready(function () {
             }
         })
         $('.aboutSectionRightPlaceAddInput1')[0].value = "";
-        $('.aboutSectionRightPlaceAddInput1Div').hide();
-        $('.aboutSectionRightPlaceAddDiv').show();
+        $('.aboutSectionRightPlaceAddInput1Div').addClass('hidden');
+        $('.aboutSectionRightPlaceAddDiv').removeClass('hidden');
 
         setTimeout(function () {
             var value = {
@@ -983,19 +989,19 @@ $(document).ready(function () {
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#65676B"
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "transparent"
 
-        $('.aboutSectionRightFamilyDiv').hide();
-        $('.aboutSectionRightOverviewDiv').hide();
-        $('.aboutSectionRightWorkDiv').hide();
-        $('.aboutSectionRightPlaceDiv').hide();
-        $('.aboutSectionRightContactDiv').show();
-        $('.aboutSectionRightContactAddInput1Div').hide();
-        $('.aboutSectionRightContactAddInput2Div').hide();
+        $('.aboutSectionRightFamilyDiv').addClass('hidden');
+        $('.aboutSectionRightOverviewDiv').addClass('hidden');
+        $('.aboutSectionRightWorkDiv').addClass('hidden');
+        $('.aboutSectionRightPlaceDiv').addClass('hidden');
+        $('.aboutSectionRightContactDiv').removeClass('hidden');
+        $('.aboutSectionRightContactAddInput1Div').addClass('hidden');
+        $('.aboutSectionRightContactAddInput2Div').addClass('hidden');
 
         if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-            $('.aboutSectionRightContactAddDiv1').hide();
+            $('.aboutSectionRightContactAddDiv1').addClass('hidden');
         }
         else {
-            $('.aboutSectionRightContactAddDiv1').show();
+            $('.aboutSectionRightContactAddDiv1').removeClass('hidden');
         }
 
         var value = {
@@ -1007,12 +1013,12 @@ $(document).ready(function () {
             data: value,
             success: function (data) {
                 if (data[0].gender == "Male") {
-                    $('.aboutSectionRightContactGenderMaleDiv').show();
-                    $('.aboutSectionRightContactGenderFemaleDiv').hide();
+                    $('.aboutSectionRightContactGenderMaleDiv').removeClass('hidden');
+                    $('.aboutSectionRightContactGenderFemaleDiv').addClass('hidden');
                 }
                 else {
-                    $('.aboutSectionRightContactGenderMaleDiv').hide();
-                    $('.aboutSectionRightContactGenderFemaleDiv').show();
+                    $('.aboutSectionRightContactGenderMaleDiv').addClass('hidden');
+                    $('.aboutSectionRightContactGenderFemaleDiv').removeClass('hidden');
                 }
 
                 document.getElementsByClassName("aboutSectionRightContactDOB1aSpan")[0].innerHTML = data[0].dobDate + ' ' + data[0].dobMon;
@@ -1039,13 +1045,13 @@ $(document).ready(function () {
     });
 
     $('.aboutSectionRightContactAddDiv1').click(function () {
-        $('.aboutSectionRightContactAddInput1Div').show();
-        $('.aboutSectionRightContactAddDiv1').hide();
+        $('.aboutSectionRightContactAddInput1Div').removeClass('hidden');
+        $('.aboutSectionRightContactAddDiv1').addClass('hidden');
     })
 
     $('.aboutSectionRightContactAddInput1a').click(function () {
-        $('.aboutSectionRightContactAddInput1Div').hide();
-        $('.aboutSectionRightContactAddDiv1').show();
+        $('.aboutSectionRightContactAddInput1Div').addClass('hidden');
+        $('.aboutSectionRightContactAddDiv1').removeClass('hidden');
     })
 
     $('.aboutSectionRightContactAddInput1b').click(function () {
@@ -1063,8 +1069,8 @@ $(document).ready(function () {
             }
         })
         $('.aboutSectionRightContactAddInput1')[0].value = "";
-        $('.aboutSectionRightContactAddInput1Div').hide();
-        $('.aboutSectionRightContactAddDiv1').show();
+        $('.aboutSectionRightContactAddInput1Div').addClass('hidden');
+        $('.aboutSectionRightContactAddDiv1').removeClass('hidden');
 
         setTimeout(function () {
             var value = {
@@ -1085,13 +1091,13 @@ $(document).ready(function () {
     })
 
     $('.aboutSectionRightContactAddDiv2').click(function () {
-        $('.aboutSectionRightContactAddInput2Div').show();
-        $('.aboutSectionRightContactAddDiv2').hide();
+        $('.aboutSectionRightContactAddInput2Div').removeClass('hidden');
+        $('.aboutSectionRightContactAddDiv2').addClass('hidden');
     })
 
     $('.aboutSectionRightContactAddInput2a').click(function () {
-        $('.aboutSectionRightContactAddInput2Div').hide();
-        $('.aboutSectionRightContactAddDiv2').show();
+        $('.aboutSectionRightContactAddInput2Div').addClass('hidden');
+        $('.aboutSectionRightContactAddDiv2').removeClass('hidden');
     })
 
     $('.aboutSectionRightContactAddInput2b').click(function () {
@@ -1129,11 +1135,11 @@ $(document).ready(function () {
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#1876F2"
         document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "#EFF3FF"
 
-        $('.aboutSectionRightOverviewDiv').hide();
-        $('.aboutSectionRightWorkDiv').hide();
-        $('.aboutSectionRightPlaceDiv').hide();
-        $('.aboutSectionRightContactDiv').hide();
-        $('.aboutSectionRightFamilyDiv').show();
+        $('.aboutSectionRightOverviewDiv').addClass('hidden');
+        $('.aboutSectionRightWorkDiv').addClass('hidden');
+        $('.aboutSectionRightPlaceDiv').addClass('hidden');
+        $('.aboutSectionRightContactDiv').addClass('hidden');
+        $('.aboutSectionRightFamilyDiv').removeClass('hidden');
     });
 
     //------------------------------------------------------------------------------------------------

@@ -31,6 +31,7 @@ body {
     margin: 0 auto;
     overflow: hidden;
     border-radius: 8px;
+    height: 50vh;
 }
 
 .myProfileHeaderCoverImg {
@@ -153,9 +154,9 @@ body {
     display: flex;
     align-items: flex-end;
     gap: 12px;
-    margin-left: 0;
     margin-top: 16px;
     flex-wrap: wrap;
+    margin-left: 24vw
 }
 
 .myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileEditDiv, .myProfileHeaderProfileFrndAcceptedDiv {
@@ -165,7 +166,7 @@ body {
     min-width: 95px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     padding: 0 12px;
 }
 
@@ -192,19 +193,16 @@ body {
 .myProfileHeaderProfileEditBtnImg {
     height: 30px;
     width: 30px;
-    padding: 5px;
 }
 
 .myProfileHeaderProfileFrndAcceptedImg {
     height: 25px;
     width: 25px;
-    padding: 6px 6px 8px 7px;
 }
 
 .myProfileHeaderProfileCancelReqImg {
     height: 22px;
     width: 22px;
-    padding: 8px;
 }
 
 .myProfileHeaderProfileAddFriend, .myProfileHeaderProfileCancelReq {
@@ -222,7 +220,7 @@ body {
 
 /* --- PROFILE NAV OPTIONS --- */
 .myProfileHeaderOptionsDiv {
-    width: 100%;
+    width: 90%;
     border-top: 1px solid lightgray;
     display: flex;
     flex-wrap: wrap;
@@ -231,7 +229,6 @@ body {
     background: #fff;
     z-index: 1;
     margin-top: 0;
-    padding-left: 5vw;
     max-width: 1000px;
     margin-left: auto;
     margin-right: auto;
@@ -317,35 +314,36 @@ body {
     box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
 }
 
-.myPost .myActualPost {
-    width: 100%;
-    max-width: 593px;
-    height: auto;
-    object-fit: cover;
-}
+    .myPost .myActualPost {
+        width: 100%;
+        max-width: 593px;
+        height: auto;
+        object-fit: cover;
+    }
 
 /* --- ABOUT SECTION --- */
 .aboutSectionDiv {
     background-color: white;
-    margin: 17px 5vw 0px 5vw;
+    margin: 17px auto 0 auto;
     border-radius: 8px;
     box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
     display: flex;
     flex-wrap: wrap;
+    width: 70vw;
 }
 
 .aboutSectionLeftDiv {
     border-right: 1px solid lightgray;
     width: 290px;
     min-width: 200px;
-    flex: 1 1 200px;
 }
 
 .aboutSectionRightFriendsDiv, .aboutSectionRightPhotosDiv {
     background-color: white;
-    margin: 15px 5vw 0px 5vw;
+    margin: 15px auto 0px auto;
     border-radius: 8px;
     box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
+    width: 70vw;
 }
 
 .aboutSectionRightFriendsListDiv, .aboutSectionRightPhotosListDiv {
@@ -361,9 +359,21 @@ body {
 
 .frndAccImg, .frndAccPostImg, .myPhotos, .myPhotosPost {
     width: 100%;
-    max-width: 182px;
+    max-width: 185px;
     height: auto;
     border-radius: 8px;
+}
+
+.myPhotos {
+    /* height: 185px;
+    width: 185px;
+    border-radius: 5px;*/
+    width: 100%;
+    max-width: 185px;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    border-radius: 5px;
+    object-fit: cover;
 }
 
 .frndAcc {
@@ -372,8 +382,6 @@ body {
     border-radius: 5px;
     display: flex;
     margin: 0px 7px 7px 0px;
-    flex-direction: column;
-    align-items: center;
 }
 
 .frndAccPost {
@@ -425,9 +433,12 @@ body {
     font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
     font-weight: 600;
     position: relative;
-    left: 755px;
     padding: 5px 12px 7px 12px;
     border-radius: 5px;
+}
+
+.aboutSectionRightFriendsHeaderFrndReqDiv {
+    left:755px;
 }
 
 .postOptionLeftFriendsHeaderAllFrndDiv, .postOptionLeftPhotosHeaderAllPhotosDiv {
@@ -464,6 +475,158 @@ body {
 
 .postOptionLeftDiv3 {
     padding-bottom: 0px;
+}
+
+.aboutSectionLeftOverview, .aboutSectionLeftWork, .aboutSectionLeftPlace, .aboutSectionLeftContact, .aboutSectionLeftFamily {
+    margin: 0px 5px 5px 5px;
+    padding: 4px 0px 0px 15px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    color: #65676B;
+    height: 29px;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.aboutSectionRightOverviewDiv {
+    padding-top: 30px;
+}
+
+.aboutSectionRightWorkResult1bSpan, .aboutSectionRightContactGenderValue2, .aboutSectionRightContactDOB1bSpan, .aboutSectionRightOverviewWork1bSpan, .postOptionLeftWork1bSpan {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: #65676B;
+    font-weight: 400;
+    position: relative;
+    left: 40px;
+    top: -10px;
+}
+
+.aboutSectionRightWorkHeader, .aboutSectionRightPlaceHeader, .aboutSectionRightContactHeader, .aboutSectionRightFamilyHeader {
+    padding: 12px 10px 10px 15px;
+    margin: 0px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 18px;
+}
+
+.aboutSectionRightWorkAddDiv1, .aboutSectionRightWorkAddDiv2, .aboutSectionRightWorkAddDiv3, .aboutSectionRightPlaceAddDiv, .aboutSectionRightContactAddDiv1, .aboutSectionRightContactAddDiv2, .aboutSectionRightFamilyAddDiv {
+    display: flex;
+}
+
+.aboutSectionRightWorkAddImg, .aboutSectionRightPlaceAddImg, .aboutSectionRightContactAddImg, .aboutSectionRightFamilyAddImg {
+    height: 28px;
+    width: 30px;
+    padding: 5px 0px 0px 12px;
+}
+
+.aboutSectionRightWorkAdd, .aboutSectionRightPlaceAdd, .aboutSectionRightContactAdd, .aboutSectionRightFamilyAdd {
+    margin: 0px;
+    padding: 8px 0px 10px 10px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    color: #1876F2;
+    cursor: pointer;
+}
+
+.aboutSectionRightWorkAddInput11, .aboutSectionRightWorkAddInput12, .aboutSectionRightWorkAddInput13, .aboutSectionRightWorkAddInput2, .aboutSectionRightWorkAddInput3, .aboutSectionRightPlaceAddInput1, .aboutSectionRightContactAddInput1, .aboutSectionRightContactAddInput2 {
+    height: 55px;
+    width: 690px;
+    margin-top: 10px;
+    position: relative;
+    left: 15px;
+    border-radius: 8px;
+    border: 1px solid lightgray;
+    padding: 15px;
+    font-size: 15px;
+}
+
+.aboutSectionRightWorkAddInput1a, .aboutSectionRightWorkAddInput1b, .aboutSectionRightWorkAddInput2a, .aboutSectionRightWorkAddInput2b, .aboutSectionRightWorkAddInput3a, .aboutSectionRightWorkAddInput3b, .aboutSectionRightPlaceAddInput1a, .aboutSectionRightPlaceAddInput1b, .aboutSectionRightContactAddInput1a, .aboutSectionRightContactAddInput1b, .aboutSectionRightContactAddInput2a, .aboutSectionRightContactAddInput2b {
+    position: relative;
+    left: 560px;
+    height: 37px;
+    width: 70px;
+    border: none;
+    border-radius: 8px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: bold;
+    font-size: 15px;
+    margin: 8px 0px 8px 0px;
+    cursor: pointer;
+}
+
+.aboutSectionRightFriendsHeaderDiv, .aboutSectionRightPhotosHeaderDiv {
+    font-size: 20px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    padding: 0px 0px 15px 20px;
+    margin: 0px;
+    position: relative;
+    top: 19px;
+    display: flex;
+}
+
+.aboutSectionRightFriendsHeaderFrndReqDiv:hover, .postOptionLeftFriendsHeaderAllFrndDiv:hover, .postOptionLeftPhotosHeaderAllPhotosDiv:hover {
+    background-color: #ECECEC;
+    cursor: pointer;
+}
+
+.aboutSectionRightFriendsOptions1Div, .aboutSectionRightPhotosOptions1Div {
+    color: #1876F2;
+    font-size: 15px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    padding: 30px 5px 17px 17px;
+    border-bottom: 3px solid #1876F2;
+    width: 80px;
+    position: relative;
+    left: 20px;
+}
+
+.aboutSectionRightFriendsListDiv {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.aboutSectionRightFriendsListDiv, .aboutSectionRightPhotosListDiv {
+    padding: 15px;
+}
+
+.frndAccPost {
+    margin: 0px 12px 35px 0px;
+    cursor: pointer
+}
+
+.frndAcc:hover {
+    cursor: pointer;
+}
+
+.frndAccImg {
+    height: 80px;
+    width: 80px;
+    border-radius: 8px;
+}
+
+.frndAccPostImg {
+    height: 120px;
+    width: 120px;
+    border-radius: 8px;
+}
+
+.frndAccName {
+    font-size: 17px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    position: relative;
+    top: 25px;
+    left: 15px;
+}
+
+.frndAccPostName {
+    font-size: 13px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    position: relative;
+    top: 5px;
+    left: 2px;
 }
 
 /*------------------------------------------------------------------------*/
@@ -645,6 +808,14 @@ body {
     padding-left: 10px;
 }
 
+.hidden {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
 /* --- RESPONSIVE ADJUSTMENTS --- */
 /* Large tablets and below */
 @media (max-width: 1260px) {
@@ -658,6 +829,18 @@ body {
         margin-right: 0;
         padding-left: 0;
         padding-right: 0;
+    }
+
+    .myProfileHeaderMyDetailsName, .myProfileHeaderMyDetailsFriendsCountDiv {
+        margin-left: -12vw;
+    }
+
+    .myProfileHeaderProfileAddEditDiv {
+        margin-left: 0
+    }
+
+    .myProfileHeaderOptionsDiv {
+        padding-left: 2vw;
     }
 
     .myProfileHeaderProfileDiv {
@@ -684,7 +867,7 @@ body {
     .aboutSectionDiv,
     .aboutSectionRightFriendsDiv,
     .aboutSectionRightPhotosDiv {
-        margin: 17px 2vw 0px 2vw;
+        margin: 17px auto 0px auto;
     }
 
     .postOptionDiv {
@@ -709,6 +892,10 @@ body {
 
     .myProfileHeaderMyDetails {
         margin-bottom: 0;
+    }
+
+    .myProfileHeaderMyDetailsName, .myProfileHeaderMyDetailsFriendsCountDiv {
+        margin-left: 0;
     }
 
     .myProfileHeaderProfile {
@@ -745,6 +932,12 @@ body {
         max-width: 100%;
         margin-left: 0;
         margin-right: 0;
+    }
+}
+
+@media (max-width: 600px) {
+    .aboutSectionRightPhotosListDiv {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     }
 }
 
