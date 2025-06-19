@@ -831,9 +831,9 @@ body {
         padding-right: 0;
     }
 
-    .myProfileHeaderMyDetailsName, .myProfileHeaderMyDetailsFriendsCountDiv {
+   /* .myProfileHeaderMyDetailsName, .myProfileHeaderMyDetailsFriendsCountDiv {
         margin-left: -12vw;
-    }
+    }*/
 
     .myProfileHeaderProfileAddEditDiv {
         margin-left: 0
@@ -843,19 +843,18 @@ body {
         padding-left: 2vw;
     }
 
-    .myProfileHeaderProfileDiv {
+    /*.myProfileHeaderProfileDiv {
         flex-direction: column;
         align-items: flex-start;
         gap: 12px;
         padding-bottom: 0;
-    }
+    }*/
 
     .myProfileHeaderMyDetails {
         margin-bottom: 0;
     }
 
     .myProfileHeaderProfileDiv {
-        max-width: 0vw !important;
         margin: -5vh 0 0 5vw;
     }
 
@@ -884,10 +883,7 @@ body {
 /* Tablets and small laptops */
 @media (max-width: 900px) {
     .myProfileHeaderProfileDiv {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
-        padding-bottom: 0;
+        margin: 0vh 0 0 5vw;
     }
 
     .myProfileHeaderMyDetails {
@@ -932,6 +928,16 @@ body {
         max-width: 100%;
         margin-left: 0;
         margin-right: 0;
+    }
+}
+
+@media (max-width: 750px) {
+    .myProfileHeaderProfileDiv {
+        max-width: 0vw !important;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding-bottom: 0;
     }
 }
 
