@@ -5,28 +5,39 @@
     overflow-x: hidden;
 }
 
+.FriendsDiv {
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .FriendsMenuDiv {
     margin-top: 55px;
     background-color: white;
-    width: 360px;
+    width: 100%;
+    max-width: 360px;
+    min-width: 220px;
     box-shadow: 0 2px 7px rgb(0 0 0 / 0.15);
     z-index: 1;
+    flex: 1 1 220px;
+    box-sizing: border-box;
 }
 
 .FriendsMenuHeaderA {
     font-family: Arial;
     font-stretch: semi-expanded;
     font-weight: 700;
-    font-size: 24px;
+    font-size: 2rem;
     margin: 0px 0px 0px 10px;
 }
 
 .FriendsMenuRequestsDiv, .FriendsMenuAllFriendsDiv {
     height: 40px;
     padding-top: 15px;
-    /*    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif; */
     font-family: Arial;
-    font-size: 17px;
+    font-size: 1rem;
     font-weight: 500;
     font-stretch: semi-expanded;
     margin: 0px 8px 0px 8px;
@@ -45,7 +56,8 @@
 
 .FriendsMenuHeaderDiv {
     height: 40px;
-    width: 315px;
+    width: 100%;
+    max-width: 315px;
     padding: 15px 0px 0px 15px;
     margin: 15px 0px 0px 15px;
 }
@@ -53,6 +65,7 @@
 .FriendsMenuRequestsImg, .FriendsMenuAllFriendsImg {
     height: 36px;
     width: 36px;
+    max-width: 100%;
     padding: 7px;
     padding-right: 10px;
     position: relative;
@@ -61,22 +74,32 @@
 
 .FriendsDiv {
     display: flex;
+    flex-wrap: wrap;
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .FriendsResultDiv {
     padding-top: 55px;
     padding-bottom: 20px;
+    flex: 3 1 400px;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .FriendsResult {
     display: grid;
-    grid-template-columns: 222px 222px 222px 222px 222px;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
     padding: 42px 25px 0px 25px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .FriendsResultHeader {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-family: Arial;
     font-weight: 700;
     position: relative;
@@ -93,9 +116,11 @@
 }
 
 .requestedAccImg {
-    width: 212px;
+    width: 100%;
+    max-width: 212px;
     border-top-right-radius: 8px;
     border-top-left-radius: 8px;
+    height: auto;
 }
 
 .requestedAccName {
@@ -103,7 +128,7 @@
 }
 
 .requestedAccNameA {
-    font-size: 17px;
+    font-size: 1rem;
     font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
     font-weight: 600;
     color: #050505
@@ -111,7 +136,9 @@
 
 .confirmBtn, .deleteBtn {
     margin-left: 12px;
-    width: 188px;
+    width: 100%;
+    max-width: 188px;
+    min-width: 120px;
     height: 35px;
     border-radius: 8px;
     background-color: #1B74E4;
@@ -121,6 +148,7 @@
     font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
     font-size: 15px;
     font-weight: bold;
+    box-sizing: border-box;
 }
 
 .deleteBtn {
@@ -130,9 +158,9 @@
     color: black;
 }
 
-    .confirmBtn:hover, .deleteBtn:hover {
-        cursor: pointer;
-    }
+.confirmBtn:hover, .deleteBtn:hover {
+    cursor: pointer;
+}
 
 .frndAcc {
     display: flex;
@@ -140,9 +168,9 @@
     padding-left: 12px;
 }
 
-    .frndAcc:hover {
-        cursor: pointer;
-    }
+.frndAcc:hover {
+    cursor: pointer;
+}
 
 .frndAccImg {
     height: 50px;
@@ -174,7 +202,7 @@
 
 .NoReq {
     font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
-    font-size: 28px;
+    font-size: 1.75rem;
     font-weight: 600;
     color: #BCC0C4;
     position: relative;
@@ -190,6 +218,58 @@
     left: 5px;
 }
 
-    .backArrow:hover {
-        cursor: pointer;
+.backArrow:hover {
+    cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1100px) {
+    .FriendsResult {
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 12px;
+        padding: 20px 10px 0px 10px;
     }
+
+    .NoReq {
+        left: 0;
+        top: 80px;
+        text-align: center;
+        font-size: 1.25rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .FriendsDiv {
+        flex-direction: column;
+    }
+
+    .FriendsMenuDiv, .FriendsResultDiv {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .FriendsResultHeader {
+        left: 10px;
+        top: 20px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    .FriendsMenuHeaderDiv {
+        width: 100%;
+        padding: 10px 0px 0px 10px;
+        margin: 10px 0px 0px 10px;
+    }
+
+    .FriendsResult {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 10px 2px 0px 2px;
+    }
+
+    .NoReq {
+        font-size: 1rem;
+        top: 40px;
+    }
+}

@@ -156,7 +156,7 @@ body {
     gap: 12px;
     margin-top: 16px;
     flex-wrap: wrap;
-    margin-left: 24vw
+    margin-left: 10vw
 }
 
 .myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileEditDiv, .myProfileHeaderProfileFrndAcceptedDiv {
