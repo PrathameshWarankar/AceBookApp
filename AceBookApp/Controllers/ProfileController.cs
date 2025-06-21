@@ -157,13 +157,6 @@ namespace AceBookApp.Controllers
             }
         }
 
-        //method to get logged user's account details
-        /*public IActionResult GetMyProfileDetails()
-        {
-            var myAccDetailsQuery = _context.Accounts.Where(x => x.Email == HomeController.loggedUser.Email);
-            return Json(myAccDetailsQuery);
-        }*/
-
         //method to additional account's work details in database
         public IActionResult AddAdditionalDetails(string i1, string i2, string i3)
         {
@@ -352,15 +345,6 @@ namespace AceBookApp.Controllers
 
             return Json(frndListQuery);
         }
-
-        //method to get all posts of particular user
-        //public IActionResult GetPhotosList(string email)
-        //{
-        //    var postsQuery = from post in _context.Posts
-        //                      where post.Email == email
-        //                      select post;
-        //   return Json(postsQuery);
-        //}
 
         //method to get all posts of particular user
         public IActionResult GetPostsList(string email)

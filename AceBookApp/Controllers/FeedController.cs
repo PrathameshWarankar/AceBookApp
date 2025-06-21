@@ -43,9 +43,11 @@ namespace AceBookApp.Controllers
                                      select acc;
 
                 postLikeCount.Add(post.Likes);
-                names.Add(postOwnerQuery.First().FirstName + " " + postOwnerQuery.First().Surname);
-                emails.Add(postOwnerQuery.First().Email);
-                feedPostProfileUrl.Add(postOwnerQuery.First().ProfileImagePath);
+
+                var postOwner = postOwnerQuery.First();
+                names.Add(postOwner.FirstName + " " + postOwner.Surname);
+                emails.Add(postOwner.Email);
+                feedPostProfileUrl.Add(postOwner.ProfileImagePath);
             }
 
             //get list of posts already liked by logged user
@@ -64,16 +66,16 @@ namespace AceBookApp.Controllers
             ViewBag.Email = HomeController.loggedUser.Email;
 
             //get account details of logged user
-            var loggedAccountDetailsQuery = from account in _context.Accounts
+            var loggedAccountDetailsQuery = (from account in _context.Accounts
                                             where account.Email == HomeController.loggedUser.Email
-                                            select account;
+                                            select account).First();
 
-            ViewBag.Firstname = loggedAccountDetailsQuery.First().FirstName;
-            ViewBag.Lastname = loggedAccountDetailsQuery.First().Surname;
-            ViewBag.Fullname = loggedAccountDetailsQuery.First().FirstName + " " + loggedAccountDetailsQuery.First().Surname;
-            fullname = loggedAccountDetailsQuery.First().FirstName + " " + loggedAccountDetailsQuery.First().Surname;
-            ViewBag.ProfileUrl = loggedAccountDetailsQuery.First().ProfileImagePath;
-            profileImage = loggedAccountDetailsQuery.First().ProfileImagePath;
+            ViewBag.Firstname = loggedAccountDetailsQuery.FirstName;
+            ViewBag.Lastname = loggedAccountDetailsQuery.Surname;
+            ViewBag.Fullname = loggedAccountDetailsQuery.FirstName + " " + loggedAccountDetailsQuery.Surname;
+            fullname = loggedAccountDetailsQuery.FirstName + " " + loggedAccountDetailsQuery.Surname;
+            ViewBag.ProfileUrl = loggedAccountDetailsQuery.ProfileImagePath;
+            profileImage = loggedAccountDetailsQuery.ProfileImagePath;
             ViewData["Host"] = Request.Host;
 
             ViewBag.FriendReqList = FriendReqList();
@@ -126,14 +128,14 @@ namespace AceBookApp.Controllers
                 {
                     try
                     {
-                        path = Path.Combine(_host.ContentRootPath + "PostContent\\Uploads\\" + HomeController.loggedUser.Email + "\\Posts", random + Path.GetFileName(file.FileName));
+                        path = Path.Combine(_host.ContentRootPath, "PostContent", "Uploads", HomeController.loggedUser.Email, "Posts", random.ToString(), Path.GetFileName(file.FileName));
                         Directory.CreateDirectory(Path.GetDirectoryName(path));
                         using (Stream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
                         {
                             file.CopyTo(fileStream);
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
                         return new Result
                         {

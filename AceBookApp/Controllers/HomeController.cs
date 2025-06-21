@@ -93,9 +93,7 @@ namespace AceBookApp.Controllers
             {
                 if (loggedAccount.Password == password)
                 {
-                    //postData.Email = email;
                     loggedUser.Email = email;
-                    //postData.PostId = loggedAccount.FirstName.Substring(0, 3) + loggedAccount.Surname.Substring(0, 3);
                     loggedUser.UserId = loggedAccount.FirstName.Substring(0, 3) + loggedAccount.Surname.Substring(0, 3);
 
                     var account = (from acc in _context.Accounts

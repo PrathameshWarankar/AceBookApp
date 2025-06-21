@@ -150,15 +150,6 @@ $(document).ready(function () {
 
     });
 
-    //$(".myProfilelogoImgRight").click(function () {
-    //    console.log(document.getElementsByClassName("settingDiv")[0].style.visibility)
-    //    //if (document.getElementsByClassName("settingDiv")[0].style.visibility == 'hidden') {
-    //    //    document.getElementsByClassName("settingDiv")[0].style.visibility = "visible"
-    //    //} else if (document.getElementsByClassName("settingDiv")[0].style.visibility == "visible") {
-    //    //    document.getElementsByClassName("settingDiv")[0].style.visibility = "hidden"
-    //    //}
-    //})
-
     //when profile name is clicked under the settings option
     $(".searchFeedSettingProfileNameDiv").click(function () {
         $.post({

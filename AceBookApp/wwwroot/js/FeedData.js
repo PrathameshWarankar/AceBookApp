@@ -1,33 +1,4 @@
-﻿/*search functionality
-function Search(data) {
-    var value = {
-        "name": data
-    }
-    $.post({
-        url: 'https://' + location.host + '/Feed/SearchBy',
-        method: 'Post',
-        data: value,
-        success: function (data) {
-            var result = '';
-            ; for (var i = 0; i < data.length; i++) {
-                //generates search results
-                result = result + '<div class="searchResultNew"><div class="searchImgDiv"><img class="searchImg" src="' + 'http://127.0.0.1:8080/' + data[i].profileImagePath.substr(64) + '"/></div><div class="searchText"><a class="searchTextA" href="/Profile/ProfileData?email=' + data[i].email + '">' + data[i].firstName + " " + data[i].surname + '</a></div></div>'
-            }
-            document.getElementById("result").innerHTML = result;
-
-            if (data.length < 1) {
-                document.getElementById("result").style.padding = "0px"
-            } else if (data.length >= 1) {
-                document.getElementById("result").style.paddingBottom = "15px"
-                $('.searchResultNew').click(function () {
-                    $(this)[0].getElementsByClassName("searchTextA")[0].click();
-                });
-            }
-        }
-    })
-}*/
-
-//function executed when creating a new post
+﻿//function executed when creating a new post
 function ShowCreatePost() {
     var modal = document.getElementById("createPostDialog");
     var searchOpacity = document.getElementById("searchBarDiv");
@@ -210,6 +181,96 @@ function AddingComment(myData) {
 }
 
 $(document).ready(function () {
+    let btn = document.getElementById("inputAreaSpan");
+    let input = document.getElementById("fileInput")
+
+    btn.onclick = function () {
+        input.click();
+    }
+
+    let file;
+
+    input.addEventListener('change', function () {
+        file = this.files[0];
+
+        let fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+            let fileURL = fileReader.result;
+            let imgTag = `<img class="img1" src="${fileURL}">`
+            btn.innerHTML = imgTag;
+        }
+    })
+
+    //populates the likes section (section above likes and comments)
+    var value = {
+    }
+    $.post({
+        url: 'https://' + location.host + '/Profile/GetPostsLikedByMe',
+        method: 'Post',
+        data: value,
+        async: false,
+        success: function (data) {
+            for (var i = 0; i < data.length; i++) {
+                var op = data[i];
+                var likedByMe = document.getElementById(op);
+                if (likedByMe == null) {
+                    continue
+                }
+                else {
+                    likedByMe.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
+
+                    if (likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "1") {
+                        likedByMe.getElementsByClassName("likeCount")[0].textContent = "You"
+                    }
+                    else if (likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "2") {
+                        likedByMe.getElementsByClassName("likeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0]) - 1) + " other";
+                    }
+                    else {
+                        likedByMe.getElementsByClassName("likeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0]) - 1) + " others";
+                    }
+                }
+
+            }
+        }
+    });
+
+    $(".likeDiv").click(function () {
+        $.post('https://' + location.host + likedUrl + '?id=' + this.parentNode.parentNode.id);
+
+        var imgSrc = document.getElementById(this.parentNode.parentNode.id);
+        if (imgSrc.getElementsByClassName("likeBtnImg")[0].src == "https://" + location.host + "/images/likebutton.png") {
+            imgSrc.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
+
+            if (imgSrc.getElementsByClassName("likeCount")[0].textContent == "") {
+                imgSrc.getElementsByClassName("likeCount")[0].textContent = "You"
+                imgSrc.getElementsByClassName("postLike")[0].src = "https://" + location.host + "/images/postLike.png"
+
+            }
+            else if (imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "1") {
+                imgSrc.getElementsByClassName("likeCount")[0].textContent = "You and " + imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] + " other";
+            }
+            else {
+                imgSrc.getElementsByClassName("likeCount")[0].textContent = "You and " + imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] + " others";
+            }
+        }
+        else {
+            imgSrc.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likebutton.png"
+
+            if (imgSrc.getElementsByClassName("likeCount")[0].textContent == "You") {
+                imgSrc.getElementsByClassName("likeCount")[0].textContent = ""
+                imgSrc.getElementsByClassName("postLike")[0].src = "https://" + location.host + "/images/white-solid-color.jpg"
+
+            }
+            else if (imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[2] == "1") {
+                imgSrc.getElementsByClassName("likeCount")[0].textContent = imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[2] + " other";
+            }
+            else {
+                imgSrc.getElementsByClassName("likeCount")[0].textContent = imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[2] + " others";
+            }
+        }
+    });
+
     $.post({
         //populates the contacts section
         url: 'https://' + location.host + '/Feed/GetContacts',

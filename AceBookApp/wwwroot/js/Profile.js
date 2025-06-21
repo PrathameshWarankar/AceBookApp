@@ -568,8 +568,6 @@ $(document).ready(function () {
             data: value,
             success: function (data) {
                 if ($('.myProfileHeaderProfileCancelReqDiv').hasClass('hidden')) {
-                    //document.getElementsByClassName("myProfileHeaderProfileCancelReqDiv")[0].style.display = "block"
-                    //document.getElementsByClassName("myProfileHeaderProfileAddFriendDiv")[0].style.display = "none"
                     $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
                     $('.myProfileHeaderProfileCancelReqDiv').removeClass('hidden');
                     $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
@@ -916,7 +914,6 @@ $(document).ready(function () {
             success: function (data) {
                 if (data[0] == undefined || data[0].placeInfo == null) {
                     document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'No city to show';
-                    //    document.getElementsByClassName("aboutSectionRightPlaceResultDiv1")[0].style.display = "block";
                 }
                 else {
                     document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
@@ -1035,7 +1032,6 @@ $(document).ready(function () {
             success: function (data) {
                 if (data[0] == undefined || data[0].phoneInfo == null) {
                     document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = 'No phone number to show';
-                    //    document.getElementsByClassName("aboutSectionRightContactResultDiv1")[0].style.display = "block";
                 }
                 else {
                     document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';

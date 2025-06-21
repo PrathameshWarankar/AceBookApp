@@ -5,7 +5,7 @@
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
             crossorigin="anonymous">
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> *@
     <script src="~/js/feeddata.js"></script>
     <link rel="stylesheet" type="text/css" href="~/css/Feed.css" />
 </head>
@@ -16,7 +16,7 @@
     <div id="leftFeed">
         <div id="myProfile">
             <div class="myProfileImg">
-                <img class="myProfilelogoImg" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
+                <img class="myProfilelogoImg" alt="my profile photo" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
             </div>
             <div class="myProfileText">
                 <a class="myProfileTextA" href='@Url.Action("ProfileData", "Profile", new { email = ViewBag.Email })'>@ViewBag.Fullname</a>
@@ -24,7 +24,7 @@
         </div>
         <div id="friends">
             <div class="friendsImg">
-                <img class="friendslogoImg" src="~/images/friendslogo.png" />
+                <img class="friendslogoImg" alt="friends logo" src="~/images/friendslogo.png" />
             </div>
             <div class="friendsText">
                 <a class="friendsTextA" href='@Url.Action("Friends", "Profile", new { email = ViewBag.Email })'>Friends</a>
@@ -32,7 +32,7 @@
         </div>
         <div id="mostRecent">
             <div class="mostRecentImg">
-                <img class="mostRecentlogoImg" src="~/images/mostrecentlogo.png" />
+                <img class="mostRecentlogoImg" alt="most recent logo" src="~/images/mostrecentlogo.png" />
             </div>
             <div class="mostRecentText">
                 <a>Most Recent</a>
@@ -46,14 +46,14 @@
         <div id="createPostFeed">
             <div id="createPostFeed1">
                 <div class="createPostInputPhoto">
-                    <img class="createPostInputPhotoImg" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
+                    <img class="createPostInputPhotoImg" alt="profile photo" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
                 </div>
                 <input id="createPostInput" placeholder="What's on your mind, @ViewBag.Firstname?" />
             </div>
             <div id="createPostFeed2">
                 <div id="createPostLabel" onclick="ShowCreatePost()">
                     <span>
-                        <img id="createPostIcon" src="~/images/createposticon.png" />
+                        <img id="createPostIcon" alt="create post icon" src="~/images/createposticon.png" />
                     </span>
                     <span id="createPostText">
                         Photo/video
@@ -61,7 +61,7 @@
                 </div>
                 <div id="activityLabel">
                     <span>
-                        <img id="activityIcon" src="~/images/activityIcon.png" />
+                        <img id="activityIcon" alt="activity icon" src="~/images/activityIcon.png" />
                     </span>
                     <span id="activityText">
                         Feeling/activity
@@ -85,7 +85,7 @@
 
                         <div class="postDetails">
                             <div>
-                                <img class="feedPostPhoto" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.FeedPostProfileUrl[c].Substring(64))" />
+                                <img class="feedPostPhoto" alt="profile img" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.FeedPostProfileUrl[c].Substring(64))" />
                             </div>
                             <div class="postName">
                                 <a href='@Url.Action("ProfileData", "Profile", new { email = ViewBag.PostEmails[c] })'>@ViewBag.Names[c]</a>
@@ -110,7 +110,7 @@
                         </div>
 
                         <div class="feedPost">
-                            <img class="post" src="@Url.Content(p)" />
+                            <img class="post" alt="post image" src="@Url.Content(p)" />
                         </div>
 
                         <div class="likedNamesParent">
@@ -120,17 +120,17 @@
                         <div class="likeCommentCount" onclick="GetCommentsCount(@post.PostId)">
                             @if (ViewBag.PostLikeCount[c] == 0)
                             {
-                                <img class="postLike" src="~/images/white-solid-color.jpg" />
+                                <img class="postLike" alt="not liked image" src="~/images/white-solid-color.jpg" />
                                 <h3 class="likeCount"></h3>
                             }
                             else if (ViewBag.PostLikeCount[c] == 1)
                             {
-                                <img class="postLike" src="~/images/postLike.png" />
+                                <img class="postLike" alt="liked image" src="~/images/postLike.png" />
                                 <h3 class="likeCount" onmouseover="DisplayLikes(@post.PostId)" onmouseout="DisplayLikesHide(@post.PostId)">@ViewBag.PostLikeCount[c] other</h3>
                             }
                             else
                             {
-                                <img onclick="test()" class="postLike" src="~/images/postLike.png" />
+                                <img onclick="test()" alt="liked image" class="postLike" src="~/images/postLike.png" />
                                 <h3 class="likeCount" onmouseover="DisplayLikes(@post.PostId)" onmouseout="DisplayLikesHide(@post.PostId)">@ViewBag.PostLikeCount[c] others</h3>
                             }
                             <div class="commentCountDiv">
@@ -140,18 +140,18 @@
 
                         <div class="likeComment">
                             <div class="likeDiv">
-                                <img class="likeBtnImg" src="~/images/likebutton.png" />
+                                <img class="likeBtnImg" alt="like button image" src="~/images/likebutton.png" />
                                 <span class="like">Like</span>
                             </div>
                             <div class="commentDiv" onclick="ShowComments(@post.PostId); AddingComment(@post.PostId);">
-                                <img class="commentBtnImg" src="~/images/commentbutton.png" />
+                                <img class="commentBtnImg" alt="comment button image" src="~/images/commentbutton.png" />
                                 <span class="comment">Comment</span>
                             </div>
                         </div>
 
                         <div class="commentSection" style="display: none;">
                             <div class="addCommentDiv">
-                                <img class="commentProfileImg" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
+                                <img class="commentProfileImg" alt="profile photo" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
                                 <input class="addComment" placeholder="Write a comment..." />
                             </div>
                             <div class="CommentsList">
@@ -166,13 +166,13 @@
         <!--window for uploading new post-->
         <div id="createPostDialog" style="display: none;">
             <div id="createLabel">
-                <img id="cancelOption" src="~/images/canceloption.png" onclick="Cancel()" />
+                <img id="cancelOption" alt="cancel option" src="~/images/canceloption.png" onclick="Cancel()" />
                 <label>Create post</label>
             </div>
             <div>
                 <form asp-action="FeedData" method="post" role="form" enctype="multipart/form-data" id="createPostForm">
                     <div>
-                        <img class="createPostProfileImg" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
+                        <img class="createPostProfileImg" alt="profile photo" src="@Url.Content("http://127.0.0.1:8080/" + ViewBag.ProfileUrl.Substring(64))" />
                     </div>
                     <div id="Fullnamelabel">
                         <span>@ViewBag.Fullname</span>
@@ -182,7 +182,7 @@
                     </div>
                     <div id="inputArea">
                         <div id="inputAreaSpan">
-                            <img id="createPostIcon2" src="~/images/createposticon2.png" />
+                            <img id="createPostIcon2" alt="create post icon" src="~/images/createposticon2.png" />
                             <span id="inputSpan">
                                 Add Photos
                             </span>
@@ -205,82 +205,7 @@
 </div>
 
 <script>
-    let btn = document.getElementById("inputAreaSpan");
-    let input = document.getElementById("fileInput")
-
-    btn.onclick = function () {
-        input.click();
-    }
-
-    let file;
-
-    input.addEventListener('change', function () {
-        file = this.files[0];
-
-        let fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = () => {
-            let fileURL = fileReader.result;
-            let imgTag = `<img class="img1" src="${fileURL}">`
-            btn.innerHTML = imgTag;
-        }
-    })
-
-    $(document).ready(function () {
-        $(".likeDiv").click(function () {
-            $.post('@Url.Action("Liked", "Feed")?id=' + this.parentNode.parentNode.id);
-
-            var imgSrc = document.getElementById(this.parentNode.parentNode.id);
-            if (imgSrc.getElementsByClassName("likeBtnImg")[0].src == "https://" + location.host + "/images/likebutton.png") {
-                imgSrc.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
-
-                if (imgSrc.getElementsByClassName("likeCount")[0].textContent == "") {
-                    imgSrc.getElementsByClassName("likeCount")[0].textContent = "You"
-                    imgSrc.getElementsByClassName("postLike")[0].src = "https://" + location.host + "/images/postLike.png"
-
-                }
-                else if (imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "1") {
-                    imgSrc.getElementsByClassName("likeCount")[0].textContent = "You and " + imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] + " other";
-                }
-                else {
-                    imgSrc.getElementsByClassName("likeCount")[0].textContent = "You and " + imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] + " others";
-                }
-            }
-            else {
-                imgSrc.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likebutton.png"
-
-                if (imgSrc.getElementsByClassName("likeCount")[0].textContent == "You") {
-                    imgSrc.getElementsByClassName("likeCount")[0].textContent = ""
-                    imgSrc.getElementsByClassName("postLike")[0].src = "https://" + location.host + "/images/white-solid-color.jpg"
-
-                }
-                else if (imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[2] == "1") {
-                    imgSrc.getElementsByClassName("likeCount")[0].textContent = imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[2] + " other";
-                }
-                else {
-                    imgSrc.getElementsByClassName("likeCount")[0].textContent = imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[2] + " others";
-                }
-            }
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', function () {
-        var jsonObj = @Html.Raw(Json.Serialize(ViewBag.LikedByMe));
-        for (var i = 0; i < jsonObj.length; i++) {
-            var op = jsonObj[i];
-            var likedByMe = document.getElementById(op);
-            likedByMe.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
-            if (likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "1") {
-                likedByMe.getElementsByClassName("likeCount")[0].textContent = "You"
-            }
-            else if (likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "2") {
-                likedByMe.getElementsByClassName("likeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0]) - 1) + " other";
-            }
-            else {
-                likedByMe.getElementsByClassName("likeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0]) - 1) + " others";
-            }
-
-        }
-    }, false);
-
+    // Render server-side values as JS variables
+    const likedUrl = '@Url.Action("Liked", "Feed")';
+    const likedByMe = @Html.Raw(Json.Serialize(ViewBag.LikedByMe));
 </script>

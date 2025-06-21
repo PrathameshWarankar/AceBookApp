@@ -4,7 +4,7 @@
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
             crossorigin="anonymous">
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    @* <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> *@
     <script src="~/js/Profile.js"></script>
     <script type="text/JavaScript" src=" https://MomentJS.com/downloads/moment.js"></script>
     <link rel="stylesheet" type="text/css" href="~/css/Feed.css" />
@@ -18,9 +18,9 @@
             <!--cover photo and edit option-->
             <div class="myProfileHeaderCover">
                 <div class="myProfileHeaderCoverDiv">
-                    <img class="myProfileHeaderCoverImg" />
+                    <img class="myProfileHeaderCoverImg" alt="cover photo" />
                     <div class="myProfileHeaderCoverEditBtnDiv">
-                        <img class="myProfileHeaderCoverEditBtnImg" src="~/images/editcoverphotoimg.png" />
+                        <img class="myProfileHeaderCoverEditBtnImg" alt="edit btn" src="~/images/editcoverphotoimg.png" />
                         <span class="myProfileHeaderCoverEditBtn">Edit cover photo</span>
                         <form class="coverImgForm" asp-action="CoverImgUpload" method="post" role="form" enctype="multipart/form-data">
                             <input type="file" name="coverImg" class="myProfileHeaderCoverUpload" onchange="Submit1()" hidden />
@@ -33,8 +33,8 @@
             <div class="myProfileHeaderProfileDiv">
                 <!--profile photo-->
                 <div class="myProfileHeaderProfile">
-                    <img class="myProfileHeaderProfileImg" />
-                    <img class="myProfileHeaderProfieUploadImg" src="~/images/profilepicuploadimg.png" />
+                    <img class="myProfileHeaderProfileImg" alt="profile photo"/>
+                    <img class="myProfileHeaderProfieUploadImg" alt="upload img" src="~/images/profilepicuploadimg.png" />
                     <form class="profileImgForm" asp-action="ProfileImgUpload" method="post" role="form" enctype="multipart/form-data">
                         <input type="file" name="profileImg" class="myProfileHeaderProfieUpload" onchange="Submit()" hidden />
                     </form>
@@ -53,19 +53,19 @@
                 <!--option for - add friend, cancel request, edit profile, friends-->
                 <div class="myProfileHeaderProfileAddEditDiv" style="display: flex;">
                     <div class="myProfileHeaderProfileAddFriendDiv">
-                        <img class="myProfileHeaderProfileEditBtnImg" src="~/images/AddFriendIcon.png" />
+                        <img class="myProfileHeaderProfileEditBtnImg" alt="add friend icon" src="~/images/AddFriendIcon.png" />
                         <span class="myProfileHeaderProfileAddFriend">Add friend</span>
                     </div>
                     <div class="myProfileHeaderProfileCancelReqDiv">
-                        <img class="myProfileHeaderProfileCancelReqImg" src="~/images/cancelReqIcon.png" />
+                        <img class="myProfileHeaderProfileCancelReqImg" alt="cancel icon" src="~/images/cancelReqIcon.png" />
                         <span class="myProfileHeaderProfileCancelReq">Cancel request</span>
                     </div>
                     <div class="myProfileHeaderProfileEditDiv" style="visibility:hidden;">
-                        <img class="myProfileHeaderProfileEditBtnImg" src="~/images/editprofileimg.png" />
+                        <img class="myProfileHeaderProfileEditBtnImg" alt="edit icon" src="~/images/editprofileimg.png" />
                         <span class="myProfileHeaderProfileEdit">Edit profile</span>
                     </div>
                     <div class="myProfileHeaderProfileFrndAcceptedDiv">
-                        <img class="myProfileHeaderProfileFrndAcceptedImg" src="~/images/friendacceptedicon.png" />
+                        <img class="myProfileHeaderProfileFrndAcceptedImg" alt="req accepted icon" src="~/images/friendacceptedicon.png" />
                         <span class="myProfileHeaderProfileFrndAccepted">Friends</span>
                     </div>
                 </div>
@@ -121,20 +121,20 @@
                 <!--right side - overview result-->
                 <div class="aboutSectionRightOverviewDiv">
                     <div class="aboutSectionRightOverviewWorkDiv">
-                        <img class="aboutSectionRightWorkResult1Img" src="~/images/workicon.png" />
+                        <img class="aboutSectionRightWorkResult1Img" alt="work icon" src="~/images/workicon.png" />
                         <span class="aboutSectionRightOverviewWork1aSpan"></span><br />
                         <span class="aboutSectionRightOverviewWork1bSpan"></span><br />
                     </div>
                     <div class="aboutSectionRightOverviewCollegeDiv">
-                        <img class="aboutSectionRightWorkResult2Img" src="~/images/StudyIcon.png" />
+                        <img class="aboutSectionRightWorkResult2Img" alt="study icon" src="~/images/StudyIcon.png" />
                         <span class="aboutSectionRightOverviewCollegeSpan"></span><br />
                     </div>
                     <div class="aboutSectionRightOverviewPlaceDiv">
-                        <img class="aboutSectionRightPlaceResult1Img" src="~/images/PlaceIcon.png" />
+                        <img class="aboutSectionRightPlaceResult1Img" alt="places icon" src="~/images/PlaceIcon.png" />
                         <span class="aboutSectionRightOverviewPlaceSpan"></span><br />
                     </div>
                     <div class="aboutSectionRightOverviewContactDiv">
-                        <img class="aboutSectionRightContactResult1Img" src="~/images/ContactIcon.png" />
+                        <img class="aboutSectionRightContactResult1Img" alt="contact icon" src="~/images/ContactIcon.png" />
                         <span class="aboutSectionRightOverviewContactSpan"></span><br />
                     </div>
                 </div>
@@ -144,7 +144,7 @@
                     <!--work-->
                     <h3 class="aboutSectionRightWorkHeader">Work</h3>
                     <div class="aboutSectionRightWorkAddDiv1">
-                        <img class="aboutSectionRightWorkAddImg" src="~/images/addimg.png" />
+                        <img class="aboutSectionRightWorkAddImg" alt="add img icon" src="~/images/addimg.png" />
                         <h3 class="aboutSectionRightWorkAdd">Add a workplace</h3>
                     </div>
                     <div class="aboutSectionRightWorkAddInput1Div">
@@ -155,7 +155,7 @@
                         <input type="button" value="Save" class="aboutSectionRightWorkAddInput1b" />
                     </div>
                     <div class="aboutSectionRightWorkResultDiv1">
-                        <img class="aboutSectionRightWorkResult1Img" src="~/images/workicon.png" />
+                        <img class="aboutSectionRightWorkResult1Img" alt="work icon" src="~/images/workicon.png" />
                         <span class="aboutSectionRightWorkResult1aSpan"></span><br />
                         <span class="aboutSectionRightWorkResult1bSpan"></span><br />
                     </div>
@@ -163,7 +163,7 @@
                     <!--college-->
                     <h3 class="aboutSectionRightWorkHeader">College</h3>
                     <div class="aboutSectionRightWorkAddDiv2">
-                        <img class="aboutSectionRightWorkAddImg" src="~/images/addimg.png" />
+                        <img class="aboutSectionRightWorkAddImg" alt="add icon" src="~/images/addimg.png" />
                         <h3 class="aboutSectionRightWorkAdd">Add college</h3>
                     </div>
                     <div class="aboutSectionRightWorkAddInput2Div">
@@ -172,14 +172,14 @@
                         <input type="button" value="Save" class="aboutSectionRightWorkAddInput2b" />
                     </div>
                     <div class="aboutSectionRightWorkResultDiv2">
-                        <img class="aboutSectionRightWorkResult2Img" src="~/images/StudyIcon.png" />
+                        <img class="aboutSectionRightWorkResult2Img" alt="study icon" src="~/images/StudyIcon.png" />
                         <span class="aboutSectionRightWorkResult2aSpan"></span><br />
                     </div>
 
                     <!--high school-->
                     <h3 class="aboutSectionRightWorkHeader">High school</h3>
                     <div class="aboutSectionRightWorkAddDiv3">
-                        <img class="aboutSectionRightWorkAddImg" src="~/images/addimg.png" />
+                        <img class="aboutSectionRightWorkAddImg" alt="add icon" src="~/images/addimg.png" />
                         <h3 class="aboutSectionRightWorkAdd">Add high school</h3>
                     </div>
                     <div class="aboutSectionRightWorkAddInput3Div">
@@ -188,7 +188,7 @@
                         <input type="button" value="Save" class="aboutSectionRightWorkAddInput3b" />
                     </div>
                     <div class="aboutSectionRightWorkResultDiv3">
-                        <img class="aboutSectionRightWorkResult3Img" src="~/images/StudyIcon.png" />
+                        <img class="aboutSectionRightWorkResult3Img" alt="study icon" src="~/images/StudyIcon.png" />
                         <span class="aboutSectionRightWorkResult3aSpan"></span><br />
                     </div>
                 </div>
@@ -197,7 +197,7 @@
                 <div class="aboutSectionRightPlaceDiv">
                     <h3 class="aboutSectionRightPlaceHeader">Places lived</h3>
                     <div class="aboutSectionRightPlaceAddDiv">
-                        <img class="aboutSectionRightPlaceAddImg" src="~/images/addimg.png" />
+                        <img class="aboutSectionRightPlaceAddImg" alt="add icon" src="~/images/addimg.png" />
                         <h3 class="aboutSectionRightPlaceAdd">Add city</h3>
                     </div>
                     <div class="aboutSectionRightPlaceAddInput1Div">
@@ -206,7 +206,7 @@
                         <input type="button" value="Save" class="aboutSectionRightPlaceAddInput1b" />
                     </div>
                     <div class="aboutSectionRightPlaceResultDiv1">
-                        <img class="aboutSectionRightPlaceResult1Img" src="~/images/PlaceIcon.png" />
+                        <img class="aboutSectionRightPlaceResult1Img" alt="place icon" src="~/images/PlaceIcon.png" />
                         <span class="aboutSectionRightPlaceResult1aSpan"></span><br />
                     </div>
                 </div>
@@ -216,7 +216,7 @@
                     <!--contact-->
                     <h3 class="aboutSectionRightContactHeader">Contact info</h3>
                     <div class="aboutSectionRightContactAddDiv1">
-                        <img class="aboutSectionRightContactAddImg" src="~/images/addimg.png" />
+                        <img class="aboutSectionRightContactAddImg" alt="add icon" src="~/images/addimg.png" />
                         <h3 class="aboutSectionRightContactAdd">Add a phone number</h3>
                     </div>
                     <div class="aboutSectionRightContactAddInput1Div">
@@ -225,7 +225,7 @@
                         <input type="button" value="Save" class="aboutSectionRightContactAddInput1b" />
                     </div>
                     <div class="aboutSectionRightContactResultDiv1">
-                        <img class="aboutSectionRightContactResult1Img" src="~/images/ContactIcon.png" />
+                        <img class="aboutSectionRightContactResult1Img"alt="contact icon" src="~/images/ContactIcon.png" />
                         <span class="aboutSectionRightContactResult1aSpan"></span><br />
                     </div>
 
@@ -233,17 +233,17 @@
                     <h3 class="aboutSectionRightContactHeader">Basic info</h3>
                     <div class="aboutSectionRightContactGenderDiv">
                         <div class="aboutSectionRightContactGenderMaleDiv">
-                            <img class="aboutSectionRightContactGenderMale" src="~/images/malegender.png" />
+                            <img class="aboutSectionRightContactGenderMale" alt="male icon" src="~/images/malegender.png" />
                             <span class="aboutSectionRightContactGenderValue1Male">Male</span><br />
                         </div>
                         <div class="aboutSectionRightContactGenderFemaleDiv">
-                            <img class="aboutSectionRightContactGenderFemale" src="~/images/femaleGender.png" />
+                            <img class="aboutSectionRightContactGenderFemale" alt="female icon" src="~/images/femaleGender.png" />
                             <span class="aboutSectionRightContactGenderValue1Female">Female</span><br />
                         </div>
                         <span class="aboutSectionRightContactGenderValue2">Gender</span>
                     </div>
                     <div class="aboutSectionRightContactDOBDiv">
-                        <img class="aboutSectionRightContactDOBImg" src="~/images/dobicon.png" />
+                        <img class="aboutSectionRightContactDOBImg" alt="dob icon" src="~/images/dobicon.png" />
                         <span class="aboutSectionRightContactDOB1aSpan"></span><br />
                         <span class="aboutSectionRightContactDOB1bSpan">Birth date</span>
                     </div>
@@ -254,14 +254,14 @@
                     <!--relatinship-->
                     <h3 class="aboutSectionRightFamilyHeader">Relationship</h3>
                     <div class="aboutSectionRightFamilyAddDiv">
-                        <img class="aboutSectionRightFamilyAddImg" src="~/images/addimg.png" />
+                        <img class="aboutSectionRightFamilyAddImg" alt="add icon" src="~/images/addimg.png" />
                         <h3 class="aboutSectionRightFamilyAdd">Add relationship status</h3>
                     </div>
 
                     <!--family-->
                     <h3 class="aboutSectionRightFamilyHeader">Family members</h3>
                     <div class="aboutSectionRightFamilyAddDiv">
-                        <img class="aboutSectionRightFamilyAddImg" src="~/images/addimg.png" />
+                        <img class="aboutSectionRightFamilyAddImg" alt="add icon" src="~/images/addimg.png" />
                         <h3 class="aboutSectionRightFamilyAdd">Add family member</h3>
                     </div>
                 </div>
@@ -309,20 +309,20 @@
                     <span class="postOptionLeftHeader">Intro</span>
                 </div>
                 <div class="postOptionLeftWorkDiv">
-                    <img class="postOptionLeftWorkImg" src="~/images/workicon.png" />
+                    <img class="postOptionLeftWorkImg" alt="work icon" src="~/images/workicon.png" />
                     <span class="postOptionLeftWork1aSpan"></span><br />
                     <span class="postOptionLeftWork1bSpan"></span><br />
                 </div>
                 <div class="postOptionLeftCollegeDiv">
-                    <img class="postOptionLeftCollegeImg" src="~/images/StudyIcon.png" />
+                    <img class="postOptionLeftCollegeImg" alt="study icon" src="~/images/StudyIcon.png" />
                     <span class="postOptionLeftCollegeSpan"></span><br />
                 </div>
                 <div class="postOptionLeftPlaceDiv">
-                    <img class="postOptionLeftPlaceImg" src="~/images/PlaceIcon.png" />
+                    <img class="postOptionLeftPlaceImg" alt="place icon" src="~/images/PlaceIcon.png" />
                     <span class="postOptionLeftPlaceSpan"></span><br />
                 </div>
                 <div class="postOptionLeftContactDiv">
-                    <img class="postOptionLeftContactImg" src="~/images/ContactIcon.png" />
+                    <img class="postOptionLeftContactImg" alt="contact icon" src="~/images/ContactIcon.png" />
                     <span class="postOptionLeftContactSpan"></span><br />
                 </div>
             </div>
