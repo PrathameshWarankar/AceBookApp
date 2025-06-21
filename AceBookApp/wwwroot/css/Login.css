@@ -113,6 +113,12 @@ h2 {
     margin: 0px;
 }
 
+@media (max-width: 1000px){
+    body {
+        margin: 2vw
+    }
+}
+
 @media (max-width: 900px) {
     body {
         flex-direction: column;

@@ -1154,6 +1154,7 @@ $(document).ready(function () {
         data: value,
         async: false,
         success: function (data) {
+            data.sort((a, b) => new Date(b.date) - new Date(a.date));
             for (var i = 0; i < data.length; i++) {
                 const postDiv = document.createElement("div");
                 postDiv.id = data[i].postId
@@ -1173,10 +1174,10 @@ $(document).ready(function () {
                 });
 
                 if (data[i].likes == 0) {
-                    document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3>'
+                    document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
                 }
                 else if (data[i].likes == 1) {
-                    document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3>'
+                    document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
 
                     const val = i
                     document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseover", function () {
@@ -1187,7 +1188,7 @@ $(document).ready(function () {
                     });
                 }
                 else if (data[i].likes > 1) {
-                    document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3>'
+                    document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
 
                     const val = i
                     document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseover", function () {
@@ -1217,7 +1218,7 @@ $(document).ready(function () {
                             document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'days') + 'd';
                         }
                         else {
-                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'hours')
+                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'hours') + 'h';
                         }
 
                         document.getElementsByClassName("myCommentProfileImg")[i].src = "http://127.0.0.1:8080/" + data1[0].profileImagePath.split('Uploads\\')[1];

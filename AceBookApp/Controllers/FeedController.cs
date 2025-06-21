@@ -84,12 +84,11 @@ namespace AceBookApp.Controllers
         [HttpPost]
         public IActionResult FeedData(Post p, IFormFile imgfile)
         {
-
             Post post = new Post();
-            string path = ImgPath(imgfile);
+            Result result = ImgPath(imgfile);
 
-            if (path.Equals("-1"))
-                return RedirectToAction("Failure", "Home");
+            if (result.isError == true)
+                return RedirectToAction("Result", "Feed", result);
             else
             {
                 //add new post's data in database
@@ -98,7 +97,7 @@ namespace AceBookApp.Controllers
                 post.PostId = HomeController.loggedUser.UserId + r.Next();
                 post.Caption = p.Caption;
                 post.Likes = 0;
-                post.Imagepath = path;
+                post.Imagepath = result.message;
                 post.Date = DateTime.Now;
 
                 _context.Posts.Add(post);
@@ -107,17 +106,23 @@ namespace AceBookApp.Controllers
             }
         }
 
+        public IActionResult Result(Result result)
+        {
+            return View(result);
+        }
+
         //save the new post's image in local folder and then return its path
-        public string ImgPath(IFormFile file)
+        public Result ImgPath(IFormFile file)
         {
             Random r = new Random();
-            string path = "-1";
+            string path = string.Empty;
+
             int random = r.Next();
             if (file != null && file.Length > 0)
             {
                 string extension = Path.GetExtension(file.FileName);
 
-                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".jpeg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jfif"))
+                if (file.ContentType.ToLower().Contains("image"))
                 {
                     try
                     {
@@ -130,16 +135,32 @@ namespace AceBookApp.Controllers
                     }
                     catch (Exception)
                     {
-                        path = "-1";
+                        return new Result
+                        {
+                            isError = true,
+                            message = "An error occurred while uploading the file. Please try again."
+                        };
                     }
                 }
                 else
-                    path = "-1";
+                    return new Result
+                    {
+                        isError = true,
+                        message = "File type not supported. Please upload an image."
+                    };
             }
             else
-                path = "-1";
+                return new Result
+                {
+                    isError = true,
+                    message = "File not found. Please upload an image."
+                };
 
-            return path;
+            return new Result
+            {
+                isError = false,
+                message = path
+            };
         }
 
         //return results for Search functionality

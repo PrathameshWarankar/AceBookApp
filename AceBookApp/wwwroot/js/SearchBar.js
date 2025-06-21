@@ -27,6 +27,7 @@
 }
 
 $(document).ready(function () {
+    //displays the settings options when profile photo from search bar is clicked
     $(".myProfilelogoImgRight").click(function () {
         if (document.getElementsByClassName("settingDiv")[0].style.visibility == "hidden") {
             document.getElementsByClassName("settingDiv")[0].style.visibility = "visible"
@@ -149,14 +150,14 @@ $(document).ready(function () {
 
     });
 
-    //displays the settings options when profile photo from search bar is clicked
-    $(".myProfilelogoImgRight").click(function () {
-        if (document.getElementsByClassName("searchFeedSettingDiv")[0].style.visibility == "hidden") {
-            document.getElementsByClassName("searchFeedSettingDiv")[0].style.visibility = "visible"
-        } else if (document.getElementsByClassName("searchFeedSettingDiv")[0].style.visibility == "visible") {
-            document.getElementsByClassName("searchFeedSettingDiv")[0].style.visibility = "hidden"
-        }
-    })
+    //$(".myProfilelogoImgRight").click(function () {
+    //    console.log(document.getElementsByClassName("settingDiv")[0].style.visibility)
+    //    //if (document.getElementsByClassName("settingDiv")[0].style.visibility == 'hidden') {
+    //    //    document.getElementsByClassName("settingDiv")[0].style.visibility = "visible"
+    //    //} else if (document.getElementsByClassName("settingDiv")[0].style.visibility == "visible") {
+    //    //    document.getElementsByClassName("settingDiv")[0].style.visibility = "hidden"
+    //    //}
+    //})
 
     //when profile name is clicked under the settings option
     $(".searchFeedSettingProfileNameDiv").click(function () {

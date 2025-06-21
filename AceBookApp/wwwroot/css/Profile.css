@@ -67,6 +67,7 @@ body {
 }
 
 .myProfileHeaderProfileDiv {
+    position: relative;
     display: flex;
     align-items: flex-end;
     gap: 32px;
@@ -151,12 +152,21 @@ body {
 }
 
 .myProfileHeaderProfileAddEditDiv {
-    display: flex;
+    /*display: flex;
     align-items: flex-end;
     gap: 12px;
     margin-top: 16px;
     flex-wrap: wrap;
-    margin-left: 10vw
+    margin-left: 10vw*/
+    position: absolute;
+    right: 0;
+    margin-bottom: 3vh;
+    margin-left: 0 !important;
+    margin-top: 0;
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 
 .myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileEditDiv, .myProfileHeaderProfileFrndAcceptedDiv {
@@ -314,12 +324,11 @@ body {
     box-shadow: 0 2px 3px rgb(0 0 0 / 0.15);
 }
 
-    .myPost .myActualPost {
-        width: 100%;
-        max-width: 593px;
-        height: auto;
-        object-fit: cover;
-    }
+.myPost .myActualPost {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
 
 /* --- ABOUT SECTION --- */
 .aboutSectionDiv {
@@ -690,6 +699,9 @@ body {
 
 .myLikeCommentCount {
     height: 40px;
+    display: flex;
+    align-items: center;
+    position: relative;
 }
 
 .myPostLike {
@@ -698,7 +710,7 @@ body {
     margin: 8px 15px;
 }
 
-.myLikeCount {
+/*.myLikeCount {
     font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
     color: dimgrey;
     font-size: 15px;
@@ -708,6 +720,28 @@ body {
     left: 47px;
     width: 125px;
     cursor: pointer;
+}
+*/
+
+.myLikeCount {
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    color: dimgrey;
+    font-size: 15px;
+    font-weight: 100;
+    cursor: pointer;
+    /* Remove position, top, left, width for better flex alignment */
+    position: static;
+    width: auto;
+    margin-left: -8px;
+}
+
+.commentCount {
+    margin-left: auto;
+    color: #65676B;
+    font-size: 15px;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    font-weight: 100;
+    top: 1px;
 }
 
 .myLikeComment {
