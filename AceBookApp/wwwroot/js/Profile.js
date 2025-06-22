@@ -124,7 +124,7 @@ function AddingComment(myData) {
                     input.value = '';
                     setTimeout(function () {
                         GetCommentList(val);
-                        UpdateCommentCount(val); 
+                        UpdateCommentCount(val);
                     }, 750);
                 },
                 complete: function () {
@@ -253,9 +253,9 @@ $(document).ready(function () {
         method: 'Post',
         data: value,
         success: function (data) {
-            document.getElementsByClassName("myProfileHeaderCoverImg")[0].src = "http://127.0.0.1:8080/" + data[0].coverImagePath.split('Uploads\\')[1];
-            document.getElementsByClassName("myProfileHeaderProfileImg")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.split('Uploads\\')[1];
-            document.getElementsByClassName("myProfileHeaderMyDetailsName")[0].textContent = data[0].firstName + " " + data[0].surname;
+            document.getElementsByClassName("myProfileHeaderCoverImg")[0].src = "http://127.0.0.1:8080/" + data.coverImagePath.split('Uploads\\')[1];
+            document.getElementsByClassName("myProfileHeaderProfileImg")[0].src = "http://127.0.0.1:8080/" + data.profileImagePath.split('Uploads\\')[1];
+            document.getElementsByClassName("myProfileHeaderMyDetailsName")[0].textContent = data.firstName + " " + data.surname;
         },
         error: function (xhr, status, error) {
             alert("An error occurred: " + error);
@@ -301,7 +301,7 @@ $(document).ready(function () {
         method: 'Post',
         data: value,
         success: function (data) {
-            myEmail = data[0].email;
+            myEmail = data.email;
 
             //if profile is not of logged user
             if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
@@ -339,38 +339,38 @@ $(document).ready(function () {
         method: 'Post',
         data: value,
         success: function (data) {
-            if (data[0] == undefined || data[0].workInfo1 == null) {
+            if (data == undefined || data.workInfo1 == null) {
                 document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'No workplace to show';
                 $('.aboutSectionRightOverviewWork1bSpan').addClass('hidden');
                 document.getElementsByClassName("aboutSectionRightOverviewWorkDiv")[0].style.height = "37px";
             }
             else {
-                document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                document.getElementsByClassName("aboutSectionRightOverviewWork1bSpan")[0].textContent = data[0].workInfo2;
+                document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data.workInfo1 + '<b>';
+                document.getElementsByClassName("aboutSectionRightOverviewWork1bSpan")[0].textContent = data.workInfo2;
             }
 
-            if (data[0] == undefined || data[0].collegeInfo == null) {
+            if (data == undefined || data.collegeInfo == null) {
                 document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'No college to show';
                 document.getElementsByClassName("aboutSectionRightOverviewCollegeDiv")[0].style.height = "37px";
             }
             else {
-                document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
+                document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'Studied at ' + '<b>' + data.collegeInfo + '<b>';
             }
 
-            if (data[0] == undefined || data[0].placeInfo == null) {
+            if (data == undefined || data.placeInfo == null) {
                 document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'No city to show';
                 document.getElementsByClassName("aboutSectionRightOverviewPlaceDiv")[0].style.height = "37px";
             }
             else {
-                document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
+                document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'From ' + '<b>' + data.placeInfo + '<b>';
             }
 
-            if (data[0] == undefined || data[0].phoneInfo == null) {
+            if (data == undefined || data.phoneInfo == null) {
                 document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = 'No phone number to show';
                 document.getElementsByClassName("aboutSectionRightOverviewContactDiv")[0].style.height = "37px";
             }
             else {
-                document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
+                document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = '<b>' + data.phoneInfo + '</b>';
             }
         },
         error: function (xhr, status, error) {
@@ -387,38 +387,38 @@ $(document).ready(function () {
         method: 'Post',
         data: value,
         success: function (data) {
-            if (data[0] == undefined || data[0].workInfo1 == null) {
+            if (data == undefined || data.workInfo1 == null) {
                 document.getElementsByClassName("postOptionLeftWork1aSpan")[0].innerHTML = 'No workplace to show';
                 $('.postOptionRightWork1bSpan').addClass('hidden');
                 document.getElementsByClassName("postOptionLeftWorkDiv")[0].style.height = "37px";
             }
             else {
-                document.getElementsByClassName("postOptionLeftWork1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                document.getElementsByClassName("postOptionLeftWork1bSpan")[0].textContent = data[0].workInfo2;
+                document.getElementsByClassName("postOptionLeftWork1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data.workInfo1 + '<b>';
+                document.getElementsByClassName("postOptionLeftWork1bSpan")[0].textContent = data.workInfo2;
             }
 
-            if (data[0] == undefined || data[0].collegeInfo == null) {
+            if (data == undefined || data.collegeInfo == null) {
                 document.getElementsByClassName("postOptionLeftCollegeSpan")[0].innerHTML = 'No college to show';
                 document.getElementsByClassName("postOptionLeftCollegeDiv")[0].style.height = "37px";
             }
             else {
-                document.getElementsByClassName("postOptionLeftCollegeSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
+                document.getElementsByClassName("postOptionLeftCollegeSpan")[0].innerHTML = 'Studied at ' + '<b>' + data.collegeInfo + '<b>';
             }
 
-            if (data[0] == undefined || data[0].placeInfo == null) {
+            if (data == undefined || data.placeInfo == null) {
                 document.getElementsByClassName("postOptionLeftPlaceSpan")[0].innerHTML = 'No city to show';
                 document.getElementsByClassName("postOptionLeftPlaceDiv")[0].style.height = "37px";
             }
             else {
-                document.getElementsByClassName("postOptionLeftPlaceSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
+                document.getElementsByClassName("postOptionLeftPlaceSpan")[0].innerHTML = 'From ' + '<b>' + data.placeInfo + '<b>';
             }
 
-            if (data[0] == undefined || data[0].phoneInfo == null) {
+            if (data == undefined || data.phoneInfo == null) {
                 document.getElementsByClassName("postOptionLeftContactSpan")[0].innerHTML = 'No phone number to show';
                 document.getElementsByClassName("postOptionLeftContactDiv")[0].style.height = "37px";
             }
             else {
-                document.getElementsByClassName("postOptionLeftContactSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
+                document.getElementsByClassName("postOptionLeftContactSpan")[0].innerHTML = '<b>' + data.phoneInfo + '</b>';
             }
         },
         error: function (xhr, status, error) {
@@ -518,7 +518,7 @@ $(document).ready(function () {
                     method: 'Post',
                     data: value,
                     success: function (data1) {
-                        result = result + '<div class="frndAcc" id="' + data1[0].email + '" onclick=\'window.location.href="/Profile/ProfileData?email=' + email + '"\'><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccNameDiv"><span class="frndAccName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div > '
+                        result = result + '<div class="frndAcc" id="' + data1.email + '" onclick=\'window.location.href="/Profile/ProfileData?email=' + email + '"\'><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/' + data1.profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccNameDiv"><span class="frndAccName">' + data1.firstName + ' ' + data1.surname + '</span></div></div > '
                     },
                     error: function (xhr, status, error) {
                         alert("An error occurred: " + error);
@@ -565,7 +565,7 @@ $(document).ready(function () {
                     method: 'Post',
                     data: value,
                     success: function (data1) {
-                        result = result + '<div class="frndAccPost" id="' + data1[0].email + '" onclick=\'window.location.href="/Profile/ProfileData?email=' + email + '"\'><div class="frndAccPostImgDiv"><img class="frndAccPostImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccPostNameDiv"><span class="frndAccPostName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div > '
+                        result = result + '<div class="frndAccPost" id="' + data1.email + '" onclick=\'window.location.href="/Profile/ProfileData?email=' + email + '"\'><div class="frndAccPostImgDiv"><img class="frndAccPostImg" src="http://127.0.0.1:8080/' + data1.profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccPostNameDiv"><span class="frndAccPostName">' + data1.firstName + ' ' + data1.surname + '</span></div></div > '
                     },
                     error: function (xhr, status, error) {
                         alert("An error occurred: " + error);
@@ -696,38 +696,38 @@ $(document).ready(function () {
             method: 'Post',
             data: value,
             success: function (data) {
-                if (data[0] == undefined || data[0].workInfo1 == null) {
+                if (data == undefined || data.workInfo1 == null) {
                     document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'No workplace to show';
                     $('.aboutSectionRightOverviewWork1bSpan').addClass('hidden');
                     document.getElementsByClassName("aboutSectionRightOverviewWorkDiv")[0].style.height = "37px";
                 }
                 else {
-                    document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                    document.getElementsByClassName("aboutSectionRightOverviewWork1bSpan")[0].textContent = data[0].workInfo2;
+                    document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data.workInfo1 + '<b>';
+                    document.getElementsByClassName("aboutSectionRightOverviewWork1bSpan")[0].textContent = data.workInfo2;
                 }
 
-                if (data[0] == undefined || data[0].collegeInfo == null) {
+                if (data == undefined || data.collegeInfo == null) {
                     document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'No college to show';
                     document.getElementsByClassName("aboutSectionRightOverviewCollegeDiv")[0].style.height = "37px";
                 }
                 else {
-                    document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
+                    document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'Studied at ' + '<b>' + data.collegeInfo + '<b>';
                 }
 
-                if (data[0] == undefined || data[0].placeInfo == null) {
+                if (data == undefined || data.placeInfo == null) {
                     document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'No city to show';
                     document.getElementsByClassName("aboutSectionRightOverviewPlaceDiv")[0].style.height = "37px";
                 }
                 else {
-                    document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
+                    document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'From ' + '<b>' + data.placeInfo + '<b>';
                 }
 
-                if (data[0] == undefined || data[0].phoneInfo == null) {
+                if (data == undefined || data.phoneInfo == null) {
                     document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = 'No phone number to show';
                     document.getElementsByClassName("aboutSectionRightOverviewContactDiv")[0].style.height = "37px";
                 }
                 else {
-                    document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
+                    document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = '<b>' + data.phoneInfo + '</b>';
                 }
             },
             error: function (xhr, status, error) {
@@ -781,30 +781,30 @@ $(document).ready(function () {
             method: 'Post',
             data: value,
             success: function (data) {
-                if (data[0] == undefined || data[0].workInfo1 == null) {
+                if (data == undefined || data.workInfo1 == null) {
                     document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'No workplace to show';
                     $('.aboutSectionRightWorkResult1bSpan').addClass('hidden');
                     document.getElementsByClassName("aboutSectionRightWorkResultDiv1")[0].style.height = "35px";
                 }
                 else {
-                    document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                    document.getElementsByClassName("aboutSectionRightWorkResult1bSpan")[0].textContent = data[0].workInfo2;
+                    document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data.workInfo1 + '<b>';
+                    document.getElementsByClassName("aboutSectionRightWorkResult1bSpan")[0].textContent = data.workInfo2;
                     /*document.getElementsByClassName("aboutSectionRightWorkResult1cSpan")[0].textContent = data[0].workInfo3;*/
                     /*document.getElementsByClassName("aboutSectionRightWorkResultDiv1")[0].style.display = "block";*/
                 }
 
-                if (data[0] == undefined || data[0].collegeInfo == null) {
+                if (data == undefined || data.collegeInfo == null) {
                     document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'No college to show';
                 }
                 else {
-                    document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
+                    document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'Studied at ' + '<b>' + data.collegeInfo + '<b>';
                 }
 
-                if (data[0] == undefined || data[0].schoolInfo == null) {
+                if (data == undefined || data.schoolInfo == null) {
                     document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'No school to show';
                 }
                 else {
-                    document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'Went at ' + '<b>' + data[0].schoolInfo + '<b>';
+                    document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'Went at ' + '<b>' + data.schoolInfo + '<b>';
                 }
             },
             error: function (xhr, status, error) {
@@ -855,9 +855,9 @@ $(document).ready(function () {
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].workInfo1 != null) {
-                        document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                        document.getElementsByClassName("aboutSectionRightWorkResult1bSpan")[0].textContent = data[0].workInfo2;
+                    if (data.workInfo1 != null) {
+                        document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data.workInfo1 + '<b>';
+                        document.getElementsByClassName("aboutSectionRightWorkResult1bSpan")[0].textContent = data.workInfo2;
                         /*document.getElementsByClassName("aboutSectionRightWorkResult1cSpan")[0].textContent = data[0].workInfo3;*/
                         document.getElementsByClassName("aboutSectionRightWorkResultDiv1")[0].style.display = "block";
                     }
@@ -909,8 +909,8 @@ $(document).ready(function () {
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].collegeInfo != null) {
-                        document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
+                    if (data.collegeInfo != null) {
+                        document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'Studied at ' + '<b>' + data.collegeInfo + '<b>';
                         document.getElementsByClassName("aboutSectionRightWorkResultDiv2")[0].style.display = "block";
                     }
                 },
@@ -961,8 +961,8 @@ $(document).ready(function () {
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].schoolInfo != null) {
-                        document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'Went at ' + '<b>' + data[0].schoolInfo + '<b>';
+                    if (data.schoolInfo != null) {
+                        document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'Went at ' + '<b>' + data.schoolInfo + '<b>';
                         document.getElementsByClassName("aboutSectionRightWorkResultDiv3")[0].style.display = "block";
                     }
                 },
@@ -1013,11 +1013,11 @@ $(document).ready(function () {
             method: 'Post',
             data: value,
             success: function (data) {
-                if (data[0] == undefined || data[0].placeInfo == null) {
+                if (data == undefined || data.placeInfo == null) {
                     document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'No city to show';
                 }
                 else {
-                    document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
+                    document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data.placeInfo + '<b>';
                 }
             },
             error: function (xhr, status, error) {
@@ -1066,8 +1066,8 @@ $(document).ready(function () {
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].placeInfo != null) {
-                        document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
+                    if (data.placeInfo != null) {
+                        document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data.placeInfo + '<b>';
                         document.getElementsByClassName("aboutSectionRightPlaceResultDiv1")[0].style.display = "block";
                     }
                 },
@@ -1119,7 +1119,7 @@ $(document).ready(function () {
             method: 'Post',
             data: value,
             success: function (data) {
-                if (data[0].gender == "Male") {
+                if (data.gender == "Male") {
                     $('.aboutSectionRightContactGenderMaleDiv').removeClass('hidden');
                     $('.aboutSectionRightContactGenderFemaleDiv').addClass('hidden');
                 }
@@ -1128,7 +1128,7 @@ $(document).ready(function () {
                     $('.aboutSectionRightContactGenderFemaleDiv').removeClass('hidden');
                 }
 
-                document.getElementsByClassName("aboutSectionRightContactDOB1aSpan")[0].innerHTML = data[0].dobDate + ' ' + data[0].dobMon;
+                document.getElementsByClassName("aboutSectionRightContactDOB1aSpan")[0].innerHTML = data.dobDate + ' ' + data.dobMon;
             },
             error: function (xhr, status, error) {
                 alert("An error occurred: " + error);
@@ -1143,11 +1143,11 @@ $(document).ready(function () {
             method: 'Post',
             data: value,
             success: function (data) {
-                if (data[0] == undefined || data[0].phoneInfo == null) {
+                if (data == undefined || data.phoneInfo == null) {
                     document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = 'No phone number to show';
                 }
                 else {
-                    document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
+                    document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data.phoneInfo + '</b>';
                 }
             },
             error: function (xhr, status, error) {
@@ -1196,8 +1196,8 @@ $(document).ready(function () {
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].phoneInfo != null) {
-                        document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
+                    if (data.phoneInfo != null) {
+                        document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data.phoneInfo + '</b>';
                         document.getElementsByClassName("aboutSectionRightContactResultDiv1")[0].style.display = "block";
                     }
                 },
@@ -1277,35 +1277,36 @@ $(document).ready(function () {
             data.sort((a, b) => new Date(b.date) - new Date(a.date));
             for (var i = 0; i < data.length; i++) {
                 const postDiv = document.createElement("div");
-                postDiv.id = data[i].postId
-                result = '<div class="myPost"><div class="myPostDetails"><div class="myPostImgDiv"><img class="myPostImg"/></div><div class="myPostNameDiv"><span class="myPostName"></span></div><div class="myPostDateDiv"><text class="myPostDate"></text></div><div class="myPostCaptionDiv"><span class="myPostCaption"></span></div></div><div class="myPost"><img class="myActualPost"/></div><div class="myLikedNamesParent"><div class="myLikedNames" runat="server" style="display: none;"></div></div><div class="myLikeCommentCount"></div><div class="myLikeComment"><div class="myLikeDiv"><img class="myLikeBtnImg"/><span class="myLike">Like</span></div><div class="myCommentDiv"><img class="myCommentBtnImg"/><span class="myComment">Comment</span></div></div><div class="myCommentSection" style="display: none;"><div class="myAddCommentDiv"><img class="myCommentProfileImg"/><input class="myAddComment" placeholder="Write a comment..." /></div><div class="myCommentsList"></div></div></div>'
-                postDiv.innerHTML = result
+                postDiv.id = data[i].postId;
+                result = '<div class="myPost"><div class="myPostDetails"><div class="myPostImgDiv"><img class="myPostImg"/></div><div class="myPostNameDiv"><span class="myPostName"></span></div><div class="myPostDateDiv"><text class="myPostDate"></text></div><div class="myPostCaptionDiv"><span class="myPostCaption"></span></div></div><div class="myPost"><img class="myActualPost"/></div><div class="myLikedNamesParent"><div class="myLikedNames" runat="server" style="display: none;"></div></div><div class="myLikeCommentCount"></div><div class="myLikeComment"><div class="myLikeDiv"><img class="myLikeBtnImg"/><span class="myLike">Like</span></div><div class="myCommentDiv"><img class="myCommentBtnImg"/><span class="myComment">Comment</span></div></div><div class="myCommentSection" style="display: none;"><div class="myAddCommentDiv"><img class="myCommentProfileImg"/><input class="myAddComment" placeholder="Write a comment..." /></div><div class="myCommentsList"></div></div></div>';
+                postDiv.innerHTML = result;
                 document.getElementsByClassName("postOptionRightDiv")[0].appendChild(postDiv);
 
-                document.getElementsByClassName("myPostCaption")[i].textContent = data[i].caption;
-                document.getElementsByClassName("myActualPost")[i].src = "http://127.0.0.1:8080/" + data[i].imagepath.split('Uploads\\')[1];
-                document.getElementsByClassName("myLikeBtnImg")[i].src = "https://" + location.host + "/images/likebutton.png";
-                document.getElementsByClassName("myCommentBtnImg")[i].src = "https://" + location.host + "/images/commentbutton.png";
+                // Set post caption and image
+                postDiv.querySelector(".myPostCaption").textContent = data[i].caption;
+                postDiv.querySelector(".myActualPost").src = "http://127.0.0.1:8080/" + data[i].imagepath.split('Uploads\\')[1];
+                postDiv.querySelector(".myLikeBtnImg").src = "https://" + location.host + "/images/likebutton.png";
+                postDiv.querySelector(".myCommentBtnImg").src = "https://" + location.host + "/images/commentbutton.png";
 
-                const val = i
-                document.getElementsByClassName("myCommentDiv")[i].addEventListener("click", function () {
-                    ShowComments(data[val].postId);
-                    AddingComment(data[val]);
+                // Attach comment event
+                postDiv.querySelector(".myCommentDiv").addEventListener("click", function () {
+                    ShowComments(data[i].postId);
+                    AddingComment(data[i]);
                 });
 
                 if (data[i].likes == 0) {
                     if (data[i].comments == 1)
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
+                        postDiv.querySelector(".myLikeCommentCount").innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
                     else
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
+                        postDiv.querySelector(".myLikeCommentCount").innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
                 }
                 else if (data[i].likes == 1) {
                     if (data[i].comments == 1)
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
+                        postDiv.querySelector(".myLikeCommentCount").innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
                     else
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
+                        postDiv.querySelector(".myLikeCommentCount").innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
 
-                    const val = i
+                    const val = i;
                     document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseover", function () {
                         DisplayLikes(data[val].postId)
                     });
@@ -1315,11 +1316,11 @@ $(document).ready(function () {
                 }
                 else if (data[i].likes > 1) {
                     if (data[i].comments == 1)
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
+                        postDiv.querySelector(".myLikeCommentCount").innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
                     else
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
+                        postDiv.querySelector(".myLikeCommentCount").innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
 
-                    const val = i
+                    const val = i;
                     document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseover", function () {
                         DisplayLikes(data[val].postId)
                     });
@@ -1328,33 +1329,40 @@ $(document).ready(function () {
                     });
                 }
 
-                $.ajax({
-                    url: 'https://' + location.host + '/Profile/GetProfileDetails',
-                    method: 'Post',
-                    data: value,
-                    success: function (data1) {
-                        var date1 = moment();
-                        var date2 = moment(data[i].date);
+                // Profile AJAX call for each post
+                (function (post, idx) {
+                    var value = { "email": post.email };
+                    $.ajax({
+                        url: 'https://' + location.host + '/Profile/GetProfileDetails',
+                        method: 'Post',
+                        data: value,
+                        success: function (data1) {
+                            postDiv.querySelector(".myPostImg").src = "http://127.0.0.1:8080/" + data1.profileImagePath.split('Uploads\\')[1];
+                            postDiv.querySelector(".myPostName").textContent = data1.firstName + " " + data1.surname;
 
-                        document.getElementsByClassName("myPostImg")[i].src = "http://127.0.0.1:8080/" + data1[0].profileImagePath.split('Uploads\\')[1];
-                        document.getElementsByClassName("myPostName")[i].textContent = data1[0].firstName + " " + data1[0].surname;
+                            var date1 = moment();
+                            var date2 = moment(post.date);
 
-                        if (date1.diff(date2, 'hours') == 0) {
-                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'minutes') + "m"
-                        }
-                        else if (date1.diff(date2, 'hours') > 24) {
-                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'days') + 'd';
-                        }
-                        else {
-                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'hours') + 'h';
-                        }
+                            postDiv.querySelector(".myPostImg").src = "http://127.0.0.1:8080/" + data1.profileImagePath.split('Uploads\\')[1];
+                            postDiv.querySelector(".myPostName").textContent = data1.firstName + " " + data1.surname;
 
-                        document.getElementsByClassName("myCommentProfileImg")[i].src = "http://127.0.0.1:8080/" + data1[0].profileImagePath.split('Uploads\\')[1];
-                    },
-                    error: function (xhr, status, error) {
-                        alert("An error occurred: " + error);
-                    }
-                });
+                            if (date1.diff(date2, 'hours') == 0) {
+                                postDiv.querySelector(".myPostDate").textContent = date1.diff(date2, 'minutes') + "m"
+                            }
+                            else if (date1.diff(date2, 'hours') > 24) {
+                                postDiv.querySelector(".myPostDate").textContent = date1.diff(date2, 'days') + 'd';
+                            }
+                            else {
+                                postDiv.querySelector(".myPostDate").textContent = date1.diff(date2, 'hours') + 'h';
+                            }
+
+                            postDiv.querySelector(".myCommentProfileImg").src = "http://127.0.0.1:8080/" + data1.profileImagePath.split('Uploads\\')[1];
+                        },
+                        error: function (xhr, status, error) {
+                            alert("An error occurred: " + error);
+                        }
+                    });
+                })(data[i], i);
             }
         },
         error: function (xhr, status, error) {

@@ -2,7 +2,7 @@
     var value = {
         "name": data
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Feed/SearchBy',
         method: 'Post',
         data: value,
@@ -22,6 +22,9 @@
                     $(this)[0].getElementsByClassName("searchTextA")[0].click();
                 });
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     })
 }
@@ -36,25 +39,26 @@ $(document).ready(function () {
         }
 
         var value = {}
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/GetProfileDetails',
             method: 'Post',
             data: value,
-            async: false,
             success: function (data) {
-                myEmail = data[0].email;
-                document.getElementsByClassName("searchFeedSettingProfileName")[0].textContent = data[0].firstName + " " + data[0].surname;
-                document.getElementsByClassName("searchFeedSettingProfileImg")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.substr(64)
+                myEmail = data.email;
+                document.getElementsByClassName("searchFeedSettingProfileName")[0].textContent = data.firstName + " " + data.surname;
+                document.getElementsByClassName("searchFeedSettingProfileImg")[0].src = "http://127.0.0.1:8080/" + data.profileImagePath.substr(64)
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
     })
 
     //populates notifications
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetMyNotifications',
         method: 'Post',
         data: "",
-        async: false,
         success: function (data) {
             document.getElementsByClassName("searchFeedNotiDiv")[0].innerHTML = "";
             var notiCount = 0;
@@ -146,47 +150,55 @@ $(document).ready(function () {
                     document.getElementsByClassName("searchFeedNotiMarkerCountDiv")[0].textContent = 10;
                 }
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
-
     });
 
     //when profile name is clicked under the settings option
     $(".searchFeedSettingProfileNameDiv").click(function () {
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/GetProfileDetails',
             method: 'Post',
             data: value,
-            async: false,
             success: function (data) {
                 window.location.href = "https://" + window.location.host + "/Profile/ProfileData?email=" + data[0].email;
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
     })
 
     //populates profile name and image in search bar and settings option
     var value = {}
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetProfileDetails',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
-            myEmail = data[0].email;
-            document.getElementsByClassName("searchFeedSettingProfileName")[0].textContent = data[0].firstName + " " + data[0].surname;
-            document.getElementsByClassName("searchFeedSettingProfileImg")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.substr(64)
-            document.getElementsByClassName("myProfilelogoImgRight")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.substr(64);
+            myEmail = data.email;
+            document.getElementsByClassName("searchFeedSettingProfileName")[0].textContent = data.firstName + " " + data.surname;
+            document.getElementsByClassName("searchFeedSettingProfileImg")[0].src = "http://127.0.0.1:8080/" + data.profileImagePath.substr(64)
+            document.getElementsByClassName("myProfilelogoImgRight")[0].src = "http://127.0.0.1:8080/" + data.profileImagePath.substr(64);
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     })
 
     //redirects to settings page when settings button is clicked
     $(".searchFeedSettingOptionDiv").click(function () {
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/GetProfileDetails',
             method: 'Post',
             data: value,
-            async: false,
             success: function (data) {
                 window.location.href = "https://" + window.location.host + "/Profile/Settings";
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
     })
@@ -222,12 +234,14 @@ $(document).ready(function () {
                 "id": this.id.split('#')[0],
                 "type": this.id.split('#')[1]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Feed/UpdateNotificatioStatus',
                 method: 'Post',
                 data: value,
-                async: false,
-                success: function (data) { }
+                success: function (data) { },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
+                }
             })
         })
     })
