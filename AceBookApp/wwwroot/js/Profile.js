@@ -57,6 +57,26 @@ function GetCommentList(myData) {
     })
 }
 
+function UpdateCommentCount(postId) {
+    var value = { "id": postId };
+    $.post({
+        url: 'https://' + location.host + '/Feed/GetCommentsBy',
+        method: 'Post',
+        data: value,
+        success: function (data) {
+            var countText = data.length === 1 ? "1 comment" : data.length + " comments";
+            // Update the comment count in the DOM for this post
+            var postElem = document.getElementById(postId);
+            if (postElem) {
+                var countElem = postElem.getElementsByClassName("commentCount")[0];
+                if (countElem) {
+                    countElem.innerHTML = countText;
+                }
+            }
+        }
+    });
+}
+
 //method to display previous comments and adds new comment when entered by user
 function AddingComment(myData) {
     var val;
@@ -70,23 +90,32 @@ function AddingComment(myData) {
     GetCommentList(val);
     var input = document.getElementById(val).getElementsByClassName("myCommentSection")[0].getElementsByClassName("myAddComment")[0];
 
+    let isSubmitting = false;
+
     input.addEventListener("keyup", (event) => {
-        if (event.key == "Enter") {
+        if (event.key === "Enter" && input.value.trim() !== '' && !isSubmitting) {
+            isSubmitting = true;
+
             var value = {
                 "id": val,
                 "text": input.value
-            }
-            if (input.value !== '') {
-                $.post({
-                    url: 'https://' + location.host + '/Feed/Commented',
-                    method: 'Post',
-                    data: value,
-                    success: function (data) {
-                        input.value = '';
-                        setTimeout(() => GetCommentList(val), 750);
-                    }
-                })
-            }
+            };
+
+            $.post({
+                url: 'https://' + location.host + '/Feed/Commented',
+                method: 'Post',
+                data: value,
+                success: function (data) {
+                    input.value = '';
+                    setTimeout(function () {
+                        GetCommentList(val);
+                        UpdateCommentCount(val); 
+                    }, 750);
+                },
+                complete: function () {
+                    isSubmitting = false;
+                }
+            });
         }
     });
 }
@@ -1170,10 +1199,16 @@ $(document).ready(function () {
                 });
 
                 if (data[i].likes == 0) {
-                    document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
+                    if (data[i].comments == 1)
+                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
+                    else
+                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
                 }
                 else if (data[i].likes == 1) {
-                    document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
+                    if (data[i].comments == 1)
+                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
+                    else
+                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
 
                     const val = i
                     document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseover", function () {
@@ -1184,7 +1219,10 @@ $(document).ready(function () {
                     });
                 }
                 else if (data[i].likes > 1) {
-                    document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
+                    if (data[i].comments == 1)
+                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
+                    else
+                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
 
                     const val = i
                     document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseover", function () {

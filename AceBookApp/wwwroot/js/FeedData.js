@@ -159,23 +159,29 @@ function AddingComment(myData) {
     GetCommentList(val);
     var input = document.getElementById(val).getElementsByClassName("commentSection")[0].getElementsByClassName("addComment")[0];
 
+    let isSubmitting = false;
+
     input.addEventListener("keyup", (event) => {
-        if (event.key == "Enter") {
+        if (event.key === "Enter" && input.value.trim() !== '' && !isSubmitting) {
+            isSubmitting = true;
+
             var value = {
                 "id": val,
                 "text": input.value
-            }
-            if (input.value !== '') {
-                $.post({
-                    url: 'https://' + location.host + '/Feed/Commented',
-                    method: 'Post',
-                    data: value,
-                    success: function (data) {
-                        input.value = '';
-                        setTimeout(() => GetCommentList(val), 750);
-                    }
-                })
-            }
+            };
+
+            $.post({
+                url: 'https://' + location.host + '/Feed/Commented',
+                method: 'Post',
+                data: value,
+                success: function (data) {
+                    input.value = '';
+                    setTimeout(() => GetCommentList(val), 750);
+                },
+                complete: function () {
+                    isSubmitting = false;
+                }
+            });
         }
     });
 }
