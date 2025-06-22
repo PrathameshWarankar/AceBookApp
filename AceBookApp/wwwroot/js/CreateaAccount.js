@@ -135,9 +135,4 @@ function CheckField() {
     else {
         document.getElementById('pass').style.border = "1px solid red"
     }
-
-    if (document.getElementById('maleradio').checked == false && document.getElementById('femaleradio').checked == false) {
-        document.getElementById('male').style.border = "1px solid red";
-        document.getElementById('female').style.border = "1px solid red";
-    }
 }

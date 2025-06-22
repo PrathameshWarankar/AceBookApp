@@ -1,6 +1,9 @@
 ﻿using AceBookApp.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AceBookApp.Controllers
 {
@@ -64,6 +67,9 @@ namespace AceBookApp.Controllers
                     acc.CoverImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "coverPhotoDefault.JPG";
 
                 acc.Status = "Offline";
+
+                var passwordHasher = new PasswordHasher<IdentityUser>();
+                acc.Password = passwordHasher.HashPassword(null, acc.Password);
                 _context.Accounts.Add(acc);
                 _context.SaveChanges();
                 return RedirectToAction("Success", "Home");
@@ -91,10 +97,13 @@ namespace AceBookApp.Controllers
             var loggedAccount = _context.Accounts.Find(email);
             if (loggedAccount != null)
             {
-                if (loggedAccount.Password == password)
+                var passwordHasher = new PasswordHasher<IdentityUser>();
+                var result = passwordHasher.VerifyHashedPassword(null, loggedAccount.Password, password);
+
+                if (result == PasswordVerificationResult.Success)
                 {
                     loggedUser.Email = email;
-                    loggedUser.UserId = loggedAccount.FirstName.Substring(0, 3) + loggedAccount.Surname.Substring(0, 3);
+                    loggedUser.UserId = BitConverter.ToString(SHA256.HashData(Encoding.UTF8.GetBytes(email.Trim().ToLower()))).Replace("-", "").ToLower().Substring(0, 16);
 
                     var account = (from acc in _context.Accounts
                                    where acc.Email == email
