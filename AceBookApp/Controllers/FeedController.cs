@@ -110,6 +110,8 @@ namespace AceBookApp.Controllers
 
         public IActionResult Result(Result result)
         {
+            TempData["AlertMessage"] = result.message;
+            TempData["RedirectUrl"] = Url.Action("FeedData", "Feed");
             return View(result);
         }
 
