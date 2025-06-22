@@ -13,6 +13,7 @@
 </head>
 
 <body style="visibility:hidden;">
+    @Html.AntiForgeryToken()
     <div class="myProfileHeaderDiv">
         <div class="myProfileHeaderContent">
             <!--cover photo and edit option-->
@@ -23,6 +24,7 @@
                         <img class="myProfileHeaderCoverEditBtnImg" alt="edit btn" src="~/images/editcoverphotoimg.png" />
                         <span class="myProfileHeaderCoverEditBtn">Edit cover photo</span>
                         <form class="coverImgForm" asp-action="CoverImgUpload" method="post" role="form" enctype="multipart/form-data">
+                            @Html.AntiForgeryToken()
                             <input type="file" name="coverImg" class="myProfileHeaderCoverUpload" onchange="Submit1()" hidden />
                         </form>
                     </div>
@@ -36,6 +38,7 @@
                     <img class="myProfileHeaderProfileImg" alt="profile photo"/>
                     <img class="myProfileHeaderProfieUploadImg" alt="upload img" src="~/images/profilepicuploadimg.png" />
                     <form class="profileImgForm" asp-action="ProfileImgUpload" method="post" role="form" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
                         <input type="file" name="profileImg" class="myProfileHeaderProfieUpload" onchange="Submit()" hidden />
                     </form>
                 </div>

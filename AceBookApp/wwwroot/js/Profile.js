@@ -1,14 +1,20 @@
-﻿
+﻿// Read the anti-forgery token from the hidden input
+var antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
+// Set up jQuery to include the token in all AJAX requests
+$.ajaxSetup({
+    headers: { 'RequestVerificationToken': antiForgeryToken }
+});
+
 //method to display all likes for particular post when mouse hovered over likes
 function DisplayLikes(myData) {
     var value = {
         "id": myData
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetLikesBy',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             var result = '';
             for (var i = 0; i < data.length; i++) {
@@ -16,6 +22,9 @@ function DisplayLikes(myData) {
             }
             document.getElementById(myData).getElementsByClassName("myLikedNames")[0].style.display = "block";
             document.getElementById(myData).getElementsByClassName("myLikedNames")[0].innerHTML = result;
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     })
 }
@@ -42,7 +51,7 @@ function GetCommentList(myData) {
     var value1 = {
         "id": myData
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetCommentsBy',
         method: 'Post',
         data: value1,
@@ -53,13 +62,16 @@ function GetCommentList(myData) {
             }
             document.getElementById(myData).getElementsByClassName("myCommentsList")[0].innerHTML = result
             //GetCommentsCount();
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     })
 }
 
 function UpdateCommentCount(postId) {
     var value = { "id": postId };
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetCommentsBy',
         method: 'Post',
         data: value,
@@ -73,6 +85,9 @@ function UpdateCommentCount(postId) {
                     countElem.innerHTML = countText;
                 }
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     });
 }
@@ -101,7 +116,7 @@ function AddingComment(myData) {
                 "text": input.value
             };
 
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Feed/Commented',
                 method: 'Post',
                 data: value,
@@ -114,6 +129,9 @@ function AddingComment(myData) {
                 },
                 complete: function () {
                     isSubmitting = false;
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             });
         }
@@ -230,15 +248,17 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetProfileDetails',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             document.getElementsByClassName("myProfileHeaderCoverImg")[0].src = "http://127.0.0.1:8080/" + data[0].coverImagePath.split('Uploads\\')[1];
             document.getElementsByClassName("myProfileHeaderProfileImg")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.split('Uploads\\')[1];
             document.getElementsByClassName("myProfileHeaderMyDetailsName")[0].textContent = data[0].firstName + " " + data[0].surname;
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     })
 
@@ -246,13 +266,15 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetFriendList',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             document.getElementsByClassName("myProfileHeaderMyDetailsFriendsCount")[0].textContent = data.length + " friends"
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     });
 
@@ -260,23 +282,24 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetFriendList',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             document.getElementsByClassName("postOptionLeftFriendsCount")[0].textContent = data.length + " friends"
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     });
 
     //method to get logged user details to populate multiple fields
     var value = {}
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetProfileDetails',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             myEmail = data[0].email;
 
@@ -301,6 +324,9 @@ $(document).ready(function () {
                 document.getElementsByClassName("myProfileHeaderProfieUpload")[0].style.visibility = "visible";
                 document.getElementsByClassName("myProfileHeaderProfileImg")[0].style.cursor = "pointer";
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     })
 
@@ -308,11 +334,10 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             if (data[0] == undefined || data[0].workInfo1 == null) {
                 document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'No workplace to show';
@@ -347,6 +372,9 @@ $(document).ready(function () {
             else {
                 document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     })
 
@@ -354,11 +382,10 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             if (data[0] == undefined || data[0].workInfo1 == null) {
                 document.getElementsByClassName("postOptionLeftWork1aSpan")[0].innerHTML = 'No workplace to show';
@@ -393,6 +420,9 @@ $(document).ready(function () {
             else {
                 document.getElementsByClassName("postOptionLeftContactSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     })
 
@@ -400,11 +430,10 @@ $(document).ready(function () {
     var value = {
         "toRequest": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/IsReqSent',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             if (data == "Yes") {
                 $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
@@ -426,6 +455,9 @@ $(document).ready(function () {
                 $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
                 $('.myProfileHeaderProfileEditDiv').addClass('hidden');
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     })
 
@@ -433,11 +465,10 @@ $(document).ready(function () {
     var value = {
         "toRequest": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/IsFriend',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             if (data == "Yes") {
                 $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
@@ -455,8 +486,10 @@ $(document).ready(function () {
             else {
                 $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
-
     })
 
     //method to populate friends when friends tab is clicked 
@@ -464,11 +497,10 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetFriendList',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             for (var i = 0; i < data.length; i++) {
                 var email;
@@ -481,17 +513,22 @@ $(document).ready(function () {
                 var value = {
                     "email": email
                 }
-                $.post({
+                $.ajax({
                     url: 'https://' + location.host + '/Profile/GetProfileDetails',
                     method: 'Post',
                     data: value,
-                    async: false,
                     success: function (data1) {
                         result = result + '<div class="frndAcc" id="' + data1[0].email + '" onclick=\'window.location.href="/Profile/ProfileData?email=' + email + '"\'><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccNameDiv"><span class="frndAccName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div > '
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred: " + error);
                     }
                 });
             }
             document.getElementsByClassName("aboutSectionRightFriendsListDiv")[0].innerHTML = result;
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     });
 
@@ -500,11 +537,10 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetFriendList',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             var len = 0;
             if (data.length > 6) {
@@ -524,17 +560,22 @@ $(document).ready(function () {
                 var value = {
                     "email": email
                 }
-                $.post({
+                $.ajax({
                     url: 'https://' + location.host + '/Profile/GetProfileDetails',
                     method: 'Post',
                     data: value,
-                    async: false,
                     success: function (data1) {
                         result = result + '<div class="frndAccPost" id="' + data1[0].email + '" onclick=\'window.location.href="/Profile/ProfileData?email=' + email + '"\'><div class="frndAccPostImgDiv"><img class="frndAccPostImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccPostNameDiv"><span class="frndAccPostName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div > '
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred: " + error);
                     }
                 });
             }
             document.getElementsByClassName("postOptionLeftFriendsListDiv")[0].innerHTML = result;
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     });
 
@@ -547,16 +588,18 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetPostsList',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             for (var i = 0; i < data.length; i++) {
                 result = result + '<div class="ImgDiv"><img class="myPhotos" src="http://127.0.0.1:8080/' + data[i].imagepath.split('Uploads\\')[1] + '"/></div>';
             }
             document.getElementsByClassName("aboutSectionRightPhotosListDiv")[0].innerHTML = result;
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     });
 
@@ -565,11 +608,10 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetPostsList',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             var len = 0;
             if (data.length > 6) {
@@ -582,6 +624,9 @@ $(document).ready(function () {
                 result = result + '<div class="ImgDiv"><img class="myPhotosPost" src="http://127.0.0.1:8080/' + data[i].imagepath.split('Uploads\\')[1] + '"/></div>';
             }
             document.getElementsByClassName("postOptionLeftPhotosListDiv")[0].innerHTML = result;
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     });
 
@@ -591,7 +636,7 @@ $(document).ready(function () {
             "fromRequest": myEmail,
             "toRequest": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/SendRequest',
             method: 'Post',
             data: value,
@@ -606,6 +651,9 @@ $(document).ready(function () {
                     $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
                     $('.myProfileHeaderProfileAddFriendDiv').removeClass('hidden');
                 }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
     })
@@ -643,7 +691,7 @@ $(document).ready(function () {
         var value = {
             "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
             method: 'Post',
             data: value,
@@ -681,6 +729,9 @@ $(document).ready(function () {
                 else {
                     document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
                 }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
     });
@@ -725,7 +776,7 @@ $(document).ready(function () {
         var value = {
             "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
             method: 'Post',
             data: value,
@@ -755,6 +806,9 @@ $(document).ready(function () {
                 else {
                     document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'Went at ' + '<b>' + data[0].schoolInfo + '<b>';
                 }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
     });
@@ -775,11 +829,14 @@ $(document).ready(function () {
             "i2": $('.aboutSectionRightWorkAddInput12')[0].value,
             "i3": $('.aboutSectionRightWorkAddInput13')[0].value
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetails',
             method: 'Post',
             data: value,
             success: function (data) {
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
 
@@ -793,7 +850,7 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
@@ -804,6 +861,9 @@ $(document).ready(function () {
                         /*document.getElementsByClassName("aboutSectionRightWorkResult1cSpan")[0].textContent = data[0].workInfo3;*/
                         document.getElementsByClassName("aboutSectionRightWorkResultDiv1")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
@@ -825,12 +885,15 @@ $(document).ready(function () {
             "type": "College",
             "i1": $('.aboutSectionRightWorkAddInput2')[0].value,
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
             method: 'Post',
             data: value,
             success: function (data) {
 
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
         $('.aboutSectionRightWorkAddInput2')[0].value = "";
@@ -841,7 +904,7 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
@@ -850,6 +913,9 @@ $(document).ready(function () {
                         document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
                         document.getElementsByClassName("aboutSectionRightWorkResultDiv2")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
@@ -871,12 +937,15 @@ $(document).ready(function () {
             "type": "School",
             "i1": $('.aboutSectionRightWorkAddInput3')[0].value,
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
             method: 'Post',
             data: value,
             success: function (data) {
 
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
         $('.aboutSectionRightWorkAddInput3')[0].value = "";
@@ -887,7 +956,7 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
@@ -896,6 +965,9 @@ $(document).ready(function () {
                         document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'Went at ' + '<b>' + data[0].schoolInfo + '<b>';
                         document.getElementsByClassName("aboutSectionRightWorkResultDiv3")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
@@ -936,7 +1008,7 @@ $(document).ready(function () {
         var value = {
             "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
             method: 'Post',
             data: value,
@@ -947,6 +1019,9 @@ $(document).ready(function () {
                 else {
                     document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
                 }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
     });
@@ -967,12 +1042,15 @@ $(document).ready(function () {
             "type": "City",
             "i1": $('.aboutSectionRightPlaceAddInput1')[0].value,
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
             method: 'Post',
             data: value,
             success: function (data) {
 
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
         $('.aboutSectionRightPlaceAddInput1')[0].value = "";
@@ -983,7 +1061,7 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
@@ -992,6 +1070,9 @@ $(document).ready(function () {
                         document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
                         document.getElementsByClassName("aboutSectionRightPlaceResultDiv1")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
@@ -1033,7 +1114,7 @@ $(document).ready(function () {
         var value = {
             "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/GetProfileDetails',
             method: 'Post',
             data: value,
@@ -1048,13 +1129,16 @@ $(document).ready(function () {
                 }
 
                 document.getElementsByClassName("aboutSectionRightContactDOB1aSpan")[0].innerHTML = data[0].dobDate + ' ' + data[0].dobMon;
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
 
         var value = {
             "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
             method: 'Post',
             data: value,
@@ -1065,6 +1149,9 @@ $(document).ready(function () {
                 else {
                     document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
                 }
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
     });
@@ -1085,12 +1172,15 @@ $(document).ready(function () {
             "type": "Contact",
             "i1": $('.aboutSectionRightContactAddInput1')[0].value,
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
             method: 'Post',
             data: value,
             success: function (data) {
 
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
         $('.aboutSectionRightContactAddInput1')[0].value = "";
@@ -1101,7 +1191,7 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
@@ -1110,6 +1200,9 @@ $(document).ready(function () {
                         document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
                         document.getElementsByClassName("aboutSectionRightContactResultDiv1")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
@@ -1131,12 +1224,15 @@ $(document).ready(function () {
             "type": "Website",
             "i1": $('.aboutSectionRightContactAddInput2')[0].value,
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
             method: 'Post',
             data: value,
             success: function (data) {
 
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
         $('.aboutSectionRightContactAddInput2')[0].value = "";
@@ -1173,11 +1269,10 @@ $(document).ready(function () {
     var value = {
         "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetPostsList',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             data.sort((a, b) => new Date(b.date) - new Date(a.date));
             for (var i = 0; i < data.length; i++) {
@@ -1233,11 +1328,10 @@ $(document).ready(function () {
                     });
                 }
 
-                $.post({
+                $.ajax({
                     url: 'https://' + location.host + '/Profile/GetProfileDetails',
                     method: 'Post',
                     data: value,
-                    async: false,
                     success: function (data1) {
                         var date1 = moment();
                         var date2 = moment(data[i].date);
@@ -1256,9 +1350,15 @@ $(document).ready(function () {
                         }
 
                         document.getElementsByClassName("myCommentProfileImg")[i].src = "http://127.0.0.1:8080/" + data1[0].profileImagePath.split('Uploads\\')[1];
+                    },
+                    error: function (xhr, status, error) {
+                        alert("An error occurred: " + error);
                     }
                 });
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     });
 
@@ -1267,12 +1367,14 @@ $(document).ready(function () {
         var value = {
             "id": this.parentNode.parentNode.parentNode.id
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Feed/Liked',
             method: 'Post',
             data: value,
-            async: false,
-            success: function (data) { }
+            success: function (data) { },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
+            }
         });
 
         //method to be executed when like button - updates the image for liked/unliked
@@ -1312,11 +1414,10 @@ $(document).ready(function () {
     //populates the likes section (section above likes and comments)
     var value = {
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetPostsLikedByMe',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             for (var i = 0; i < data.length; i++) {
                 var op = data[i];
@@ -1339,6 +1440,9 @@ $(document).ready(function () {
                 }
 
             }
+        },
+        error: function (xhr, status, error) {
+            alert("An error occurred: " + error);
         }
     });
 

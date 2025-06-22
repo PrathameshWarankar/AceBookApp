@@ -1,5 +1,6 @@
 ﻿using AceBookApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace AceBookApp.Controllers
@@ -143,16 +144,20 @@ namespace AceBookApp.Controllers
         }
 
         //method to fetch account details of user
-        public IActionResult GetProfileDetails(string email)
+        public async Task<IActionResult> GetProfileDetails(string email)
         {
             if (email == null)
             {
-                var myAccDetailsQuery = _context.Accounts.Where(x => x.Email == HomeController.loggedUser.Email);
+                var myAccDetailsQuery = await _context.Accounts
+                                        .Where(x => x.Email == HomeController.loggedUser.Email)
+                                        .FirstAsync();
                 return Json(myAccDetailsQuery);
             }
             else
             {
-                var accDetailsQuery = _context.Accounts.Where(x => x.Email == email);
+                var accDetailsQuery = await _context.Accounts
+                                        .Where(x => x.Email == email)
+                                        .FirstAsync();
                 return Json(accDetailsQuery);
             }
         }

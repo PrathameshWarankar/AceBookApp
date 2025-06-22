@@ -20,6 +20,7 @@
 <div id="login">
     <!--fields to be entered-->
     <form asp-action="Login" method="post" role="form" id="loginform">
+        @Html.AntiForgeryToken()
         <div class="col-md-5" id="emailDiv">
             <input asp-for="Email" class="form-control" type="email" placeholder="Email address" id="email" required />
         </div>
