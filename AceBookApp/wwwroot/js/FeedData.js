@@ -141,7 +141,7 @@ function GetCommentList(myData) {
                 result = result + '<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="' + 'http://127.0.0.1:8080/' + data[i].commentedByImagepath + '"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/' + data[i].commentedBy + '">' + data[i].commentedByName + '</a></br><span class="commentText"> ' + data[i].commentedText + '</span ></div></div></div>'
             }
             document.getElementById(myData).getElementsByClassName("CommentsList")[0].innerHTML = result
-            GetCommentsCount();
+            UpdateCommentCount(myData);
         }
     })
 }
@@ -182,6 +182,25 @@ function AddingComment(myData) {
                     isSubmitting = false;
                 }
             });
+        }
+    });
+}
+
+function UpdateCommentCount(postId) {
+    var value = { "id": postId };
+    $.post({
+        url: 'https://' + location.host + '/Feed/GetCommentsBy',
+        method: 'Post',
+        data: value,
+        success: function (data) {
+            var countText = data.length === 1 ? "1 comment" : data.length + " comments";
+            var postElem = document.getElementById(postId);
+            if (postElem) {
+                var countElem = postElem.getElementsByClassName("commentCount")[0];
+                if (countElem) {
+                    countElem.innerHTML = countText;
+                }
+            }
         }
     });
 }
