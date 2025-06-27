@@ -1,46 +1,64 @@
-﻿
-body {
-    background-color: #e9ebee;
+﻿body {
+    background-color: #f0f2f5;
+    margin: 0;
+    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .SuccessMsgDiv {
-    position: relative;
-    top: 40px;
-    border: 1px solid #1877f2;
-    width: 450px;
-    left: 550px;
+    border: 1px solid #dddfe2;
+    max-width: 400px;
+    width: 100%;
     border-radius: 8px;
-    padding: 10px 10px 0px 10px;
-    background-color: white;
-    /*background-color: #1877f235;*/
+    padding: 32px 24px 24px 24px;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: -35vh;
 }
 
 .SuccessMsg1 {
-    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
     color: #1877f2;
-    position: relative;
-    left: 60px;
+    font-size: 1.7rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-align: center;
+    letter-spacing: 0.2px;
 }
 
 .SuccessMsg2 {
-    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
+    color: #42b72a;
     font-weight: 500;
-    position: relative;
-    color: #00800095;
-    text-shadow: 0 0 0.1px #00800097;
-    left: 46px;
-    top: -10px;
+    font-size: 1.1rem;
+    margin-bottom: 24px;
+    text-align: center;
+    text-shadow: 0 1px 1px #e4e6eb;
 }
 
 .backToLoginBtn {
-    position: relative;
-    font-family: Segoe UI Historic, Segoe UI, Helvetica, Arial, sans-serif;
-    top: -8px;
-    left: 155px;
+    background: #1877f2;
+    color: #fff;
     border: none;
-    color: #1877f2;
+    border-radius: 6px;
+    padding: 12px 0;
+    font-size: 1.05rem;
+    font-weight: 600;
     cursor: pointer;
-    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    transition: background 0.2s;
+    margin-top: 8px;
+    text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
 }
 
-
+    .backToLoginBtn:hover,
+    .backToLoginBtn:focus {
+        background: #166fe5;
+        outline: none;
+    }

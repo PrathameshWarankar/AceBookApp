@@ -1,4 +1,5 @@
-﻿// Read the anti-forgery token from the hidden input
+﻿
+// Read the anti-forgery token from the hidden input
 const antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
 
 // Set up jQuery to include the token in all AJAX requests
@@ -59,7 +60,7 @@ function GetCommentList(postId) {
         success: function (data) {
             let result = '';
             for (let i = 0; i < data.length; i++) {
-                result += `<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="http://127.0.0.1:8080/${data[i].commentedByImagepath}"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/${data[i].commentedBy}">${data[i].commentedByName}</a></br><span class="commentText"> ${data[i].commentedText}</span ></div></div></div>`;
+                result += '<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="' + serverUrl + data[i].commentedByImagepath + '"/></div><div class="commentData"><div><a class="commentName" href=" / Profile / ProfileData /' + data[i].commentedBy + '">' + data[i].commentedByName + '</a></br><span class="commentText">' + data[i].commentedText + '</span ></div></div></div>';
             }
             document.getElementById(postId).getElementsByClassName("myCommentsList")[0].innerHTML = result;
         },
@@ -647,8 +648,8 @@ $(document).ready(function () {
         method: 'POST',
         data: { email: profileEmail },
         success: function (data) {
-            $(".myProfileHeaderCoverImg")[0].src = "http://127.0.0.1:8080/" + data.coverImagePath.split('Uploads\\')[1];
-            $(".myProfileHeaderProfileImg")[0].src = "http://127.0.0.1:8080/" + data.profileImagePath.split('Uploads\\')[1];
+            $(".myProfileHeaderCoverImg")[0].src = serverUrl + data.coverImagePath.split('Uploads\\')[1];
+            $(".myProfileHeaderProfileImg")[0].src = serverUrl + data.profileImagePath.split('Uploads\\')[1];
             $(".myProfileHeaderMyDetailsName")[0].textContent = data.firstName + " " + data.surname;
         },
         error: function (xhr, status, error) {
@@ -826,10 +827,9 @@ $(document).ready(function () {
                         async: false,
                         success: function (data1) {
                             if (selector === ".aboutSectionRightFriendsListDiv") {
-                                result += `<div class="frndAcc" id="${data1.email}" onclick='window.location.href="/Profile/ProfileData?email=${email}"'><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/${data1.profileImagePath.split('Uploads\\')[1]}"/></div><div class="frndAccNameDiv"><span class="frndAccName">${data1.firstName} ${data1.surname}</span></div></div>`;
+                                result += '<div class="frndAcc" id="' + data1.email + '" onclick="window.location.href=\'/Profile/ProfileData?email=' + email + '\'"><div class="frndAccImgDiv"><img class="frndAccImg" src="' + serverUrl + data1.profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccNameDiv"><span class="frndAccName">' + data1.firstName + ' ' + data1.surname + '</span></div></div>';
                             } else {
-                                result += `<div class="frndAccPost" id="${data1.email}" onclick='window.location.href="/Profile/ProfileData?email=${email}"'><div class="frndAccPostImgDiv"><img class="frndAccPostImg" src="http://127.0.0.1:8080/${data1.profileImagePath.split('Uploads\\')[1]}"/></div><div class="frndAccPostNameDiv"><span class="frndAccPostName">${data1.firstName} ${data1.surname}</span></div></div>`;
-                            }
+                                result += '<div class="frndAccPost" id="' + data1.email + '" onclick="window.location.href=\'/Profile/ProfileData?email=' + email + '\'"><div class="frndAccPostImgDiv"><img class="frndAccPostImg" src="' + serverUrl + data1.profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccPostNameDiv"><span class="frndAccPostName">' + data1.firstName + ' ' + data1.surname + '</span></div></div>';                            }
                         },
                         error: function (xhr, status, error) {
                             showError(error);
@@ -861,9 +861,9 @@ $(document).ready(function () {
                 let len = limit ? Math.min(data.length, limit) : data.length;
                 for (let i = 0; i < len; i++) {
                     if (selector === ".aboutSectionRightPhotosListDiv") {
-                        result += `<div class="ImgDiv"><img class="myPhotos" src="http://127.0.0.1:8080/${data[i].imagepath.split('Uploads\\')[1]}"/></div>`;
+                        result += '<div class="ImgDiv"><img class="myPhotos" src="' + serverUrl + data[i].imagepath.split('Uploads\\')[1] + '"/></div>';
                     } else {
-                        result += `<div class="ImgDiv"><img class="myPhotosPost" src="http://127.0.0.1:8080/${data[i].imagepath.split('Uploads\\')[1]}"/></div>`;
+                        result += '<div class="ImgDiv"><img class="myPhotosPost" src="' + serverUrl + data[i].imagepath.split('Uploads\\')[1] + '"/></div>';
                     }
                 }
                 $(selector).html(result);
@@ -920,7 +920,7 @@ $(document).ready(function () {
                 $(".postOptionRightDiv")[0].appendChild(postDiv);
 
                 postDiv.querySelector(".myPostCaption").textContent = data[i].caption;
-                postDiv.querySelector(".myActualPost").src = "http://127.0.0.1:8080/" + data[i].imagepath.split('Uploads\\')[1];
+                postDiv.querySelector(".myActualPost").src = serverUrl + data[i].imagepath.split('Uploads\\')[1];
                 postDiv.querySelector(".myLikeBtnImg").src = `${baseUrl}/images/likebutton.png`;
                 postDiv.querySelector(".myCommentBtnImg").src = `${baseUrl}/images/commentbutton.png`;
 
@@ -950,7 +950,7 @@ $(document).ready(function () {
                         method: 'POST',
                         data: { email: post.email },
                         success: function (data1) {
-                            postDiv.querySelector(".myPostImg").src = "http://127.0.0.1:8080/" + data1.profileImagePath.split('Uploads\\')[1];
+                            postDiv.querySelector(".myPostImg").src = serverUrl + data1.profileImagePath.split('Uploads\\')[1];
                             postDiv.querySelector(".myPostName").textContent = data1.firstName + " " + data1.surname;
                             let date1 = moment();
                             let date2 = moment(post.date);
@@ -961,7 +961,7 @@ $(document).ready(function () {
                             } else {
                                 postDiv.querySelector(".myPostDate").textContent = date1.diff(date2, 'hours') + 'h';
                             }
-                            postDiv.querySelector(".myCommentProfileImg").src = "http://127.0.0.1:8080/" + data1.profileImagePath.split('Uploads\\')[1];
+                            postDiv.querySelector(".myCommentProfileImg").src = serverUrl + data1.profileImagePath.split('Uploads\\')[1];
                         },
                         error: function (xhr, status, error) {
                             showError(error);

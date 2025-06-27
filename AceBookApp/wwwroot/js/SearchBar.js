@@ -1,4 +1,6 @@
-﻿function Search(data) {
+﻿var serverUrl = 'http://127.0.0.1:8080/';
+
+function Search(data) {
     var value = {
         "name": data
     }
@@ -12,7 +14,7 @@
                 // Defensive: check if data[i] exists and has profileImagePath
                 if (data[i] && data[i].profileImagePath) {
                     result += '<div class="searchResultNew"><div class="searchImgDiv"><img class="searchImg" src="' +
-                        'http://127.0.0.1:8080/' + data[i].profileImagePath.substr(64) +
+                        serverUrl + data[i].profileImagePath.substr(64) +
                         '"/></div><div class="searchText"><a class="searchTextA" href="/Profile/ProfileData?email=' +
                         data[i].email + '">' + data[i].firstName + " " + data[i].surname + '</a></div></div>';
                 } else if (data[i]) {
@@ -62,7 +64,7 @@ $(document).ready(function () {
                 var nameElem = document.getElementsByClassName("searchFeedSettingProfileName")[0];
                 var imgElem = document.getElementsByClassName("searchFeedSettingProfileImg")[0];
                 if (nameElem) nameElem.textContent = data.firstName + " " + data.surname;
-                if (imgElem && data.profileImagePath) imgElem.src = "http://127.0.0.1:8080/" + data.profileImagePath.substr(64)
+                if (imgElem && data.profileImagePath) imgElem.src = serverUrl + data.profileImagePath.substr(64)
             },
             error: function (xhr, status, error) {
                 alert("An error occurred: " + error);
@@ -106,7 +108,7 @@ $(document).ready(function () {
                             data: { "email": notiData.notifiedBy },
                             success: function (data1) {
                                 var profile = Array.isArray(data1) ? data1[0] : data1;
-                                var imgSrc = (profile && profile.profileImagePath) ? "http://127.0.0.1:8080/" + profile.profileImagePath.substr(64) : "/images/default-profile.png";
+                                var imgSrc = (profile && profile.profileImagePath) ? serverUrl + profile.profileImagePath.substr(64) : "/images/default-profile.png";
                                 var name = (profile && profile.firstName && profile.surname) ? profile.firstName + ' ' + profile.surname : "Unknown";
                                 if (notiData.notiType == "Like") {
                                     notiDiv.innerHTML = '<a href="' + 'https://' + location.host + '/Profile/ProfileData?email=' + notiData.notifiedTo + '#' + notiData.postId + '"><img class="notifiedByImg" src="' + imgSrc + '"/><div class="notifiedByName"><text><b>' + name + '</b> liked your photo</text></div><div class="notiMarker"></div></a>';
@@ -187,8 +189,8 @@ $(document).ready(function () {
             var imgElem = document.getElementsByClassName("searchFeedSettingProfileImg")[0];
             var rightImgElem = document.getElementsByClassName("myProfilelogoImgRight")[0];
             if (nameElem) nameElem.textContent = data.firstName + " " + data.surname;
-            if (imgElem && data.profileImagePath) imgElem.src = "http://127.0.0.1:8080/" + data.profileImagePath.substr(64);
-            if (rightImgElem && data.profileImagePath) rightImgElem.src = "http://127.0.0.1:8080/" + data.profileImagePath.substr(64);
+            if (imgElem && data.profileImagePath) imgElem.src = serverUrl + data.profileImagePath.substr(64);
+            if (rightImgElem && data.profileImagePath) rightImgElem.src = serverUrl + data.profileImagePath.substr(64);
         },
         error: function (xhr, status, error) {
             alert("An error occurred: " + error);

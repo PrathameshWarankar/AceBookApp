@@ -1,4 +1,5 @@
-﻿function showError(error) {
+﻿
+function showError(error) {
     alert("An error occurred: " + error);
 }
 
@@ -121,7 +122,7 @@ function loadFriendRequests() {
             var result = '';
             profiles.forEach(function (data1) {
                 result += '<div class="gridItem">' +
-                    '<div class="requestedAccImgDiv"><img class="requestedAccImg" src="http://127.0.0.1:8080/' + data1.profileImagePath.substr(64) + '"/></div>' +
+                    '<div class="requestedAccImgDiv"><img class="requestedAccImg" src="' + serverUrl + data1.profileImagePath.substr(64) + '"/></div>' +
                     '<div class="requestedAccName"><span class="requestedAccNameA">' + data1.firstName + ' ' + data1.surname + '</span></div>' +
                     '<button id="' + data1.email + '" class="confirmBtn" onclick="ConfirmBtn(this.id)">Confirm</button><br/>' +
                     '<button class="deleteBtn" id="' + data1.email + '-Del" onclick="DeleteBtn(this.id)">Delete</button>' +
@@ -161,7 +162,7 @@ function loadAllFriends() {
         Promise.all(requests).then(function (profiles) {
             profiles.forEach(function (data1) {
                 result += '<div class="frndAcc" id="' + data1.email + '" onclick="FrndProfileDisplay(this.id)">' +
-                    '<div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/' + data1.profileImagePath.substr(64) + '"/></div>' +
+                    '<div class="frndAccImgDiv"><img class="frndAccImg" src="' + serverUrl + data1.profileImagePath.substr(64) + '"/></div>' +
                     '<div class="frndAccNameDiv"><span class="frndAccName">' + data1.firstName + ' ' + data1.surname + '</span></div>' +
                     '</div>';
             });

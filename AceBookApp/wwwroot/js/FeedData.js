@@ -1,4 +1,5 @@
-﻿// Show the create post modal and dim the background
+﻿
+// Show the create post modal and dim the background
 function ShowCreatePost() {
     var modal = document.getElementById("createPostDialog");
     var searchOpacity = document.getElementById("searchBarDiv");
@@ -141,7 +142,7 @@ function GetCommentList(myData) {
         success: function (data) {
             var result = '';
             for (var i = 0; i < data.length; i++) {
-                result += '<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="http://127.0.0.1:8080/' + data[i].commentedByImagepath + '"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/' + data[i].commentedBy + '">' + data[i].commentedByName + '</a></br><span class="commentText"> ' + data[i].commentedText + '</span ></div></div></div>';
+                result += '<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="' + serverUrl + data[i].commentedByImagepath + '"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/' + data[i].commentedBy + '">' + data[i].commentedByName + '</a></br><span class="commentText"> ' + data[i].commentedText + '</span ></div></div></div>';
             }
             var commentsList = document.getElementById(myData)?.getElementsByClassName("CommentsList")[0];
             if (commentsList) commentsList.innerHTML = result;
@@ -322,9 +323,9 @@ $(document).ready(function () {
                         data: value,
                         success: function (data1) {
                             if (data1.status == "Online") {
-                                result += '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="http://127.0.0.1:8080/' + data1.profileImagePath.substr(64) + '"/><div class="onlineMarkerBG"><div class="onlineMarker"></div></div></div><a class="contactData" href="/Profile/ProfileData?email=' + data1.email + '">' + data1.firstName + " " + data1.surname + '</a></div>';
+                                result += '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="' + serverUrl + data1.profileImagePath.substr(64) + '"/><div class="onlineMarkerBG"><div class="onlineMarker"></div></div></div><a class="contactData" href="/Profile/ProfileData?email=' + data1.email + '">' + data1.firstName + " " + data1.surname + '</a></div>';
                             } else {
-                                result += '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="http://127.0.0.1:8080/' + data1.profileImagePath.substr(64) + '"/></div><a class="contactData" href="/Profile/ProfileData?email=' + data1.email + '">' + data1.firstName + " " + data1.surname + '</a></div>';
+                                result += '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="' + serverUrl + data1.profileImagePath.substr(64) + '"/></div><a class="contactData" href="/Profile/ProfileData?email=' + data1.email + '">' + data1.firstName + " " + data1.surname + '</a></div>';
                             }
                         },
                         complete: function () {
