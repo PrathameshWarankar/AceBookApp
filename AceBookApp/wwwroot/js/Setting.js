@@ -106,11 +106,10 @@ $(document).ready(function () {
             "value1": document.getElementsByClassName("rightSettingName1Edit")[0].value,
             "value2": document.getElementsByClassName("rightSettingName2Edit")[0].value
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/EditAccountDetails',
             method: 'Post',
             data: value,
-            async: false,
             success: function (data) {
             }
         })
@@ -124,11 +123,10 @@ $(document).ready(function () {
             "value1": document.getElementsByClassName("rightSettingContact1Edit")[0].value,
             "value2": "null"
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/EditAccountDetails',
             method: 'Post',
             data: value,
-            async: false,
             success: function (data) {
             }
         })
@@ -146,11 +144,10 @@ $(document).ready(function () {
                 "currPass": document.getElementsByClassName("rightSettingPassword1Edit")[0].value,
                 "newPass": document.getElementsByClassName("rightSettingPassword2Edit")[0].value
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/UpdatePassword',
                 method: 'Post',
                 data: value,
-                async: false,
                 success: function (data) {
                     if (data == "Wrong Password") {
                         alert("Password is incorrect")

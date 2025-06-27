@@ -96,11 +96,10 @@ $(document).ready(function () {
                     var value = {
                         "email": data[i].notifiedBy
                     }
-                    $.post({
+                    $.ajax({
                         url: 'https://' + location.host + '/Profile/GetProfileDetails',
                         method: 'Post',
                         data: value,
-                        async: false,
                         //populate individual notification
                         success: function (data1) {
                             if (data[i].notiType == "Like") {
@@ -206,7 +205,7 @@ $(document).ready(function () {
     //logs out user account
     $(".searchFeedSettingLogoutOptionDiv").click(function () {
         window.location.href = "https://" + window.location.host
-        $.post('https://' + location.host + '/Profile/Logout')
+        $.ajax('https://' + location.host + '/Profile/Logout')
     })
 
     //displays notification

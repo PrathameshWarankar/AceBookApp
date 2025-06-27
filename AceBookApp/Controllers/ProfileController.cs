@@ -573,12 +573,20 @@ namespace AceBookApp.Controllers
         //method to logout user
         public async void Logout()
         {
-            var account = await (from acc in _context.Accounts
-                                where acc.Email == HomeController.loggedUser.Email
-                                select acc).FirstAsync();
+            try
+            {
+                var account = await (from acc in _context.Accounts
+                                     where acc.Email == HomeController.loggedUser.Email
+                                     select acc).FirstAsync();
 
-            account.Status = "Offline";
-            await _context.SaveChangesAsync();
+                account.Status = "Offline";
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error while saving Status changes to database: " + ex.Message);
+            }
         }
     }
 }
