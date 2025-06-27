@@ -1,5 +1,6 @@
 ﻿using AceBookApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 
 namespace AceBookApp.Controllers
@@ -19,26 +20,28 @@ namespace AceBookApp.Controllers
         public static FriendRequest frData = new FriendRequest();
 
         //method to send/delete friend request
-        public IActionResult SendRequest(string toRequest, string fromRequest)
+        public async Task<IActionResult> SendRequest(string toRequest, string fromRequest)
         {
             if (ModelState.IsValid)
             {
                 FriendRequest fr = new FriendRequest();
 
                 //query to check if friend req already exists
-                var existingReqCheckQuery = from entry in _context.FriendRequests
-                                            where entry.FromRequest == fromRequest && entry.ToRequest == toRequest
-                                            select entry;
+                var existingReqCheckQuery = await (from entry in _context.FriendRequests
+                                                  where entry.FromRequest == fromRequest && entry.ToRequest == toRequest
+                                                  select entry).SingleOrDefaultAsync();
 
-                var isNoti = _context.Notifications.Where(_ => (_.NotifiedBy == HomeController.loggedUser.Email && _.NotiType == "Add Friend"));
+                var isNoti = await _context.Notifications
+                            .Where(_ => _.NotifiedBy == HomeController.loggedUser.Email && _.NotiType == "Add Friend")
+                            .FirstOrDefaultAsync();
 
                 //if friend req already exists, delete the req
-                if (existingReqCheckQuery.Any())
+                if (existingReqCheckQuery != null)
                 {
-                    _context.FriendRequests.Remove(existingReqCheckQuery.SingleOrDefault());
-                    _context.Notifications.Remove(isNoti.First());
+                    _context.FriendRequests.Remove(existingReqCheckQuery);
+                    _context.Notifications.Remove(isNoti);
 
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
                     return new EmptyResult();
                 }
 
@@ -46,9 +49,9 @@ namespace AceBookApp.Controllers
                 fr.ToRequest = toRequest;
                 fr.SentDate = DateTime.Now;
 
-                var frndReqListQuery = from entry in _context.FriendRequests
-                                       orderby entry.SentDate descending
-                                       select entry;
+                var frndReqListQuery = await (from entry in _context.FriendRequests
+                                              orderby entry.SentDate descending
+                                              select entry).ToListAsync();
 
                 //create request id for first entry
                 if (frndReqListQuery == null || frndReqListQuery.Count() == 0)
@@ -57,7 +60,7 @@ namespace AceBookApp.Controllers
                 //create request id for subsequent entry
                 else
                 {
-                    var res = frndReqListQuery.First().RequestID.ToString();
+                    var res = frndReqListQuery.Last().RequestID.ToString();
                     fr.RequestID = "Req" + Convert.ToString(Convert.ToInt32(res.Substring(3, 1)) + 1) + " - " + fr.FromRequest.Substring(0, 3) + fr.ToRequest.Substring(0, 3);
                 }
 
@@ -73,7 +76,7 @@ namespace AceBookApp.Controllers
                 noti.NotiStatus = "Unread";
                 _context.Notifications.Add(noti);
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new EmptyResult();
             }
             else
@@ -81,33 +84,34 @@ namespace AceBookApp.Controllers
         }
 
         //confirm if request sent, used to update the view
-        public string IsReqSent(string toRequest)
+        public async Task<string> IsReqSent(string toRequest)
         {
-            var reqCheckQuery = from entry in _context.FriendRequests
-                                where entry.FromRequest == HomeController.loggedUser.Email && entry.ToRequest == toRequest
-                                select entry;
+            var reqCheckQuery = await (from entry in _context.FriendRequests
+                                      where entry.FromRequest == HomeController.loggedUser.Email && entry.ToRequest == toRequest
+                                      select entry).FirstOrDefaultAsync();
 
-            if (reqCheckQuery.Any())
+            if (reqCheckQuery != null)
                 return "Yes";
             else
                 return "No";
         }
 
         //confirm if friend, used to update the view
-        public string IsFriend(string toRequest)
+        public async Task<string> IsFriend(string toRequest)
         {
-            var frndCheckQuery = from entry in _context.Friends
-                                 where (entry.FromRequest == HomeController.loggedUser.Email && entry.ToRequest == toRequest) || (entry.ToRequest == HomeController.loggedUser.Email && entry.FromRequest == toRequest)
-                                 select entry;
+            var frndCheckQuery = await (from entry in _context.Friends
+                                       where (entry.FromRequest == HomeController.loggedUser.Email && entry.ToRequest == toRequest)
+                                          || (entry.ToRequest == HomeController.loggedUser.Email && entry.FromRequest == toRequest)
+                                       select entry).FirstOrDefaultAsync();
 
-            if (frndCheckQuery.Any())
+            if (frndCheckQuery != null)
                 return "Yes";
             else
                 return "No";
         }
 
         //method executed when friend req accepted
-        public IActionResult AddFriend(string toRequest, string fromRequest)
+        public async Task<IActionResult> AddFriend(string toRequest, string fromRequest)
         {
             Friend fr = new Friend();
 
@@ -115,9 +119,9 @@ namespace AceBookApp.Controllers
             fr.ToRequest = toRequest;
             fr.SentDate = DateTime.Now;
 
-            var frndListQuery = from entry in _context.Friends
-                                orderby entry.SentDate descending
-                                select entry;
+            var frndListQuery = await (from entry in _context.Friends
+                                      orderby entry.SentDate descending
+                                      select entry).ToListAsync();
 
             //create friend id for first entry
             if (frndListQuery == null || frndListQuery.Count() == 0)
@@ -126,13 +130,13 @@ namespace AceBookApp.Controllers
             //create friend id for subsequent entry
             else
             {
-                var res = frndListQuery.First().RequestID.ToString();
+                var res = frndListQuery.Last().RequestID.ToString();
                 fr.RequestID = "FrndID" + Convert.ToString(Convert.ToInt32(res.Substring(6, 1)) + 1) + " - " + fr.FromRequest.Substring(0, 3) + fr.ToRequest.Substring(0, 3);
             }
 
             _context.Friends.Add(fr);
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return new EmptyResult();
         }
 
@@ -143,28 +147,34 @@ namespace AceBookApp.Controllers
         }
 
         //method to fetch account details of user
-        public IActionResult GetProfileDetails(string email)
+        public async Task<IActionResult> GetProfileDetails(string email)
         {
             if (email == null)
             {
-                var myAccDetailsQuery = _context.Accounts.Where(x => x.Email == HomeController.loggedUser.Email);
+                var myAccDetailsQuery = await _context.Accounts
+                                        .Where(x => x.Email == HomeController.loggedUser.Email)
+                                        .FirstOrDefaultAsync();
                 return Json(myAccDetailsQuery);
             }
             else
             {
-                var accDetailsQuery = _context.Accounts.Where(x => x.Email == email);
+                var accDetailsQuery = await _context.Accounts
+                                        .Where(x => x.Email == email)
+                                        .FirstOrDefaultAsync();
                 return Json(accDetailsQuery);
             }
         }
 
         //method to additional account's work details in database
-        public IActionResult AddAdditionalDetails(string i1, string i2, string i3)
+        public async Task<IActionResult> AddAdditionalDetails(string i1, string i2, string i3)
         {
             AdditionAccountDetail details = new AdditionAccountDetail();
-            var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
+            var isEntry = await _context.additionAccountDetails
+                            .Where(x => x.Loggedemail == HomeController.loggedUser.Email)
+                            .FirstOrDefaultAsync();
 
             //if details do not exists previously
-            if (!isEntry.Any())
+            if (isEntry == null)
             {
                 details.Loggedemail = HomeController.loggedUser.Email;
                 details.WorkInfo1 = i1;
@@ -175,25 +185,26 @@ namespace AceBookApp.Controllers
             //if details exists previously
             else
             {
-                isEntry.First().WorkInfo1 = i1;
-                isEntry.First().WorkInfo2 = i2;
-                isEntry.First().WorkInfo3 = i3;
+                isEntry.WorkInfo1 = i1;
+                isEntry.WorkInfo2 = i2;
+                isEntry.WorkInfo3 = i3;
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return new EmptyResult();
         }
 
         //method to additional account's non work details in database
-        public IActionResult AddAdditionalDetailsNew(string type, string i1)
+        public async Task<IActionResult> AddAdditionalDetailsNew(string type, string i1)
         {
             AdditionAccountDetail details = new AdditionAccountDetail();
             if (type == "College")
             {
-                var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
+                var isEntry = await _context.additionAccountDetails
+                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
 
                 //if college details do not exists previously
-                if (!isEntry.Any())
+                if (isEntry == null)
                 {
                     details.Loggedemail = HomeController.loggedUser.Email;
                     details.CollegeInfo = i1;
@@ -202,18 +213,18 @@ namespace AceBookApp.Controllers
 
                 //if college details exists previously
                 else
-                    isEntry.First().CollegeInfo = i1;
+                    isEntry.CollegeInfo = i1;
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new EmptyResult();
             }
 
             if (type == "School")
             {
-                var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
-
+                var isEntry = await _context.additionAccountDetails
+                                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
                 //if school details do not exists previously
-                if (!isEntry.Any())
+                if (isEntry == null)
                 {
                     details.Loggedemail = HomeController.loggedUser.Email;
                     details.SchoolInfo = i1;
@@ -222,18 +233,18 @@ namespace AceBookApp.Controllers
 
                 //if school details exists previously
                 else
-                    isEntry.First().SchoolInfo = i1;
+                    isEntry.SchoolInfo = i1;
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new EmptyResult();
             }
 
             if (type == "City")
             {
-                var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
-
+                var isEntry = await _context.additionAccountDetails
+                                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
                 //if city details do not exists previously
-                if (!isEntry.Any())
+                if (isEntry == null)
                 {
                     details.Loggedemail = HomeController.loggedUser.Email;
                     details.PlaceInfo = i1;
@@ -242,18 +253,18 @@ namespace AceBookApp.Controllers
 
                 //if city details exists previously
                 else
-                    isEntry.First().PlaceInfo = i1;
+                    isEntry.PlaceInfo = i1;
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new EmptyResult();
             }
 
             if (type == "Contact")
             {
-                var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
-
+                var isEntry = await _context.additionAccountDetails
+                                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
                 //if contact details do not exists previously
-                if (!isEntry.Any())
+                if (isEntry == null)
                 {
                     details.Loggedemail = HomeController.loggedUser.Email;
                     details.PhoneInfo = i1;
@@ -262,18 +273,18 @@ namespace AceBookApp.Controllers
 
                 //if contact details exists previously
                 else
-                    isEntry.First().PhoneInfo = i1;
+                    isEntry.PhoneInfo = i1;
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new EmptyResult();
             }
 
             if (type == "Website")
             {
-                var isEntry = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
-
+                var isEntry = await _context.additionAccountDetails
+                                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
                 //if website details do not exists previously
-                if (!isEntry.Any())
+                if (isEntry == null)
                 {
                     details.Loggedemail = HomeController.loggedUser.Email;
                     details.SocialAccInfo = i1;
@@ -282,25 +293,29 @@ namespace AceBookApp.Controllers
 
                 //if website details exists previously
                 else
-                    isEntry.First().SocialAccInfo = i1;
+                    isEntry.SocialAccInfo = i1;
 
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return new EmptyResult();
             }
             return new EmptyResult();
         }
 
         //method to fetch additional details of user from database
-        public IActionResult GetAdditionalDetails(string email)
+        public async Task<IActionResult> GetAdditionalDetails(string email)
         {
             if (email == null)
             {
-                var myDetailsQuery = _context.additionAccountDetails.Where(x => x.Loggedemail == HomeController.loggedUser.Email);
+                var myDetailsQuery = await _context.additionAccountDetails
+                                    .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
+
                 return Json(myDetailsQuery);
             }
             else
             {
-                var userDetailsQuery = _context.additionAccountDetails.Where(x => x.Loggedemail == email);
+                var userDetailsQuery = await _context.additionAccountDetails
+                                        .FirstOrDefaultAsync(x => x.Loggedemail == email);
+
                 return Json(userDetailsQuery);
             }
         }
@@ -312,86 +327,86 @@ namespace AceBookApp.Controllers
         }
 
         //method to get list of friend requests received
-        public IActionResult GetFriendReq(string email)
+        public async Task<IActionResult> GetFriendReq(string email)
         {
-            var query = from req in _context.FriendRequests
-                        where req.ToRequest == email
-                        orderby req.SentDate descending
-                        select req;
+            var query = await (from req in _context.FriendRequests
+                              where req.ToRequest == email
+                              orderby req.SentDate descending
+                              select req).ToListAsync();
 
             return Json(query);
         }
 
         //method to delete friend req
-        public IActionResult DeleteReq(string fromRequest, string toRequest)
+        public async Task<IActionResult> DeleteReq(string fromRequest, string toRequest)
         {
-            var reqQuery = from req in _context.FriendRequests
-                           where req.FromRequest == fromRequest && req.ToRequest == toRequest
-                           select req;
+            var reqQuery = await (from req in _context.FriendRequests
+                                 where req.FromRequest == fromRequest && req.ToRequest == toRequest
+                                 select req).FirstOrDefaultAsync();
 
-            _context.FriendRequests.Remove(reqQuery.SingleOrDefault());
-            _context.SaveChanges();
+            _context.FriendRequests.Remove(reqQuery);
+            await _context.SaveChangesAsync();
 
             return new EmptyResult();
         }
 
         //method to get list of friend
-        public IActionResult GetFriendList(string email)
+        public async Task<IActionResult> GetFriendList(string email)
         {
-            var frndListQuery = from req in _context.Friends
-                                where req.ToRequest == email || req.FromRequest == email
-                                orderby req.SentDate descending
-                                select req;
+            var frndListQuery = await (from req in _context.Friends
+                                      where req.ToRequest == email || req.FromRequest == email
+                                      orderby req.SentDate descending
+                                      select req).ToListAsync();
 
             return Json(frndListQuery);
         }
 
         //method to get all posts of particular user
-        public IActionResult GetPostsList(string email)
+        public async Task<IActionResult> GetPostsList(string email)
         {
-            var postsQuery = from post in _context.Posts
-                             where post.Email == email
-                             select post;
+            var postsQuery = await (from post in _context.Posts
+                                   where post.Email == email
+                                   select post).ToListAsync();
 
             return Json(postsQuery);
         }
 
         //method to get posts like by logged user
-        public IActionResult GetPostsLikedByMe()
+        public async Task<IActionResult> GetPostsLikedByMe()
         {
-            var myLikedPostsQuery = from like in _context.Likes
-                                    where like.LikedBy == HomeController.loggedUser.Email
-                                    select like.PostId;
+            var myLikedPostsQuery = await (from like in _context.Likes
+                                          where like.LikedBy == HomeController.loggedUser.Email
+                                          select like.PostId).ToListAsync();
 
             return Json(myLikedPostsQuery);
         }
 
         //method to update profile photo of logged user
-        public IActionResult ProfileImgUpload(IFormFile profileImg)
+        public async Task<IActionResult> ProfileImgUpload(IFormFile profileImg)
         {
-            var account = (from acc in _context.Accounts
-                           where acc.Email == HomeController.loggedUser.Email
-                           select acc).First();
+            var account = await (from acc in _context.Accounts
+                                where acc.Email == HomeController.loggedUser.Email
+                                select acc).FirstOrDefaultAsync();
 
             string path = ImgPath(profileImg);
             account.ProfileImagePath = path;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("ProfileData", "Profile", new { email = HomeController.loggedUser.Email });
         }
 
         //method to update cover photo of logged user
-        public IActionResult CoverImgUpload(IFormFile coverImg)
+        public async Task<IActionResult> CoverImgUpload(IFormFile coverImg)
         {
-            var account = (from acc in _context.Accounts
-                           where acc.Email == HomeController.loggedUser.Email
-                           select acc).First();
+            var account = await (from acc in _context.Accounts
+                                where acc.Email == HomeController.loggedUser.Email
+                                select acc).FirstOrDefaultAsync();
 
             string path = ImgPath(coverImg);
             account.CoverImagePath = path;
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return RedirectToAction("ProfileData", "Profile", new { email = HomeController.loggedUser.Email });
         }
@@ -436,23 +451,23 @@ namespace AceBookApp.Controllers
         }
 
         //return settings page of logged user
-        public IActionResult Settings(string email)
+        public async Task<IActionResult> Settings(string email)
         {
-            var account = (from acc in _context.Accounts
-                           where acc.Email == HomeController.loggedUser.Email
-                           select acc).First();
+            var account = await (from acc in _context.Accounts
+                                where acc.Email == HomeController.loggedUser.Email
+                                select acc).FirstOrDefaultAsync();
 
             return View(account);
         }
 
         //method to update account details
-        public IActionResult EditAccountDetails(string type, string value1, string value2)
+        public async Task<IActionResult> EditAccountDetails(string type, string value1, string value2)
         {
             Account account = new Account();
 
-            var myAcc = (from acc in _context.Accounts
-                         where acc.Email == HomeController.loggedUser.Email
-                         select acc).First();
+            var myAcc = await (from acc in _context.Accounts
+                              where acc.Email == HomeController.loggedUser.Email
+                              select acc).FirstOrDefaultAsync();
 
             if (type == "name")
             {
@@ -476,9 +491,9 @@ namespace AceBookApp.Controllers
                 _context.Accounts.Remove(myAcc);
                 _context.Accounts.Add(newAcc);
 
-                var myAddAcc = (from addAcc in _context.additionAccountDetails
-                                where addAcc.Loggedemail == HomeController.loggedUser.Email
-                                select addAcc).First();
+                var myAddAcc = await (from addAcc in _context.additionAccountDetails
+                                      where addAcc.Loggedemail == HomeController.loggedUser.Email
+                                      select addAcc).FirstOrDefaultAsync();
 
                 AdditionAccountDetail newAddAcc = new AdditionAccountDetail();
                 newAddAcc.WorkInfo1 = myAddAcc.WorkInfo1;
@@ -531,17 +546,17 @@ namespace AceBookApp.Controllers
                 HomeController.loggedUser.Email = value1;
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return new EmptyResult();
         }
 
         //method to update account password
-        public string UpdatePassword(string currPass, string newPass)
+        public async Task<string> UpdatePassword(string currPass, string newPass)
         {
-            var myAcc = (from acc in _context.Accounts
-                         where acc.Email == HomeController.loggedUser.Email
-                         select acc).First();
+            var myAcc = await (from acc in _context.Accounts
+                              where acc.Email == HomeController.loggedUser.Email
+                              select acc).FirstOrDefaultAsync();
 
             if (myAcc.Password != currPass)
             {
@@ -550,20 +565,28 @@ namespace AceBookApp.Controllers
             else
             {
                 myAcc.Password = newPass;
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
                 return "Success";
             }
         }
 
         //method to logout user
-        public void Logout()
+        public async Task Logout()
         {
-            var account = (from acc in _context.Accounts
-                           where acc.Email == HomeController.loggedUser.Email
-                           select acc).First();
+            try
+            {
+                var account = await (from acc in _context.Accounts
+                                     where acc.Email == HomeController.loggedUser.Email
+                                     select acc).FirstOrDefaultAsync();
 
-            account.Status = "Offline";
-            _context.SaveChanges();
+                account.Status = "Offline";
+
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error while saving Status changes to database: " + ex.Message);
+            }
         }
     }
 }

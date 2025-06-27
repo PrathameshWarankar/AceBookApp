@@ -1,773 +1,399 @@
-﻿
-//method to display all likes for particular post when mouse hovered over likes
-function DisplayLikes(myData) {
-    var value = {
-        "id": myData
-    }
-    $.post({
-        url: 'https://' + location.host + '/Feed/GetLikesBy',
-        method: 'Post',
-        data: value,
-        async: false,
+﻿// Read the anti-forgery token from the hidden input
+const antiForgeryToken = $('input[name="__RequestVerificationToken"]').val();
+
+// Set up jQuery to include the token in all AJAX requests
+$.ajaxSetup({
+    headers: { 'RequestVerificationToken': antiForgeryToken }
+});
+
+// Utility functions
+const baseUrl = `https://${location.host}`;
+
+function getProfileEmailFromUrl() {
+    return $(location).attr('href').substr(35 + location.host.length).split('#')[0];
+}
+
+function showError(error) {
+    alert("An error occurred: " + error);
+}
+
+// Display all likes for a particular post when mouse hovered over likes
+function DisplayLikes(postId) {
+    $.ajax({
+        url: `${baseUrl}/Feed/GetLikesBy`,
+        method: 'POST',
+        data: { id: postId },
         success: function (data) {
-            var result = '';
-            for (var i = 0; i < data.length; i++) {
-                result = result + '<span class="myLikedEmail">' + data[i].likedByName + '</span>' + '</br>'
+            let result = '';
+            for (let i = 0; i < data.length; i++) {
+                result += `<span class="myLikedEmail">${data[i].likedByName}</span></br>`;
             }
-            document.getElementById(myData).getElementsByClassName("myLikedNames")[0].style.display = "block";
-            document.getElementById(myData).getElementsByClassName("myLikedNames")[0].innerHTML = result;
-        }
-    })
-}
-
-//method to hide all likes for particular post when mouse removed over likes
-function DisplayLikesHide(myData) {
-    document.getElementById(myData).getElementsByClassName("myLikedNames")[0].style.display = "none";
-}
-
-//method to show comments section
-function ShowComments(myData) {
-    if (document.getElementById(myData).getElementsByClassName("myCommentSection")[0].style.display == "block") {
-        document.getElementById(myData).getElementsByClassName("myCommentSection")[0].style.display = "none";
-    }
-    else {
-        document.getElementById(myData).getElementsByClassName("myCommentSection")[0].style.display = "block";
-    }
-
-    document.getElementById(myData).getElementsByClassName("myCommentSection")[0].getElementsByClassName("myAddComment")[0].focus();
-}
-
-//method to display all previous comments for a particular post
-function GetCommentList(myData) {
-    var value1 = {
-        "id": myData
-    }
-    $.post({
-        url: 'https://' + location.host + '/Feed/GetCommentsBy',
-        method: 'Post',
-        data: value1,
-        success: function (data) {
-            var result = '';
-            for (var i = 0; i < data.length; i++) {
-                result = result + '<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="' + 'http://127.0.0.1:8080/' + data[i].commentedByImagepath + '"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/' + data[i].commentedBy + '">' + data[i].commentedByName + '</a></br><span class="commentText"> ' + data[i].commentedText + '</span ></div></div></div>'
-            }
-            document.getElementById(myData).getElementsByClassName("myCommentsList")[0].innerHTML = result
-            //GetCommentsCount();
-        }
-    })
-}
-
-function UpdateCommentCount(postId) {
-    var value = { "id": postId };
-    $.post({
-        url: 'https://' + location.host + '/Feed/GetCommentsBy',
-        method: 'Post',
-        data: value,
-        success: function (data) {
-            var countText = data.length === 1 ? "1 comment" : data.length + " comments";
-            // Update the comment count in the DOM for this post
-            var postElem = document.getElementById(postId);
-            if (postElem) {
-                var countElem = postElem.getElementsByClassName("commentCount")[0];
-                if (countElem) {
-                    countElem.innerHTML = countText;
-                }
-            }
+            const likedNames = document.getElementById(postId).getElementsByClassName("myLikedNames")[0];
+            likedNames.style.display = "block";
+            likedNames.innerHTML = result;
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
     });
 }
 
-//method to display previous comments and adds new comment when entered by user
+// Hide all likes for a particular post when mouse removed over likes
+function DisplayLikesHide(postId) {
+    document.getElementById(postId).getElementsByClassName("myLikedNames")[0].style.display = "none";
+}
+
+// Show/hide comments section
+function ShowComments(postId) {
+    const commentSection = document.getElementById(postId).getElementsByClassName("myCommentSection")[0];
+    commentSection.style.display = (commentSection.style.display === "block") ? "none" : "block";
+    commentSection.getElementsByClassName("myAddComment")[0].focus();
+}
+
+// Display all previous comments for a particular post
+function GetCommentList(postId) {
+    $.ajax({
+        url: `${baseUrl}/Feed/GetCommentsBy`,
+        method: 'POST',
+        data: { id: postId },
+        success: function (data) {
+            let result = '';
+            for (let i = 0; i < data.length; i++) {
+                result += `<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="http://127.0.0.1:8080/${data[i].commentedByImagepath}"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/${data[i].commentedBy}">${data[i].commentedByName}</a></br><span class="commentText"> ${data[i].commentedText}</span ></div></div></div>`;
+            }
+            document.getElementById(postId).getElementsByClassName("myCommentsList")[0].innerHTML = result;
+        },
+        error: function (xhr, status, error) {
+            showError(error);
+        }
+    });
+}
+
+// Update comment count for a post
+function UpdateCommentCount(postId) {
+    $.ajax({
+        url: `${baseUrl}/Feed/GetCommentsBy`,
+        method: 'POST',
+        data: { id: postId },
+        success: function (data) {
+            const countText = data.length === 1 ? "1 comment" : `${data.length} comments`;
+            const postElem = document.getElementById(postId);
+            if (postElem) {
+                const countElem = postElem.getElementsByClassName("commentCount")[0];
+                if (countElem) {
+                    countElem.innerHTML = countText;
+                }
+            }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
+        }
+    });
+}
+
+// Display previous comments and add new comment when entered by user
 function AddingComment(myData) {
-    var val;
+    let postId = myData.postId !== undefined ? myData.postId : myData.id;
+    GetCommentList(postId);
+    const input = document.getElementById(postId).getElementsByClassName("myCommentSection")[0].getElementsByClassName("myAddComment")[0];
 
-    if (myData.postId == undefined) {
-        val = myData.id
-    } else {
-        val = myData.postId
-    }
-
-    GetCommentList(val);
-    var input = document.getElementById(val).getElementsByClassName("myCommentSection")[0].getElementsByClassName("myAddComment")[0];
+    // Prevent multiple event bindings
+    if (input.dataset.handlerAttached) return;
+    input.dataset.handlerAttached = "true";
 
     let isSubmitting = false;
-
     input.addEventListener("keyup", (event) => {
         if (event.key === "Enter" && input.value.trim() !== '' && !isSubmitting) {
             isSubmitting = true;
-
-            var value = {
-                "id": val,
-                "text": input.value
-            };
-
-            $.post({
-                url: 'https://' + location.host + '/Feed/Commented',
-                method: 'Post',
-                data: value,
-                success: function (data) {
+            $.ajax({
+                url: `${baseUrl}/Feed/Commented`,
+                method: 'POST',
+                data: { id: postId, text: input.value },
+                success: function () {
                     input.value = '';
                     setTimeout(function () {
-                        GetCommentList(val);
-                        UpdateCommentCount(val); 
+                        GetCommentList(postId);
+                        UpdateCommentCount(postId);
                     }, 750);
                 },
                 complete: function () {
                     isSubmitting = false;
+                },
+                error: function (xhr, status, error) {
+                    showError(error);
                 }
             });
         }
     });
 }
 
-//method to update profile photo
+// Update profile photo
 function Submit() {
     document.getElementsByClassName("profileImgForm")[0].submit();
 }
 
-//method to update cover photo
+// Update cover photo
 function Submit1() {
     document.getElementsByClassName("coverImgForm")[0].submit();
 }
 
 $(document).ready(function () {
-    var myEmail;
+    let myEmail;
+    const profileEmail = getProfileEmailFromUrl();
 
-    $('.myProfileHeaderProfileAddEditDiv').addClass('hidden');
-    $('.myProfileHeaderProfileEditDiv').addClass('hidden');
-    $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
-    $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-    $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
-    document.getElementsByClassName("myProfileHeaderCoverEditBtnDiv")[0].style.visibility = "hidden";
-
-    document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
-    document.getElementsByClassName("myProfileHeaderOptionsPosts")[0].style.color = "#1876F2"
-
+    // Hide all profile action divs initially
+    $('.myProfileHeaderProfileAddEditDiv, .myProfileHeaderProfileEditDiv, .myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileFrndAcceptedDiv, .myProfileHeaderProfileAddFriendDiv').addClass('hidden');
+    $(".myProfileHeaderCoverEditBtnDiv")[0].style.visibility = "hidden";
+    $(".myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "3px solid #1876F2";
+    $(".myProfileHeaderOptionsPosts")[0].style.color = "#1876F2";
     $('.aboutOptionDiv').addClass('hidden');
 
+    // Tab click handlers
     $('.myProfileHeaderOptionsAboutDiv').click(function () {
         $('.aboutOptionDiv').removeClass('hidden');
         $('.aboutSectionDiv').removeClass('hidden');
-        $('.aboutSectionRightFriendsDiv').removeClass('hidden');
-        $('.aboutSectionRightPhotosDiv').removeClass('hidden');
+        $('.aboutSectionRightFriendsDiv, .aboutSectionRightPhotosDiv').removeClass('hidden');
         $('.postOptionDiv').addClass('hidden');
-
-        document.getElementsByClassName("myProfileHeaderOptionsAbout")[0].style.color = "#1876F2"
-        document.getElementsByClassName("myProfileHeaderOptionsFriends")[0].style.color = "#65676B"
-        document.getElementsByClassName("myProfileHeaderOptionsPosts")[0].style.color = "#65676B"
-        document.getElementsByClassName("myProfileHeaderOptionsPhotos")[0].style.color = "#65676B"
-
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#1876F2"
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.backgroundColor = "#EFF3FF";
-        $('.aboutSectionRightWorkDiv').addClass('hidden');
-        $('.aboutSectionRightPlaceDiv').addClass('hidden');
-        $('.aboutSectionRightContactDiv').addClass('hidden');
-        $('.aboutSectionRightFamilyDiv').addClass('hidden');
+        $(".myProfileHeaderOptionsAbout")[0].style.color = "#1876F2";
+        $(".myProfileHeaderOptionsFriends, .myProfileHeaderOptionsPosts, .myProfileHeaderOptionsPhotos").css("color", "#65676B");
+        $(".aboutSectionLeftOverview")[0].style.color = "#1876F2";
+        $(".aboutSectionLeftOverview")[0].style.backgroundColor = "#EFF3FF";
+        $('.aboutSectionRightWorkDiv, .aboutSectionRightPlaceDiv, .aboutSectionRightContactDiv, .aboutSectionRightFamilyDiv').addClass('hidden');
         $('.aboutSectionRightOverviewDiv').removeClass('hidden');
-
-        document.getElementsByClassName("myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
-        document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsFriendsOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "none"
-    })
+        $(".myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "3px solid #1876F2";
+        $(".myProfileHeaderOptionsPostsOuterDiv, .myProfileHeaderOptionsFriendsOuterDiv, .myProfileHeaderOptionsPhotosOuterDiv").css("borderBottom", "none");
+    });
 
     $('.myProfileHeaderOptionsFriendsDiv').click(function () {
-        document.getElementsByClassName("myProfileHeaderOptionsAbout")[0].style.color = "#65676B"
-        document.getElementsByClassName("myProfileHeaderOptionsFriends")[0].style.color = "#1876F2"
-        document.getElementsByClassName("myProfileHeaderOptionsPosts")[0].style.color = "#65676B"
-        document.getElementsByClassName("myProfileHeaderOptionsPhotos")[0].style.color = "#65676B"
-
+        $(".myProfileHeaderOptionsAbout, .myProfileHeaderOptionsPosts, .myProfileHeaderOptionsPhotos").css("color", "#65676B");
+        $(".myProfileHeaderOptionsFriends")[0].style.color = "#1876F2";
         $('.aboutOptionDiv').removeClass('hidden');
         $('.aboutSectionDiv').addClass('hidden');
         $('.aboutSectionRightFriendsDiv').removeClass('hidden');
         $('.aboutSectionRightPhotosDiv').addClass('hidden');
-
-        document.getElementsByClassName("myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsFriendsOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
-        document.getElementsByClassName("myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "none"
-
+        $(".myProfileHeaderOptionsAboutOuterDiv, .myProfileHeaderOptionsPostsOuterDiv, .myProfileHeaderOptionsPhotosOuterDiv").css("borderBottom", "none");
+        $(".myProfileHeaderOptionsFriendsOuterDiv")[0].style.borderBottom = "3px solid #1876F2";
         $('.postOptionDiv').addClass('hidden');
     });
 
     $('.myProfileHeaderOptionsPhotosDiv').click(function () {
-        document.getElementsByClassName("myProfileHeaderOptionsAbout")[0].style.color = "#65676B"
-        document.getElementsByClassName("myProfileHeaderOptionsFriends")[0].style.color = "#65676B"
-        document.getElementsByClassName("myProfileHeaderOptionsPosts")[0].style.color = "#65676B"
-        document.getElementsByClassName("myProfileHeaderOptionsPhotos")[0].style.color = "#1876F2"
-
+        $(".myProfileHeaderOptionsAbout, .myProfileHeaderOptionsFriends, .myProfileHeaderOptionsPosts").css("color", "#65676B");
+        $(".myProfileHeaderOptionsPhotos")[0].style.color = "#1876F2";
         $('.aboutOptionDiv').removeClass('hidden');
         $('.aboutSectionDiv').addClass('hidden');
         $('.aboutSectionRightFriendsDiv').addClass('hidden');
         $('.aboutSectionRightPhotosDiv').removeClass('hidden');
-
-        document.getElementsByClassName("myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsFriendsOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
-
+        $(".myProfileHeaderOptionsAboutOuterDiv, .myProfileHeaderOptionsPostsOuterDiv, .myProfileHeaderOptionsFriendsOuterDiv").css("borderBottom", "none");
+        $(".myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "3px solid #1876F2";
         $('.postOptionDiv').addClass('hidden');
-
     });
 
     $('.myProfileHeaderOptionsPostsDiv').click(function () {
         $('.postOptionDiv').removeClass('hidden');
-
-        document.getElementsByClassName("myProfileHeaderOptionsAbout")[0].style.color = "#65676B"
-        document.getElementsByClassName("myProfileHeaderOptionsFriends")[0].style.color = "#65676B"
-        document.getElementsByClassName("myProfileHeaderOptionsPosts")[0].style.color = "#1876F2"
-        document.getElementsByClassName("myProfileHeaderOptionsPhotos")[0].style.color = "#65676B"
-
+        $(".myProfileHeaderOptionsAbout, .myProfileHeaderOptionsFriends, .myProfileHeaderOptionsPhotos").css("color", "#65676B");
+        $(".myProfileHeaderOptionsPosts")[0].style.color = "#1876F2";
         $('.aboutOptionDiv').addClass('hidden');
-
-        document.getElementsByClassName("myProfileHeaderOptionsAboutOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "3px solid #1876F2"
-        document.getElementsByClassName("myProfileHeaderOptionsFriendsOuterDiv")[0].style.borderBottom = "none"
-        document.getElementsByClassName("myProfileHeaderOptionsPhotosOuterDiv")[0].style.borderBottom = "none"
+        $(".myProfileHeaderOptionsAboutOuterDiv, .myProfileHeaderOptionsFriendsOuterDiv, .myProfileHeaderOptionsPhotosOuterDiv").css("borderBottom", "none");
+        $(".myProfileHeaderOptionsPostsOuterDiv")[0].style.borderBottom = "3px solid #1876F2";
     });
 
-    //method to get logged user details and display on profile page
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetProfileDetails',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            document.getElementsByClassName("myProfileHeaderCoverImg")[0].src = "http://127.0.0.1:8080/" + data[0].coverImagePath.split('Uploads\\')[1];
-            document.getElementsByClassName("myProfileHeaderProfileImg")[0].src = "http://127.0.0.1:8080/" + data[0].profileImagePath.split('Uploads\\')[1];
-            document.getElementsByClassName("myProfileHeaderMyDetailsName")[0].textContent = data[0].firstName + " " + data[0].surname;
-        }
-    })
-
-    //method to display friends count on profile page
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetFriendList',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            document.getElementsByClassName("myProfileHeaderMyDetailsFriendsCount")[0].textContent = data.length + " friends"
-        }
-    });
-
-    //method to display friends count inside friends section
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetFriendList',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            document.getElementsByClassName("postOptionLeftFriendsCount")[0].textContent = data.length + " friends"
-        }
-    });
-
-    //method to get logged user details to populate multiple fields
-    var value = {}
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetProfileDetails',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            myEmail = data[0].email;
-
-            //if profile is not of logged user
-            if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-                $('.myProfileHeaderProfileEditDiv').addClass('hidden');
-                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-                document.getElementsByClassName("myProfileHeaderCoverEditBtnDiv")[0].style.visibility = "hidden";
-                document.getElementsByClassName("myProfileHeaderProfieUploadImg")[0].style.visibility = "hidden";
-                document.getElementsByClassName("myProfileHeaderProfieUpload")[0].style.visibility = "hidden";
-            }
-            //if profile is of logged user
-            else {
-                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
-                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
-                $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
-                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-                setTimeout(function () {
-                    document.getElementsByClassName("myProfileHeaderCoverEditBtnDiv")[0].style.visibility = "visible";
-                    document.getElementsByClassName("myProfileHeaderProfieUploadImg")[0].style.visibility = "visible";
-                }, 10)
-                document.getElementsByClassName("myProfileHeaderProfieUpload")[0].style.visibility = "visible";
-                document.getElementsByClassName("myProfileHeaderProfileImg")[0].style.cursor = "pointer";
-            }
-        }
-    })
-
-    //method to populate additional details (Overview) of user
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            if (data[0] == undefined || data[0].workInfo1 == null) {
-                document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'No workplace to show';
-                $('.aboutSectionRightOverviewWork1bSpan').addClass('hidden');
-                document.getElementsByClassName("aboutSectionRightOverviewWorkDiv")[0].style.height = "37px";
-            }
-            else {
-                document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                document.getElementsByClassName("aboutSectionRightOverviewWork1bSpan")[0].textContent = data[0].workInfo2;
-            }
-
-            if (data[0] == undefined || data[0].collegeInfo == null) {
-                document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'No college to show';
-                document.getElementsByClassName("aboutSectionRightOverviewCollegeDiv")[0].style.height = "37px";
-            }
-            else {
-                document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
-            }
-
-            if (data[0] == undefined || data[0].placeInfo == null) {
-                document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'No city to show';
-                document.getElementsByClassName("aboutSectionRightOverviewPlaceDiv")[0].style.height = "37px";
-            }
-            else {
-                document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
-            }
-
-            if (data[0] == undefined || data[0].phoneInfo == null) {
-                document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = 'No phone number to show';
-                document.getElementsByClassName("aboutSectionRightOverviewContactDiv")[0].style.height = "37px";
-            }
-            else {
-                document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
-            }
-        }
-    })
-
-    //method to populate additional details (Work, College, Place, Contact) of user
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            if (data[0] == undefined || data[0].workInfo1 == null) {
-                document.getElementsByClassName("postOptionLeftWork1aSpan")[0].innerHTML = 'No workplace to show';
-                $('.postOptionRightWork1bSpan').addClass('hidden');
-                document.getElementsByClassName("postOptionLeftWorkDiv")[0].style.height = "37px";
-            }
-            else {
-                document.getElementsByClassName("postOptionLeftWork1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                document.getElementsByClassName("postOptionLeftWork1bSpan")[0].textContent = data[0].workInfo2;
-            }
-
-            if (data[0] == undefined || data[0].collegeInfo == null) {
-                document.getElementsByClassName("postOptionLeftCollegeSpan")[0].innerHTML = 'No college to show';
-                document.getElementsByClassName("postOptionLeftCollegeDiv")[0].style.height = "37px";
-            }
-            else {
-                document.getElementsByClassName("postOptionLeftCollegeSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
-            }
-
-            if (data[0] == undefined || data[0].placeInfo == null) {
-                document.getElementsByClassName("postOptionLeftPlaceSpan")[0].innerHTML = 'No city to show';
-                document.getElementsByClassName("postOptionLeftPlaceDiv")[0].style.height = "37px";
-            }
-            else {
-                document.getElementsByClassName("postOptionLeftPlaceSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
-            }
-
-            if (data[0] == undefined || data[0].phoneInfo == null) {
-                document.getElementsByClassName("postOptionLeftContactSpan")[0].innerHTML = 'No phone number to show';
-                document.getElementsByClassName("postOptionLeftContactDiv")[0].style.height = "37px";
-            }
-            else {
-                document.getElementsByClassName("postOptionLeftContactSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
-            }
-        }
-    })
-
-    //page to display when request is sent to a user
-    var value = {
-        "toRequest": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/IsReqSent',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            if (data == "Yes") {
-                $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
-                $('.myProfileHeaderProfileCancelReqDiv').removeClass('hidden');
-                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
-                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-                $('.myProfileHeaderProfileEditDiv').addClass('hidden');
-            }
-            else if (myEmail == $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
-                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
-                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-                $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
-            }
-            else {
-                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
-                $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
-                $('.myProfileHeaderProfileAddFriendDiv').removeClass('hidden');
-                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-                $('.myProfileHeaderProfileEditDiv').addClass('hidden');
-            }
-        }
-    })
-
-    //page to display when user is a friend
-    var value = {
-        "toRequest": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/IsFriend',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            if (data == "Yes") {
-                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
-                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
-                $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
-                $('.myProfileHeaderProfileFrndAcceptedDiv').removeClass('hidden');
-                $('.myProfileHeaderProfileEditDiv').addClass('hidden');
-            }
-            else if (myEmail == $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-                $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
-                $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
-                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-                $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
-            }
-            else {
-                $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-            }
-        }
-
-    })
-
-    //method to populate friends when friends tab is clicked 
-    var result = '';
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetFriendList',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            for (var i = 0; i < data.length; i++) {
-                var email;
-                if (data[i].fromRequest == $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-                    email = data[i].toRequest
-                }
-                else {
-                    email = data[i].fromRequest
-                }
-                var value = {
-                    "email": email
-                }
-                $.post({
-                    url: 'https://' + location.host + '/Profile/GetProfileDetails',
-                    method: 'Post',
-                    data: value,
-                    async: false,
-                    success: function (data1) {
-                        result = result + '<div class="frndAcc" id="' + data1[0].email + '" onclick=\'window.location.href="/Profile/ProfileData?email=' + email + '"\'><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccNameDiv"><span class="frndAccName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div > '
-                    }
-                });
-            }
-            document.getElementsByClassName("aboutSectionRightFriendsListDiv")[0].innerHTML = result;
-        }
-    });
-
-    //method to populate friends when posts tab is clicked 
-    var result = '';
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetFriendList',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            var len = 0;
-            if (data.length > 6) {
-                len = 6;
-            }
-            else {
-                len = data.length
-            }
-            for (var i = 0; i < len; i++) {
-                var email;
-                if (data[i].fromRequest == $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-                    email = data[i].toRequest
-                }
-                else {
-                    email = data[i].fromRequest
-                }
-                var value = {
-                    "email": email
-                }
-                $.post({
-                    url: 'https://' + location.host + '/Profile/GetProfileDetails',
-                    method: 'Post',
-                    data: value,
-                    async: false,
-                    success: function (data1) {
-                        result = result + '<div class="frndAccPost" id="' + data1[0].email + '" onclick=\'window.location.href="/Profile/ProfileData?email=' + email + '"\'><div class="frndAccPostImgDiv"><img class="frndAccPostImg" src="http://127.0.0.1:8080/' + data1[0].profileImagePath.split('Uploads\\')[1] + '"/></div><div class="frndAccPostNameDiv"><span class="frndAccPostName">' + data1[0].firstName + ' ' + data1[0].surname + '</span></div></div > '
-                    }
-                });
-            }
-            document.getElementsByClassName("postOptionLeftFriendsListDiv")[0].innerHTML = result;
-        }
-    });
-
-    $(".aboutSectionRightFriendsHeaderFrndReqDiv").click(function () {
-        window.location.href = '/Profile/Friends?email=' + $(location).attr('href').substr(35 + location.host.length).split('#')[0];
-    });
-
-    //method to populate posts when about tab is clicked 
-    var result = '';
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetPostsList',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            for (var i = 0; i < data.length; i++) {
-                result = result + '<div class="ImgDiv"><img class="myPhotos" src="http://127.0.0.1:8080/' + data[i].imagepath.split('Uploads\\')[1] + '"/></div>';
-            }
-            document.getElementsByClassName("aboutSectionRightPhotosListDiv")[0].innerHTML = result;
-        }
-    });
-
-    //method to populate posts when photos tab is clicked 
-    var result = '';
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetPostsList',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            var len = 0;
-            if (data.length > 6) {
-                len = 6;
-            }
-            else {
-                len = data.length
-            }
-            for (var i = 0; i < len; i++) {
-                result = result + '<div class="ImgDiv"><img class="myPhotosPost" src="http://127.0.0.1:8080/' + data[i].imagepath.split('Uploads\\')[1] + '"/></div>';
-            }
-            document.getElementsByClassName("postOptionLeftPhotosListDiv")[0].innerHTML = result;
-        }
-    });
-
-    //methods to be executed when each of the button is clicked
-    $('.myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileCancelReqDiv').click(function () {
-        var value = {
-            "fromRequest": myEmail,
-            "toRequest": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-        }
-        $.post({
-            url: 'https://' + location.host + '/Profile/SendRequest',
-            method: 'Post',
-            data: value,
-            success: function (data) {
-                if ($('.myProfileHeaderProfileCancelReqDiv').hasClass('hidden')) {
-                    $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
-                    $('.myProfileHeaderProfileCancelReqDiv').removeClass('hidden');
-                    $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
-                }
-                else {
-                    $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
-                    $('.myProfileHeaderProfileAddEditDiv').removeClass('hidden');
-                    $('.myProfileHeaderProfileAddFriendDiv').removeClass('hidden');
-                }
-            }
-        })
-    })
-
-    $('.postOptionLeftPhotosHeaderAllPhotosDiv').click(function () {
-        document.getElementsByClassName("myProfileHeaderOptionsPhotosDiv")[0].click();
-    });
-
-    $('.postOptionLeftFriendsHeaderAllFrndDiv').click(function () {
-        document.getElementsByClassName("myProfileHeaderOptionsFriendsDiv")[0].click();
-    });
+    // About section left tab click handlers
 
     $('.aboutSectionLeftOverview').click(function () {
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#1876F2"
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.backgroundColor = "#EFF3FF";
-
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "transparent"
-
-        $('.aboutSectionRightWorkDiv').addClass('hidden');
-        $('.aboutSectionRightPlaceDiv').addClass('hidden');
-        $('.aboutSectionRightContactDiv').addClass('hidden');
-        $('.aboutSectionRightFamilyDiv').addClass('hidden');
+        $(".aboutSectionLeftOverview")[0].style.color = "#1876F2";
+        $(".aboutSectionLeftOverview")[0].style.backgroundColor = "#EFF3FF";
+        $(".aboutSectionLeftWork, .aboutSectionLeftPlace, .aboutSectionLeftContact, .aboutSectionLeftFamily")
+            .css("color", "#65676B").css("backgroundColor", "transparent");
+        $('.aboutSectionRightWorkDiv, .aboutSectionRightPlaceDiv, .aboutSectionRightContactDiv, .aboutSectionRightFamilyDiv')
+            .addClass('hidden');
         $('.aboutSectionRightOverviewDiv').removeClass('hidden');
 
-        var value = {
-            "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-        }
-        $.post({
-            url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
-            method: 'Post',
-            data: value,
+        $.ajax({
+            url: `${baseUrl}/Profile/GetAdditionalDetails`,
+            method: 'POST',
+            data: { email: getProfileEmailFromUrl() },
             success: function (data) {
-                if (data[0] == undefined || data[0].workInfo1 == null) {
-                    document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'No workplace to show';
+                if (!data || data.workInfo1 == null) {
+                    $(".aboutSectionRightOverviewWork1aSpan").html('No workplace to show');
                     $('.aboutSectionRightOverviewWork1bSpan').addClass('hidden');
-                    document.getElementsByClassName("aboutSectionRightOverviewWorkDiv")[0].style.height = "37px";
+                    $(".aboutSectionRightOverviewWorkDiv")[0].style.height = "37px";
+                } else {
+                    $(".aboutSectionRightOverviewWork1aSpan").html('Worked at <b>' + data.workInfo1 + '<b>');
+                    $(".aboutSectionRightOverviewWork1bSpan").text(data.workInfo2);
                 }
-                else {
-                    document.getElementsByClassName("aboutSectionRightOverviewWork1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                    document.getElementsByClassName("aboutSectionRightOverviewWork1bSpan")[0].textContent = data[0].workInfo2;
+                if (!data || data.collegeInfo == null) {
+                    $(".aboutSectionRightOverviewCollegeSpan").html('No college to show');
+                    $(".aboutSectionRightOverviewCollegeDiv")[0].style.height = "37px";
+                } else {
+                    $(".aboutSectionRightOverviewCollegeSpan").html('Studied at <b>' + data.collegeInfo + '<b>');
                 }
-
-                if (data[0] == undefined || data[0].collegeInfo == null) {
-                    document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'No college to show';
-                    document.getElementsByClassName("aboutSectionRightOverviewCollegeDiv")[0].style.height = "37px";
+                if (!data || data.placeInfo == null) {
+                    $(".aboutSectionRightOverviewPlaceSpan").html('No city to show');
+                    $(".aboutSectionRightOverviewPlaceDiv")[0].style.height = "37px";
+                } else {
+                    $(".aboutSectionRightOverviewPlaceSpan").html('From <b>' + data.placeInfo + '<b>');
                 }
-                else {
-                    document.getElementsByClassName("aboutSectionRightOverviewCollegeSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
+                if (!data || data.phoneInfo == null) {
+                    $(".aboutSectionRightOverviewContactSpan").html('No phone number to show');
+                    $(".aboutSectionRightOverviewContactDiv")[0].style.height = "37px";
+                } else {
+                    $(".aboutSectionRightOverviewContactSpan").html('<b>' + data.phoneInfo + '</b>');
                 }
-
-                if (data[0] == undefined || data[0].placeInfo == null) {
-                    document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'No city to show';
-                    document.getElementsByClassName("aboutSectionRightOverviewPlaceDiv")[0].style.height = "37px";
-                }
-                else {
-                    document.getElementsByClassName("aboutSectionRightOverviewPlaceSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
-                }
-
-                if (data[0] == undefined || data[0].phoneInfo == null) {
-                    document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = 'No phone number to show';
-                    document.getElementsByClassName("aboutSectionRightOverviewContactDiv")[0].style.height = "37px";
-                }
-                else {
-                    document.getElementsByClassName("aboutSectionRightOverviewContactSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
-                }
+            },
+            error: function (xhr, status, error) {
+                showError(error);
             }
-        })
+        });
     });
 
-    //----------------------------------------------------------------------------------------
-
     $('.aboutSectionLeftWork').click(function () {
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.backgroundColor = "transparent";
-
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.color = "#1876F2"
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.backgroundColor = "#EFF3FF"
-
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "transparent"
-
-        $('.aboutSectionRightPlaceDiv').addClass('hidden');
-        $('.aboutSectionRightContactDiv').addClass('hidden');
-        $('.aboutSectionRightFamilyDiv').addClass('hidden');
-        $('.aboutSectionRightOverviewDiv').addClass('hidden');
+        $(".aboutSectionLeftOverview, .aboutSectionLeftPlace, .aboutSectionLeftContact, .aboutSectionLeftFamily")
+            .css("color", "#65676B").css("backgroundColor", "transparent");
+        $(".aboutSectionLeftWork")[0].style.color = "#1876F2";
+        $(".aboutSectionLeftWork")[0].style.backgroundColor = "#EFF3FF";
+        $('.aboutSectionRightPlaceDiv, .aboutSectionRightContactDiv, .aboutSectionRightFamilyDiv, .aboutSectionRightOverviewDiv')
+            .addClass('hidden');
         $('.aboutSectionRightWorkDiv').removeClass('hidden');
-        $('.aboutSectionRightWorkAddInput1Div').addClass('hidden');
-        $('.aboutSectionRightWorkAddInput2Div').addClass('hidden');
-        $('.aboutSectionRightWorkAddInput3Div').addClass('hidden');
+        $('.aboutSectionRightWorkAddInput1Div, .aboutSectionRightWorkAddInput2Div, .aboutSectionRightWorkAddInput3Div')
+            .addClass('hidden');
 
-        if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-            $('.aboutSectionRightWorkAddDiv1').addClass('hidden');
-            $('.aboutSectionRightWorkAddDiv2').addClass('hidden');
-            $('.aboutSectionRightWorkAddDiv3').addClass('hidden');
-        }
-        else {
+        if (typeof myEmail !== "undefined" && myEmail !== getProfileEmailFromUrl()) {
+            $('.aboutSectionRightWorkAddDiv1, .aboutSectionRightWorkAddDiv2, .aboutSectionRightWorkAddDiv3').addClass('hidden');
+        } else {
             $('.aboutSectionRightWorkAddDiv1').removeClass('hidden');
-
         }
 
-        var value = {
-            "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-        }
-        $.post({
-            url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
-            method: 'Post',
-            data: value,
+        $.ajax({
+            url: `${baseUrl}/Profile/GetAdditionalDetails`,
+            method: 'POST',
+            data: { email: getProfileEmailFromUrl() },
             success: function (data) {
-                if (data[0] == undefined || data[0].workInfo1 == null) {
-                    document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'No workplace to show';
+                if (!data || data.workInfo1 == null) {
+                    $(".aboutSectionRightWorkResult1aSpan").html('No workplace to show');
                     $('.aboutSectionRightWorkResult1bSpan').addClass('hidden');
-                    document.getElementsByClassName("aboutSectionRightWorkResultDiv1")[0].style.height = "35px";
+                    $(".aboutSectionRightWorkResultDiv1")[0].style.height = "35px";
+                } else {
+                    $(".aboutSectionRightWorkResult1aSpan").html('Worked at <b>' + data.workInfo1 + '<b>');
+                    $(".aboutSectionRightWorkResult1bSpan").text(data.workInfo2);
                 }
-                else {
-                    document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                    document.getElementsByClassName("aboutSectionRightWorkResult1bSpan")[0].textContent = data[0].workInfo2;
-                    /*document.getElementsByClassName("aboutSectionRightWorkResult1cSpan")[0].textContent = data[0].workInfo3;*/
-                    /*document.getElementsByClassName("aboutSectionRightWorkResultDiv1")[0].style.display = "block";*/
+                if (!data || data.collegeInfo == null) {
+                    $(".aboutSectionRightWorkResult2aSpan").html('No college to show');
+                } else {
+                    $(".aboutSectionRightWorkResult2aSpan").html('Studied at <b>' + data.collegeInfo + '<b>');
                 }
-
-                if (data[0] == undefined || data[0].collegeInfo == null) {
-                    document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'No college to show';
+                if (!data || data.schoolInfo == null) {
+                    $(".aboutSectionRightWorkResult3aSpan").html('No school to show');
+                } else {
+                    $(".aboutSectionRightWorkResult3aSpan").html('Went at <b>' + data.schoolInfo + '<b>');
                 }
-                else {
-                    document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
-                }
-
-                if (data[0] == undefined || data[0].schoolInfo == null) {
-                    document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'No school to show';
-                }
-                else {
-                    document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'Went at ' + '<b>' + data[0].schoolInfo + '<b>';
-                }
+            },
+            error: function (xhr, status, error) {
+                showError(error);
             }
-        })
+        });
+    });
+
+    $('.aboutSectionLeftPlace').click(function () {
+        $(".aboutSectionLeftOverview, .aboutSectionLeftWork, .aboutSectionLeftContact, .aboutSectionLeftFamily")
+            .css("color", "#65676B").css("backgroundColor", "transparent");
+        $(".aboutSectionLeftPlace")[0].style.color = "#1876F2";
+        $(".aboutSectionLeftPlace")[0].style.backgroundColor = "#EFF3FF";
+        $('.aboutSectionRightContactDiv, .aboutSectionRightFamilyDiv, .aboutSectionRightOverviewDiv, .aboutSectionRightWorkDiv')
+            .addClass('hidden');
+        $('.aboutSectionRightPlaceDiv').removeClass('hidden');
+        $('.aboutSectionRightPlaceAddInput1Div').addClass('hidden');
+
+        if (typeof myEmail !== "undefined" && myEmail !== getProfileEmailFromUrl()) {
+            $('.aboutSectionRightPlaceAddDiv').addClass('hidden');
+        } else {
+            $('.aboutSectionRightPlaceAddDiv').removeClass('hidden');
+        }
+
+        $.ajax({
+            url: `${baseUrl}/Profile/GetAdditionalDetails`,
+            method: 'POST',
+            data: { email: getProfileEmailFromUrl() },
+            success: function (data) {
+                if (!data || data.placeInfo == null) {
+                    $(".aboutSectionRightPlaceResult1aSpan").html('No city to show');
+                } else {
+                    $(".aboutSectionRightPlaceResult1aSpan").html('From <b>' + data.placeInfo + '<b>');
+                }
+            },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
+        });
+    });
+
+    $('.aboutSectionLeftContact').click(function () {
+        $(".aboutSectionLeftOverview, .aboutSectionLeftWork, .aboutSectionLeftPlace, .aboutSectionLeftFamily")
+            .css("color", "#65676B").css("backgroundColor", "transparent");
+        $(".aboutSectionLeftContact")[0].style.color = "#1876F2";
+        $(".aboutSectionLeftContact")[0].style.backgroundColor = "#EFF3FF";
+        $('.aboutSectionRightFamilyDiv, .aboutSectionRightOverviewDiv, .aboutSectionRightWorkDiv, .aboutSectionRightPlaceDiv')
+            .addClass('hidden');
+        $('.aboutSectionRightContactDiv').removeClass('hidden');
+        $('.aboutSectionRightContactAddInput1Div, .aboutSectionRightContactAddInput2Div').addClass('hidden');
+
+        if (typeof myEmail !== "undefined" && myEmail !== getProfileEmailFromUrl()) {
+            $('.aboutSectionRightContactAddDiv1').addClass('hidden');
+        } else {
+            $('.aboutSectionRightContactAddDiv1').removeClass('hidden');
+        }
+
+        $.ajax({
+            url: `${baseUrl}/Profile/GetProfileDetails`,
+            method: 'POST',
+            data: { email: getProfileEmailFromUrl() },
+            success: function (data) {
+                if (data.gender === "Male") {
+                    $('.aboutSectionRightContactGenderMaleDiv').removeClass('hidden');
+                    $('.aboutSectionRightContactGenderFemaleDiv').addClass('hidden');
+                } else {
+                    $('.aboutSectionRightContactGenderMaleDiv').addClass('hidden');
+                    $('.aboutSectionRightContactGenderFemaleDiv').removeClass('hidden');
+                }
+                $(".aboutSectionRightContactDOB1aSpan").html(data.dobDate + ' ' + data.dobMon);
+            },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
+        });
+
+        $.ajax({
+            url: `${baseUrl}/Profile/GetAdditionalDetails`,
+            method: 'POST',
+            data: { email: getProfileEmailFromUrl() },
+            success: function (data) {
+                if (!data || data.phoneInfo == null) {
+                    $(".aboutSectionRightContactResult1aSpan").html('No phone number to show');
+                } else {
+                    $(".aboutSectionRightContactResult1aSpan").html('<b>' + data.phoneInfo + '</b>');
+                }
+            },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
+        });
+    });
+
+    $('.aboutSectionLeftFamily').click(function () {
+        $(".aboutSectionLeftOverview, .aboutSectionLeftWork, .aboutSectionLeftPlace, .aboutSectionLeftContact")
+            .css("color", "#65676B").css("backgroundColor", "transparent");
+        $(".aboutSectionLeftFamily")[0].style.color = "#1876F2";
+        $(".aboutSectionLeftFamily")[0].style.backgroundColor = "#EFF3FF";
+        $('.aboutSectionRightOverviewDiv, .aboutSectionRightWorkDiv, .aboutSectionRightPlaceDiv, .aboutSectionRightContactDiv')
+            .addClass('hidden');
+        $('.aboutSectionRightFamilyDiv').removeClass('hidden');
     });
 
     $('.aboutSectionRightWorkAddDiv1').click(function () {
         $('.aboutSectionRightWorkAddInput1Div').removeClass('hidden');
-        $('.aboutSectionRightWorkAddDiv1').addClass('hidden');
-    })
-
+    });
     $('.aboutSectionRightWorkAddInput1a').click(function () {
         $('.aboutSectionRightWorkAddInput1Div').addClass('hidden');
-        $('.aboutSectionRightWorkAddDiv1').addClass('hidden');
-    })
+    });
 
     $('.aboutSectionRightWorkAddInput1b').click(function () {
         var value = {
@@ -775,11 +401,14 @@ $(document).ready(function () {
             "i2": $('.aboutSectionRightWorkAddInput12')[0].value,
             "i3": $('.aboutSectionRightWorkAddInput13')[0].value
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetails',
             method: 'Post',
             data: value,
             success: function (data) {
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
 
@@ -793,31 +422,32 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].workInfo1 != null) {
-                        document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data[0].workInfo1 + '<b>';
-                        document.getElementsByClassName("aboutSectionRightWorkResult1bSpan")[0].textContent = data[0].workInfo2;
+                    if (data.workInfo1 != null) {
+                        document.getElementsByClassName("aboutSectionRightWorkResult1aSpan")[0].innerHTML = 'Worked at ' + '<b>' + data.workInfo1 + '<b>';
+                        document.getElementsByClassName("aboutSectionRightWorkResult1bSpan")[0].textContent = data.workInfo2;
                         /*document.getElementsByClassName("aboutSectionRightWorkResult1cSpan")[0].textContent = data[0].workInfo3;*/
                         document.getElementsByClassName("aboutSectionRightWorkResultDiv1")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
     })
 
+    // College
     $('.aboutSectionRightWorkAddDiv2').click(function () {
         $('.aboutSectionRightWorkAddInput2Div').removeClass('hidden');
-        $('.aboutSectionRightWorkAddDiv2').addClass('hidden');
-    })
-
+    });
     $('.aboutSectionRightWorkAddInput2a').click(function () {
         $('.aboutSectionRightWorkAddInput2Div').addClass('hidden');
-        $('.aboutSectionRightWorkAddDiv2').removeClass('hidden');
-    })
+    });
 
     $('.aboutSectionRightWorkAddInput2b').click(function () {
 
@@ -825,12 +455,15 @@ $(document).ready(function () {
             "type": "College",
             "i1": $('.aboutSectionRightWorkAddInput2')[0].value,
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
             method: 'Post',
             data: value,
             success: function (data) {
 
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
         $('.aboutSectionRightWorkAddInput2')[0].value = "";
@@ -841,29 +474,30 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].collegeInfo != null) {
-                        document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'Studied at ' + '<b>' + data[0].collegeInfo + '<b>';
+                    if (data.collegeInfo != null) {
+                        document.getElementsByClassName("aboutSectionRightWorkResult2aSpan")[0].innerHTML = 'Studied at ' + '<b>' + data.collegeInfo + '<b>';
                         document.getElementsByClassName("aboutSectionRightWorkResultDiv2")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
     })
 
+    // High School
     $('.aboutSectionRightWorkAddDiv3').click(function () {
         $('.aboutSectionRightWorkAddInput3Div').removeClass('hidden');
-        $('.aboutSectionRightWorkAddDiv3').addClass('hidden');
-    })
-
+    });
     $('.aboutSectionRightWorkAddInput3a').click(function () {
         $('.aboutSectionRightWorkAddInput3Div').addClass('hidden');
-        $('.aboutSectionRightWorkAddDiv3').removeClass('hidden');
-    })
+    });
 
     $('.aboutSectionRightWorkAddInput3b').click(function () {
 
@@ -871,12 +505,15 @@ $(document).ready(function () {
             "type": "School",
             "i1": $('.aboutSectionRightWorkAddInput3')[0].value,
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
             method: 'Post',
             data: value,
             success: function (data) {
 
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
         $('.aboutSectionRightWorkAddInput3')[0].value = "";
@@ -887,79 +524,30 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].schoolInfo != null) {
-                        document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'Went at ' + '<b>' + data[0].schoolInfo + '<b>';
+                    if (data.schoolInfo != null) {
+                        document.getElementsByClassName("aboutSectionRightWorkResult3aSpan")[0].innerHTML = 'Went at ' + '<b>' + data.schoolInfo + '<b>';
                         document.getElementsByClassName("aboutSectionRightWorkResultDiv3")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
     })
 
-    //--------------------------------------------------------------------------------------------
-
-    $('.aboutSectionLeftPlace').click(function () {
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.backgroundColor = "#transparent";
-
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.color = "#1876F2"
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.backgroundColor = "#EFF3FF"
-
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "transparent"
-
-        $('.aboutSectionRightContactDiv').addClass('hidden');
-        $('.aboutSectionRightFamilyDiv').addClass('hidden');
-        $('.aboutSectionRightOverviewDiv').addClass('hidden');
-        $('.aboutSectionRightWorkDiv').addClass('hidden');
-        $('.aboutSectionRightPlaceDiv').removeClass('hidden');
-        $('.aboutSectionRightPlaceAddInput1Div').addClass('hidden');
-
-        if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-            $('.aboutSectionRightPlaceAddDiv').addClass('hidden');
-        }
-        else {
-            $('.aboutSectionRightPlaceAddDiv').removeClass('hidden');
-        }
-
-        var value = {
-            "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-        }
-        $.post({
-            url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
-            method: 'Post',
-            data: value,
-            success: function (data) {
-                if (data[0] == undefined || data[0].placeInfo == null) {
-                    document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'No city to show';
-                }
-                else {
-                    document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
-                }
-            }
-        })
-    });
-
+    // Place
     $('.aboutSectionRightPlaceAddDiv').click(function () {
         $('.aboutSectionRightPlaceAddInput1Div').removeClass('hidden');
-        $('.aboutSectionRightPlaceAddDiv').addClass('hidden');
-    })
-
+    });
     $('.aboutSectionRightPlaceAddInput1a').click(function () {
         $('.aboutSectionRightPlaceAddInput1Div').addClass('hidden');
-        $('.aboutSectionRightPlaceAddDiv').removeClass('hidden');
-    })
+    });
 
     $('.aboutSectionRightPlaceAddInput1b').click(function () {
 
@@ -967,12 +555,15 @@ $(document).ready(function () {
             "type": "City",
             "i1": $('.aboutSectionRightPlaceAddInput1')[0].value,
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
             method: 'Post',
             data: value,
             success: function (data) {
 
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
         $('.aboutSectionRightPlaceAddInput1')[0].value = "";
@@ -983,101 +574,30 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].placeInfo != null) {
-                        document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data[0].placeInfo + '<b>';
+                    if (data.placeInfo != null) {
+                        document.getElementsByClassName("aboutSectionRightPlaceResult1aSpan")[0].innerHTML = 'From ' + '<b>' + data.placeInfo + '<b>';
                         document.getElementsByClassName("aboutSectionRightPlaceResultDiv1")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
     })
 
-    //--------------------------------------------------------------------------------------------
-
-    $('.aboutSectionLeftContact').click(function () {
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.backgroundColor = "transparent";
-
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.color = "#1876F2"
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.backgroundColor = "#EFF3FF"
-
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "transparent"
-
-        $('.aboutSectionRightFamilyDiv').addClass('hidden');
-        $('.aboutSectionRightOverviewDiv').addClass('hidden');
-        $('.aboutSectionRightWorkDiv').addClass('hidden');
-        $('.aboutSectionRightPlaceDiv').addClass('hidden');
-        $('.aboutSectionRightContactDiv').removeClass('hidden');
-        $('.aboutSectionRightContactAddInput1Div').addClass('hidden');
-        $('.aboutSectionRightContactAddInput2Div').addClass('hidden');
-
-        if (myEmail != $(location).attr('href').substr(35 + location.host.length).split('#')[0]) {
-            $('.aboutSectionRightContactAddDiv1').addClass('hidden');
-        }
-        else {
-            $('.aboutSectionRightContactAddDiv1').removeClass('hidden');
-        }
-
-        var value = {
-            "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-        }
-        $.post({
-            url: 'https://' + location.host + '/Profile/GetProfileDetails',
-            method: 'Post',
-            data: value,
-            success: function (data) {
-                if (data[0].gender == "Male") {
-                    $('.aboutSectionRightContactGenderMaleDiv').removeClass('hidden');
-                    $('.aboutSectionRightContactGenderFemaleDiv').addClass('hidden');
-                }
-                else {
-                    $('.aboutSectionRightContactGenderMaleDiv').addClass('hidden');
-                    $('.aboutSectionRightContactGenderFemaleDiv').removeClass('hidden');
-                }
-
-                document.getElementsByClassName("aboutSectionRightContactDOB1aSpan")[0].innerHTML = data[0].dobDate + ' ' + data[0].dobMon;
-            }
-        })
-
-        var value = {
-            "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
-        }
-        $.post({
-            url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
-            method: 'Post',
-            data: value,
-            success: function (data) {
-                if (data[0] == undefined || data[0].phoneInfo == null) {
-                    document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = 'No phone number to show';
-                }
-                else {
-                    document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
-                }
-            }
-        })
-    });
-
+    // Contact
     $('.aboutSectionRightContactAddDiv1').click(function () {
         $('.aboutSectionRightContactAddInput1Div').removeClass('hidden');
-        $('.aboutSectionRightContactAddDiv1').addClass('hidden');
-    })
-
+    });
     $('.aboutSectionRightContactAddInput1a').click(function () {
         $('.aboutSectionRightContactAddInput1Div').addClass('hidden');
-        $('.aboutSectionRightContactAddDiv1').removeClass('hidden');
-    })
+    });
 
     $('.aboutSectionRightContactAddInput1b').click(function () {
 
@@ -1085,12 +605,15 @@ $(document).ready(function () {
             "type": "Contact",
             "i1": $('.aboutSectionRightContactAddInput1')[0].value,
         }
-        $.post({
+        $.ajax({
             url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
             method: 'Post',
             data: value,
             success: function (data) {
 
+            },
+            error: function (xhr, status, error) {
+                alert("An error occurred: " + error);
             }
         })
         $('.aboutSectionRightContactAddInput1')[0].value = "";
@@ -1101,283 +624,455 @@ $(document).ready(function () {
             var value = {
                 "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
             }
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Profile/GetAdditionalDetails',
                 method: 'Post',
                 data: value,
                 success: function (data) {
-                    if (data[0].phoneInfo != null) {
-                        document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data[0].phoneInfo + '</b>';
+                    if (data.phoneInfo != null) {
+                        document.getElementsByClassName("aboutSectionRightContactResult1aSpan")[0].innerHTML = '<b>' + data.phoneInfo + '</b>';
                         document.getElementsByClassName("aboutSectionRightContactResultDiv1")[0].style.display = "block";
                     }
+                },
+                error: function (xhr, status, error) {
+                    alert("An error occurred: " + error);
                 }
             })
         }, 500);
     })
 
-    $('.aboutSectionRightContactAddDiv2').click(function () {
-        $('.aboutSectionRightContactAddInput2Div').removeClass('hidden');
-        $('.aboutSectionRightContactAddDiv2').addClass('hidden');
-    })
-
-    $('.aboutSectionRightContactAddInput2a').click(function () {
-        $('.aboutSectionRightContactAddInput2Div').addClass('hidden');
-        $('.aboutSectionRightContactAddDiv2').removeClass('hidden');
-    })
-
-    $('.aboutSectionRightContactAddInput2b').click(function () {
-
-        var value = {
-            "type": "Website",
-            "i1": $('.aboutSectionRightContactAddInput2')[0].value,
+    // Get logged user details and display on profile page
+    $.ajax({
+        url: `${baseUrl}/Profile/GetProfileDetails`,
+        method: 'POST',
+        data: { email: profileEmail },
+        success: function (data) {
+            $(".myProfileHeaderCoverImg")[0].src = "http://127.0.0.1:8080/" + data.coverImagePath.split('Uploads\\')[1];
+            $(".myProfileHeaderProfileImg")[0].src = "http://127.0.0.1:8080/" + data.profileImagePath.split('Uploads\\')[1];
+            $(".myProfileHeaderMyDetailsName")[0].textContent = data.firstName + " " + data.surname;
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
-        $.post({
-            url: 'https://' + location.host + '/Profile/AddAdditionalDetailsNew',
-            method: 'Post',
-            data: value,
-            success: function (data) {
-
-            }
-        })
-        $('.aboutSectionRightContactAddInput2')[0].value = "";
-    })
-
-    //--------------------------------------------------------------------------------------------
-
-    $('.aboutSectionLeftFamily').click(function () {
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftOverview")[0].style.backgroundColor = "transparent";
-
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftWork")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftPlace")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.color = "#65676B"
-        document.getElementsByClassName("aboutSectionLeftContact")[0].style.backgroundColor = "transparent"
-
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.color = "#1876F2"
-        document.getElementsByClassName("aboutSectionLeftFamily")[0].style.backgroundColor = "#EFF3FF"
-
-        $('.aboutSectionRightOverviewDiv').addClass('hidden');
-        $('.aboutSectionRightWorkDiv').addClass('hidden');
-        $('.aboutSectionRightPlaceDiv').addClass('hidden');
-        $('.aboutSectionRightContactDiv').addClass('hidden');
-        $('.aboutSectionRightFamilyDiv').removeClass('hidden');
     });
 
-    //------------------------------------------------------------------------------------------------
-
-    //populates the each of the posts and its details in post tab
-    var value = {
-        "email": $(location).attr('href').substr(35 + location.host.length).split('#')[0]
+    // Display friends count on profile page and inside friends section
+    function updateFriendsCount(selector) {
+        $.ajax({
+            url: `${baseUrl}/Profile/GetFriendList`,
+            method: 'POST',
+            data: { email: profileEmail },
+            success: function (data) {
+                $(selector).text(`${data.length} friends`);
+            },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
+        });
     }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetPostsList',
-        method: 'Post',
-        data: value,
-        async: false,
+    updateFriendsCount(".myProfileHeaderMyDetailsFriendsCount");
+    updateFriendsCount(".postOptionLeftFriendsCount");
+
+    // Get logged user details to populate multiple fields
+    $.ajax({
+        url: `${baseUrl}/Profile/GetProfileDetails`,
+        method: 'POST',
+        data: {},
+        success: function (data) {
+            myEmail = data.email;
+            if (myEmail !== profileEmail) {
+                $('.myProfileHeaderProfileEditDiv, .myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                $(".myProfileHeaderCoverEditBtnDiv, .myProfileHeaderProfieUploadImg, .myProfileHeaderProfieUpload").css("visibility", "hidden");
+            } else {
+                $('.myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
+                setTimeout(function () {
+                    $(".myProfileHeaderCoverEditBtnDiv, .myProfileHeaderProfieUploadImg").css("visibility", "visible");
+                }, 10);
+                $(".myProfileHeaderProfieUpload")[0].style.visibility = "visible";
+                $(".myProfileHeaderProfileImg")[0].style.cursor = "pointer";
+            }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
+        }
+    });
+
+    // Populate additional details (Overview) of user
+    function populateAdditionalDetails(workSelectors, collegeSelectors, placeSelectors, contactSelectors, data) {
+        if (!data || data.workInfo1 == null) {
+            $(workSelectors.span).html('No workplace to show');
+            $(workSelectors.bspan).addClass('hidden');
+            $(workSelectors.div)[0].style.height = "37px";
+        } else {
+            $(workSelectors.span).html(`Worked at <b>${data.workInfo1}<b>`);
+            $(workSelectors.bspan).text(data.workInfo2);
+        }
+        if (!data || data.collegeInfo == null) {
+            $(collegeSelectors.span).html('No college to show');
+            $(collegeSelectors.div)[0].style.height = "37px";
+        } else {
+            $(collegeSelectors.span).html(`Studied at <b>${data.collegeInfo}<b>`);
+        }
+        if (!data || data.placeInfo == null) {
+            $(placeSelectors.span).html('No city to show');
+            $(placeSelectors.div)[0].style.height = "37px";
+        } else {
+            $(placeSelectors.span).html(`From <b>${data.placeInfo}<b>`);
+        }
+        if (!data || data.phoneInfo == null) {
+            $(contactSelectors.span).html('No phone number to show');
+            $(contactSelectors.div)[0].style.height = "37px";
+        } else {
+            $(contactSelectors.span).html(`<b>${data.phoneInfo}</b>`);
+        }
+    }
+    $.ajax({
+        url: `${baseUrl}/Profile/GetAdditionalDetails`,
+        method: 'POST',
+        data: { email: profileEmail },
+        success: function (data) {
+            populateAdditionalDetails(
+                { span: ".aboutSectionRightOverviewWork1aSpan", bspan: ".aboutSectionRightOverviewWork1bSpan", div: ".aboutSectionRightOverviewWorkDiv" },
+                { span: ".aboutSectionRightOverviewCollegeSpan", div: ".aboutSectionRightOverviewCollegeDiv" },
+                { span: ".aboutSectionRightOverviewPlaceSpan", div: ".aboutSectionRightOverviewPlaceDiv" },
+                { span: ".aboutSectionRightOverviewContactSpan", div: ".aboutSectionRightOverviewContactDiv" },
+                data
+            );
+        },
+        error: function (xhr, status, error) {
+            showError(error);
+        }
+    });
+    $.ajax({
+        url: `${baseUrl}/Profile/GetAdditionalDetails`,
+        method: 'POST',
+        data: { email: profileEmail },
+        success: function (data) {
+            populateAdditionalDetails(
+                { span: ".postOptionLeftWork1aSpan", bspan: ".postOptionLeftWork1bSpan", div: ".postOptionLeftWorkDiv" },
+                { span: ".postOptionLeftCollegeSpan", div: ".postOptionLeftCollegeDiv" },
+                { span: ".postOptionLeftPlaceSpan", div: ".postOptionLeftPlaceDiv" },
+                { span: ".postOptionLeftContactSpan", div: ".postOptionLeftContactDiv" },
+                data
+            );
+        },
+        error: function (xhr, status, error) {
+            showError(error);
+        }
+    });
+
+    // Request/friendship status
+    function updateFriendRequestStatus() {
+        $.ajax({
+            url: `${baseUrl}/Profile/IsReqSent`,
+            method: 'POST',
+            data: { toRequest: profileEmail },
+            success: function (data) {
+                if (data === "Yes") {
+                    $('.myProfileHeaderProfileAddEditDiv, .myProfileHeaderProfileCancelReqDiv').removeClass('hidden');
+                    $('.myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileFrndAcceptedDiv, .myProfileHeaderProfileEditDiv').addClass('hidden');
+                } else if (myEmail === profileEmail) {
+                    $('.myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                    $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
+                } else {
+                    $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
+                    $('.myProfileHeaderProfileAddEditDiv, .myProfileHeaderProfileAddFriendDiv').removeClass('hidden');
+                    $('.myProfileHeaderProfileFrndAcceptedDiv, .myProfileHeaderProfileEditDiv').addClass('hidden');
+                }
+            },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
+        });
+        $.ajax({
+            url: `${baseUrl}/Profile/IsFriend`,
+            method: 'POST',
+            data: { toRequest: profileEmail },
+            success: function (data) {
+                if (data === "Yes") {
+                    $('.myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileAddFriendDiv').addClass('hidden');
+                    $('.myProfileHeaderProfileAddEditDiv, .myProfileHeaderProfileFrndAcceptedDiv').removeClass('hidden');
+                    $('.myProfileHeaderProfileEditDiv').addClass('hidden');
+                } else if (myEmail === profileEmail) {
+                    $('.myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                    $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
+                } else {
+                    $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                }
+            },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
+        });
+    }
+    setTimeout(updateFriendRequestStatus, 200);
+
+    // Populate friends for friends and posts tab
+    function populateFriendsList(selector, limit) {
+        $.ajax({
+            url: `${baseUrl}/Profile/GetFriendList`,
+            method: 'POST',
+            data: { email: profileEmail },
+            success: function (data) {
+                let result = '';
+                let len = limit ? Math.min(data.length, limit) : data.length;
+                for (let i = 0; i < len; i++) {
+                    let email = (data[i].fromRequest === profileEmail) ? data[i].toRequest : data[i].fromRequest;
+                    $.ajax({
+                        url: `${baseUrl}/Profile/GetProfileDetails`,
+                        method: 'POST',
+                        data: { email: email },
+                        async: false,
+                        success: function (data1) {
+                            if (selector === ".aboutSectionRightFriendsListDiv") {
+                                result += `<div class="frndAcc" id="${data1.email}" onclick='window.location.href="/Profile/ProfileData?email=${email}"'><div class="frndAccImgDiv"><img class="frndAccImg" src="http://127.0.0.1:8080/${data1.profileImagePath.split('Uploads\\')[1]}"/></div><div class="frndAccNameDiv"><span class="frndAccName">${data1.firstName} ${data1.surname}</span></div></div>`;
+                            } else {
+                                result += `<div class="frndAccPost" id="${data1.email}" onclick='window.location.href="/Profile/ProfileData?email=${email}"'><div class="frndAccPostImgDiv"><img class="frndAccPostImg" src="http://127.0.0.1:8080/${data1.profileImagePath.split('Uploads\\')[1]}"/></div><div class="frndAccPostNameDiv"><span class="frndAccPostName">${data1.firstName} ${data1.surname}</span></div></div>`;
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            showError(error);
+                        }
+                    });
+                }
+                $(selector).html(result);
+            },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
+        });
+    }
+    populateFriendsList(".aboutSectionRightFriendsListDiv");
+    populateFriendsList(".postOptionLeftFriendsListDiv", 6);
+
+    $(".aboutSectionRightFriendsHeaderFrndReqDiv").click(function () {
+        window.location.href = `/Profile/Friends?email=${profileEmail}`;
+    });
+
+    // Populate posts for about and photos tab
+    function populatePhotos(selector, limit) {
+        $.ajax({
+            url: `${baseUrl}/Profile/GetPostsList`,
+            method: 'POST',
+            data: { email: profileEmail },
+            success: function (data) {
+                let result = '';
+                let len = limit ? Math.min(data.length, limit) : data.length;
+                for (let i = 0; i < len; i++) {
+                    if (selector === ".aboutSectionRightPhotosListDiv") {
+                        result += `<div class="ImgDiv"><img class="myPhotos" src="http://127.0.0.1:8080/${data[i].imagepath.split('Uploads\\')[1]}"/></div>`;
+                    } else {
+                        result += `<div class="ImgDiv"><img class="myPhotosPost" src="http://127.0.0.1:8080/${data[i].imagepath.split('Uploads\\')[1]}"/></div>`;
+                    }
+                }
+                $(selector).html(result);
+            },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
+        });
+    }
+    populatePhotos(".aboutSectionRightPhotosListDiv");
+    populatePhotos(".postOptionLeftPhotosListDiv", 6);
+
+    // Add/cancel friend request
+    $('.myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileCancelReqDiv').click(function () {
+        $.ajax({
+            url: `${baseUrl}/Profile/SendRequest`,
+            method: 'POST',
+            data: { fromRequest: myEmail, toRequest: profileEmail },
+            success: function () {
+                if ($('.myProfileHeaderProfileCancelReqDiv').hasClass('hidden')) {
+                    $('.myProfileHeaderProfileAddEditDiv, .myProfileHeaderProfileCancelReqDiv').removeClass('hidden');
+                    $('.myProfileHeaderProfileAddFriendDiv').addClass('hidden');
+                } else {
+                    $('.myProfileHeaderProfileCancelReqDiv').addClass('hidden');
+                    $('.myProfileHeaderProfileAddEditDiv, .myProfileHeaderProfileAddFriendDiv').removeClass('hidden');
+                }
+            },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
+        });
+    });
+
+    // Tab navigation for all photos/friends
+    $('.postOptionLeftPhotosHeaderAllPhotosDiv').click(function () {
+        $(".myProfileHeaderOptionsPhotosDiv")[0].click();
+    });
+    $('.postOptionLeftFriendsHeaderAllFrndDiv').click(function () {
+        $(".myProfileHeaderOptionsFriendsDiv")[0].click();
+    });
+
+    // Populate posts and their details in post tab
+    $.ajax({
+        url: `${baseUrl}/Profile/GetPostsList`,
+        method: 'POST',
+        data: { email: profileEmail },
         success: function (data) {
             data.sort((a, b) => new Date(b.date) - new Date(a.date));
-            for (var i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 const postDiv = document.createElement("div");
-                postDiv.id = data[i].postId
-                result = '<div class="myPost"><div class="myPostDetails"><div class="myPostImgDiv"><img class="myPostImg"/></div><div class="myPostNameDiv"><span class="myPostName"></span></div><div class="myPostDateDiv"><text class="myPostDate"></text></div><div class="myPostCaptionDiv"><span class="myPostCaption"></span></div></div><div class="myPost"><img class="myActualPost"/></div><div class="myLikedNamesParent"><div class="myLikedNames" runat="server" style="display: none;"></div></div><div class="myLikeCommentCount"></div><div class="myLikeComment"><div class="myLikeDiv"><img class="myLikeBtnImg"/><span class="myLike">Like</span></div><div class="myCommentDiv"><img class="myCommentBtnImg"/><span class="myComment">Comment</span></div></div><div class="myCommentSection" style="display: none;"><div class="myAddCommentDiv"><img class="myCommentProfileImg"/><input class="myAddComment" placeholder="Write a comment..." /></div><div class="myCommentsList"></div></div></div>'
-                postDiv.innerHTML = result
-                document.getElementsByClassName("postOptionRightDiv")[0].appendChild(postDiv);
+                postDiv.id = data[i].postId;
+                let postResult = `<div class="myPost"><div class="myPostDetails"><div class="myPostImgDiv"><img class="myPostImg"/></div><div class="myPostNameDiv"><span class="myPostName"></span></div><div class="myPostDateDiv"><text class="myPostDate"></text></div><div class="myPostCaptionDiv"><span class="myPostCaption"></span></div></div><div class="myPost"><img class="myActualPost"/></div><div class="myLikedNamesParent"><div class="myLikedNames" runat="server" style="display: none;"></div></div><div class="myLikeCommentCount"></div><div class="myLikeComment"><div class="myLikeDiv"><img class="myLikeBtnImg"/><span class="myLike">Like</span></div><div class="myCommentDiv"><img class="myCommentBtnImg"/><span class="myComment">Comment</span></div></div><div class="myCommentSection" style="display: none;"><div class="myAddCommentDiv"><img class="myCommentProfileImg"/><input class="myAddComment" placeholder="Write a comment..." /></div><div class="myCommentsList"></div></div></div>`;
+                postDiv.innerHTML = postResult;
+                $(".postOptionRightDiv")[0].appendChild(postDiv);
 
-                document.getElementsByClassName("myPostCaption")[i].textContent = data[i].caption;
-                document.getElementsByClassName("myActualPost")[i].src = "http://127.0.0.1:8080/" + data[i].imagepath.split('Uploads\\')[1];
-                document.getElementsByClassName("myLikeBtnImg")[i].src = "https://" + location.host + "/images/likebutton.png";
-                document.getElementsByClassName("myCommentBtnImg")[i].src = "https://" + location.host + "/images/commentbutton.png";
+                postDiv.querySelector(".myPostCaption").textContent = data[i].caption;
+                postDiv.querySelector(".myActualPost").src = "http://127.0.0.1:8080/" + data[i].imagepath.split('Uploads\\')[1];
+                postDiv.querySelector(".myLikeBtnImg").src = `${baseUrl}/images/likebutton.png`;
+                postDiv.querySelector(".myCommentBtnImg").src = `${baseUrl}/images/commentbutton.png`;
 
-                const val = i
-                document.getElementsByClassName("myCommentDiv")[i].addEventListener("click", function () {
-                    ShowComments(data[val].postId);
-                    AddingComment(data[val]);
+                postDiv.querySelector(".myCommentDiv").addEventListener("click", function () {
+                    ShowComments(data[i].postId);
+                    AddingComment(data[i]);
                 });
 
                 if (data[i].likes == 0) {
-                    if (data[i].comments == 1)
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
-                    else
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
-                }
-                else if (data[i].likes == 1) {
-                    if (data[i].comments == 1)
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
-                    else
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' other</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
-
-                    const val = i
+                    postDiv.querySelector(".myLikeCommentCount").innerHTML = `<img class="myPostLike" src="${baseUrl}/images/white-solid-color.jpg"/><h3 class="myLikeCount"></h3><h3 class="commentCount">${data[i].comments} comment${data[i].comments === 1 ? '' : 's'}</h3>`;
+                } else {
+                    let likeText = data[i].likes === 1 ? "other" : "others";
+                    postDiv.querySelector(".myLikeCommentCount").innerHTML = `<img class="myPostLike" src="${baseUrl}/images/postLike.png"/><h3 class="myLikeCount">${data[i].likes} ${likeText}</h3><h3 class="commentCount">${data[i].comments} comment${data[i].comments === 1 ? '' : 's'}</h3>`;
+                    const val = i;
                     document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseover", function () {
-                        DisplayLikes(data[val].postId)
+                        DisplayLikes(data[val].postId);
                     });
                     document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseout", function () {
-                        DisplayLikesHide(data[val].postId)
-                    });
-                }
-                else if (data[i].likes > 1) {
-                    if (data[i].comments == 1)
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comment</h3 >'
-                    else
-                        document.getElementsByClassName("myLikeCommentCount")[i].innerHTML = '<img class="myPostLike" src="https://' + location.host + '/images/postLike.png"/><h3 class="myLikeCount">' + data[i].likes + ' others</h3><h3 class="commentCount">' + data[i].comments + ' comments</h3 >'
-
-                    const val = i
-                    document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseover", function () {
-                        DisplayLikes(data[val].postId)
-                    });
-                    document.getElementsByClassName("myLikeCount")[i].addEventListener("mouseout", function () {
-                        DisplayLikesHide(data[val].postId)
+                        DisplayLikesHide(data[val].postId);
                     });
                 }
 
-                $.post({
-                    url: 'https://' + location.host + '/Profile/GetProfileDetails',
-                    method: 'Post',
-                    data: value,
-                    async: false,
-                    success: function (data1) {
-                        var date1 = moment();
-                        var date2 = moment(data[i].date);
-
-                        document.getElementsByClassName("myPostImg")[i].src = "http://127.0.0.1:8080/" + data1[0].profileImagePath.split('Uploads\\')[1];
-                        document.getElementsByClassName("myPostName")[i].textContent = data1[0].firstName + " " + data1[0].surname;
-
-                        if (date1.diff(date2, 'hours') == 0) {
-                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'minutes') + "m"
+                // Profile AJAX call for each post
+                (function (post, idx) {
+                    $.ajax({
+                        url: `${baseUrl}/Profile/GetProfileDetails`,
+                        method: 'POST',
+                        data: { email: post.email },
+                        success: function (data1) {
+                            postDiv.querySelector(".myPostImg").src = "http://127.0.0.1:8080/" + data1.profileImagePath.split('Uploads\\')[1];
+                            postDiv.querySelector(".myPostName").textContent = data1.firstName + " " + data1.surname;
+                            let date1 = moment();
+                            let date2 = moment(post.date);
+                            if (date1.diff(date2, 'hours') == 0) {
+                                postDiv.querySelector(".myPostDate").textContent = date1.diff(date2, 'minutes') + "m";
+                            } else if (date1.diff(date2, 'hours') > 24) {
+                                postDiv.querySelector(".myPostDate").textContent = date1.diff(date2, 'days') + 'd';
+                            } else {
+                                postDiv.querySelector(".myPostDate").textContent = date1.diff(date2, 'hours') + 'h';
+                            }
+                            postDiv.querySelector(".myCommentProfileImg").src = "http://127.0.0.1:8080/" + data1.profileImagePath.split('Uploads\\')[1];
+                        },
+                        error: function (xhr, status, error) {
+                            showError(error);
                         }
-                        else if (date1.diff(date2, 'hours') > 24) {
-                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'days') + 'd';
-                        }
-                        else {
-                            document.getElementsByClassName("myPostDate")[i].textContent = date1.diff(date2, 'hours') + 'h';
-                        }
-
-                        document.getElementsByClassName("myCommentProfileImg")[i].src = "http://127.0.0.1:8080/" + data1[0].profileImagePath.split('Uploads\\')[1];
-                    }
-                });
+                    });
+                })(data[i], i);
             }
+
+            // Populate likes section (above likes and comments)
+            $.ajax({
+                url: `${baseUrl}/Profile/GetPostsLikedByMe`,
+                method: 'POST',
+                data: { email: profileEmail },
+                success: function (likedPosts) {
+                    for (let i = 0; i < likedPosts.length; i++) {
+                        let op = likedPosts[i];
+                        let likedByMe = document.getElementById(op);
+                        if (!likedByMe) continue;
+                        likedByMe.getElementsByClassName("myLikeBtnImg")[0].src = `${baseUrl}/images/likedbutton.png`;
+                        let likeCountElem = likedByMe.getElementsByClassName("myLikeCount")[0];
+                        let count = likeCountElem.textContent.split(" ")[0];
+                        if (count === "1") {
+                            likeCountElem.textContent = "You";
+                        } else if (count === "2") {
+                            likeCountElem.textContent = `You and 1 other`;
+                        } else {
+                            likeCountElem.textContent = `You and ${parseInt(count) - 1} others`;
+                        }
+                    }
+                },
+                error: function (xhr, status, error) {
+                    showError(error);
+                }
+            });
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
     });
 
-    //method to be executed when like button is clicked for a particular post
-    $(".myLikeDiv").click(function () {
-        var value = {
-            "id": this.parentNode.parentNode.parentNode.id
-        }
-        $.post({
-            url: 'https://' + location.host + '/Feed/Liked',
-            method: 'Post',
-            data: value,
-            async: false,
-            success: function (data) { }
+    // Like button click handler
+    $(document).on("click", ".myLikeDiv", function () {
+        let postId = this.parentNode.parentNode.parentNode.id;
+        $.ajax({
+            url: `${baseUrl}/Feed/Liked`,
+            method: 'POST',
+            data: { id: postId },
+            error: function (xhr, status, error) {
+                showError(error);
+            }
         });
 
-        //method to be executed when like button - updates the image for liked/unliked
-        var imgSrc = document.getElementById(this.parentNode.parentNode.parentNode.id);
-        if (imgSrc.getElementsByClassName("myLikeBtnImg")[0].src == "https://" + location.host + "/images/likebutton.png") {
-            imgSrc.getElementsByClassName("myLikeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
+        let imgSrc = document.getElementById(postId);
+        let likeBtnImg = imgSrc.getElementsByClassName("myLikeBtnImg")[0];
+        let likeCountElem = imgSrc.getElementsByClassName("myLikeCount")[0];
+        let postLikeImg = imgSrc.getElementsByClassName("myPostLike")[0];
 
-            if (imgSrc.getElementsByClassName("myLikeCount")[0].textContent == "") {
-                imgSrc.getElementsByClassName("myLikeCount")[0].textContent = "You"
-                imgSrc.getElementsByClassName("myPostLike")[0].src = "https://" + location.host + "/images/postLike.png"
-
+        if (likeBtnImg.src === `${baseUrl}/images/likebutton.png`) {
+            likeBtnImg.src = `${baseUrl}/images/likedbutton.png`;
+            if (likeCountElem.textContent === "") {
+                likeCountElem.textContent = "You";
+                postLikeImg.src = `${baseUrl}/images/postLike.png`;
+            } else if (likeCountElem.textContent.split(" ")[0] === "1") {
+                likeCountElem.textContent = "You and 1 other";
+            } else {
+                likeCountElem.textContent = `You and ${likeCountElem.textContent.split(" ")[0]} others`;
             }
-            else if (imgSrc.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0] == "1") {
-                imgSrc.getElementsByClassName("myLikeCount")[0].textContent = "You and " + imgSrc.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0] + " other";
-            }
-            else {
-                imgSrc.getElementsByClassName("myLikeCount")[0].textContent = "You and " + imgSrc.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0] + " others";
-            }
-        }
-        else {
-            imgSrc.getElementsByClassName("myLikeBtnImg")[0].src = "https://" + location.host + "/images/likebutton.png"
-
-            if (imgSrc.getElementsByClassName("myLikeCount")[0].textContent == "You") {
-                imgSrc.getElementsByClassName("myLikeCount")[0].textContent = ""
-                imgSrc.getElementsByClassName("myPostLike")[0].src = "https://" + location.host + "/images/white-solid-color.jpg"
-
-            }
-            else if (imgSrc.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[2] == "1") {
-                imgSrc.getElementsByClassName("myLikeCount")[0].textContent = imgSrc.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[2] + " other";
-            }
-            else {
-                imgSrc.getElementsByClassName("myLikeCount")[0].textContent = imgSrc.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[2] + " others";
+        } else {
+            likeBtnImg.src = `${baseUrl}/images/likebutton.png`;
+            if (likeCountElem.textContent === "You") {
+                likeCountElem.textContent = "";
+                postLikeImg.src = `${baseUrl}/images/white-solid-color.jpg`;
+            } else if (likeCountElem.textContent.split(" ")[2] === "1") {
+                likeCountElem.textContent = "1 other";
+            } else {
+                likeCountElem.textContent = `${likeCountElem.textContent.split(" ")[2]} others`;
             }
         }
     });
 
-    //populates the likes section (section above likes and comments)
-    var value = {
-    }
-    $.post({
-        url: 'https://' + location.host + '/Profile/GetPostsLikedByMe',
-        method: 'Post',
-        data: value,
-        async: false,
-        success: function (data) {
-            for (var i = 0; i < data.length; i++) {
-                var op = data[i];
-                var likedByMe = document.getElementById(op);
-                if (likedByMe == null) {
-                    continue
-                }
-                else {
-                    likedByMe.getElementsByClassName("myLikeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
-
-                    if (likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0] == "1") {
-                        likedByMe.getElementsByClassName("myLikeCount")[0].textContent = "You"
-                    }
-                    else if (likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0] == "2") {
-                        likedByMe.getElementsByClassName("myLikeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0]) - 1) + " other";
-                    }
-                    else {
-                        likedByMe.getElementsByClassName("myLikeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("myLikeCount")[0].textContent.split(" ")[0]) - 1) + " others";
-                    }
-                }
-
-            }
-        }
-    });
-
-    let currentprofileImg = document.getElementsByClassName("myProfileHeaderProfileImg")[0];
-    let input = document.getElementsByClassName("myProfileHeaderProfieUpload")[0]
-    let currentCoverImg = document.getElementsByClassName("myProfileHeaderCoverEditBtnDiv")[0];
-    let input1 = document.getElementsByClassName("myProfileHeaderCoverUpload")[0]
+    // Profile/cover image upload triggers
+    let currentprofileImg = $(".myProfileHeaderProfileImg")[0];
+    let input = $(".myProfileHeaderProfieUpload")[0];
+    let currentCoverImg = $(".myProfileHeaderCoverEditBtnDiv")[0];
+    let input1 = $(".myProfileHeaderCoverUpload")[0];
 
     currentprofileImg.onclick = function () {
         input.click();
-    }
-
+    };
     currentCoverImg.onclick = function () {
         input1.click();
-    }
+    };
 
-    document.getElementById("result").style.padding = "0px"
-
-    if (document.getElementsByClassName("postOptionLeftDiv2")[0].offsetHeight == 213) {
-        document.getElementsByClassName("postOptionLeftDiv3")[0].style.top = "125px"
-    }
-    else {
-        document.getElementsByClassName("postOptionLeftDiv3")[0].style.top = "255px"
+    $("#result")[0].style.padding = "0px";
+    if ($(".postOptionLeftDiv2")[0].offsetHeight == 213) {
+        $(".postOptionLeftDiv3")[0].style.top = "125px";
+    } else {
+        $(".postOptionLeftDiv3")[0].style.top = "255px";
     }
 
     setTimeout(function () {
-        document.getElementsByTagName('body')[0].style.visibility = "visible"
-    }, 5)
+        document.getElementsByTagName('body')[0].style.visibility = "visible";
+    }, 5);
 
     setTimeout(function () {
-        if ($(location).attr('href').substr(35 + location.host.length).split('#').length == 2) {
-            document.getElementById($(location).attr('href').substr(35 + location.host.length).split('#')[1]).scrollIntoView(true)
+        let urlParts = $(location).attr('href').substr(35 + location.host.length).split('#');
+        if (urlParts.length == 2) {
+            document.getElementById(urlParts[1]).scrollIntoView(true);
         }
-
-        if ($(location).attr('href').substr(35 + location.host.length).split('#').length == 3) {
-            document.getElementById($(location).attr('href').substr(35 + location.host.length).split('#')[1]).getElementsByClassName("myCommentDiv")[0].click();
+        if (urlParts.length == 3) {
+            document.getElementById(urlParts[1]).getElementsByClassName("myCommentDiv")[0].click();
         }
-    }, 250)
+    }, 250);
 });
-
-
-

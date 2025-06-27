@@ -1,4 +1,4 @@
-﻿//function executed when creating a new post
+﻿// Show the create post modal and dim the background
 function ShowCreatePost() {
     var modal = document.getElementById("createPostDialog");
     var searchOpacity = document.getElementById("searchBarDiv");
@@ -7,29 +7,27 @@ function ShowCreatePost() {
     var createPostFeedOpacity = document.getElementById("createPostFeed");
     var feedPostOpacity = document.getElementById("feedPostSection");
 
-    searchOpacity.style.opacity = 0.2;
-    leftOpacity.style.opacity = 0.2;
-    rightOpacity.style.opacity = 0.2;
-    createPostFeedOpacity.style.opacity = 0.2;
-    feedPostOpacity.style.opacity = 0.2;
-    modal.style.display = "block";
+    [searchOpacity, leftOpacity, rightOpacity, createPostFeedOpacity, feedPostOpacity].forEach(function (el) {
+        if (el) el.style.opacity = 0.2;
+    });
+    if (modal) modal.style.display = "block";
     document.body.style.overflow = 'hidden';
 }
 
-//method to check if photo/caption is present when creating post
+// Validate post input before submission
 function CheckCreatePostInput() {
     var fileInput = document.getElementById('fileInput');
-    var files = fileInput.files;
+    var files = fileInput ? fileInput.files : [];
     var submitButton = document.getElementById("actualUploadbtn");
     var form = document.getElementById("createPostForm");
 
+    if (!submitButton || !form) return;
+
     if (files.length === 0) {
         submitButton.style.cursor = "not-allowed";
-        // Prevent form submission if no file is selected
         form.addEventListener("submit", handleFormSubmit, { once: true });
     } else {
         submitButton.style.cursor = "pointer";
-        // Remove any previously added submit listener if a file is selected
         form.removeEventListener("submit", handleFormSubmit);
     }
 }
@@ -39,7 +37,7 @@ function handleFormSubmit(event) {
     console.log("Form submission prevented because no file was selected.");
 }
 
-//function executed when cancel button clicked in new post window
+// Hide the create post modal and restore background
 function Cancel() {
     var modal = document.getElementById("createPostDialog");
     var searchOpacity = document.getElementById("searchBarDiv");
@@ -48,299 +46,320 @@ function Cancel() {
     var createPostFeedOpacity = document.getElementById("createPostFeed");
     var feedPostOpacity = document.getElementById("feedPostSection");
 
-    searchOpacity.style.opacity = 1;
-    leftOpacity.style.opacity = 1;
-    rightOpacity.style.opacity = 1;
-    createPostFeedOpacity.style.opacity = 1;
-    feedPostOpacity.style.opacity = 1;
-    modal.style.display = "none";
+    [searchOpacity, leftOpacity, rightOpacity, createPostFeedOpacity, feedPostOpacity].forEach(function (el) {
+        if (el) el.style.opacity = 1;
+    });
+    if (modal) modal.style.display = "none";
     document.body.style.overflow = 'visible';
 }
 
-//function executed when hovered over likes count
+function showError(error) {
+    alert("An error occurred: " + error);
+}
+
+// Show list of users who liked a post
 function DisplayLikes(myData) {
-    var value = {
-        "id": myData.id
-    }
-    $.post({
+    var value = { "id": myData };
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetLikesBy',
-        method: 'Post',
+        method: 'POST',
         data: value,
         success: function (data) {
             var result = '';
             for (var i = 0; i < data.length; i++) {
-                //generates names of accounts which liked the post
-                result = result + '<span class="likedEmail">' + data[i].likedByName + '</span>' + '</br>'
+                result += '<span class="likedEmail">' + data[i].likedByName + '</span></br>';
             }
-            document.getElementById(myData.id).getElementsByClassName("likedNames")[0].style.display = "block";
-            document.getElementById(myData.id).getElementsByClassName("likedNames")[0].innerHTML = result
+            var likedNames = document.getElementById(myData)?.getElementsByClassName("likedNames")[0];
+            if (likedNames) {
+                likedNames.style.display = "block";
+                likedNames.innerHTML = result;
+            }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
-    })
+    });
 }
 
-//function executed when removed hover from likes count
+// Hide the likes list
 function DisplayLikesHide(myData) {
-    document.getElementById(myData.id).getElementsByClassName("likedNames")[0].style.display = "none";
+    var likedNames = document.getElementById(myData)?.getElementsByClassName("likedNames")[0];
+    if (likedNames) likedNames.style.display = "none";
 }
 
-//function executed to display comments count
+// Fetch and display comment counts for all posts
 function GetCommentsCount() {
-    $.post({
-        //populates the comments count
+    $.ajax({
         url: 'https://' + location.host + '/Feed/AllPostIds',
-        method: 'Post',
+        method: 'POST',
         data: "",
         success: function (data) {
             for (var i = 0; i < data.length; i++) {
                 let postId = data[i];
-
-                let value = {
-                    "id": data[i]
-                }
-                $.post({
+                let value = { "id": postId };
+                $.ajax({
                     url: 'https://' + location.host + '/Feed/GetCommentsBy',
-                    method: 'Post',
+                    method: 'POST',
                     data: value,
-                    success: function (data) {
-                        if (data.length == 1) {
-                            document.getElementById(postId).getElementsByClassName("commentCountDiv")[0].getElementsByClassName("commentCount")[0].innerHTML = data.length + " comment";
-                        } else {
-                            document.getElementById(postId).getElementsByClassName("commentCountDiv")[0].getElementsByClassName("commentCount")[0].innerHTML = data.length + " comments";
+                    success: function (comments) {
+                        var postElem = document.getElementById(postId);
+                        if (postElem) {
+                            var countElem = postElem.getElementsByClassName("commentCountDiv")[0]?.getElementsByClassName("commentCount")[0];
+                            if (countElem) {
+                                countElem.innerHTML = comments.length === 1 ? "1 comment" : comments.length + " comments";
+                            }
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        showError(error);
                     }
-                })
+                });
             }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
-    })
+    });
 }
 
-//function executed to show comment section
+// Toggle comment section visibility and focus input
 function ShowComments(myData) {
-    if (document.getElementById(myData.id).getElementsByClassName("commentSection")[0].style.display == "block") {
-        document.getElementById(myData.id).getElementsByClassName("commentSection")[0].style.display = "none";
-    }
-    else {
-        document.getElementById(myData.id).getElementsByClassName("commentSection")[0].style.display = "block";
-    }
-
-    document.getElementById(myData.id).getElementsByClassName("commentSection")[0].getElementsByClassName("addComment")[0].focus();
+    var commentSection = document.getElementById(myData)?.getElementsByClassName("commentSection")[0];
+    if (!commentSection) return;
+    commentSection.style.display = commentSection.style.display === "block" ? "none" : "block";
+    var addComment = commentSection.getElementsByClassName("addComment")[0];
+    if (addComment) addComment.focus();
 }
 
-//function executed to fetech all the comments on a post
+// Fetch and display all comments for a post
 function GetCommentList(myData) {
-    var value1 = {
-        "id": myData
-    }
-    $.post({
+    var value1 = { "id": myData };
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetCommentsBy',
-        method: 'Post',
+        method: 'POST',
         data: value1,
         success: function (data) {
             var result = '';
             for (var i = 0; i < data.length; i++) {
-                result = result + '<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="' + 'http://127.0.0.1:8080/' + data[i].commentedByImagepath + '"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/' + data[i].commentedBy + '">' + data[i].commentedByName + '</a></br><span class="commentText"> ' + data[i].commentedText + '</span ></div></div></div>'
+                result += '<div class="commentDetails"><div class="commentImgDiv"><img class="commentImg" src="http://127.0.0.1:8080/' + data[i].commentedByImagepath + '"/></div><div class="commentData"><div><a class="commentName" href="/Profile/ProfileData/' + data[i].commentedBy + '">' + data[i].commentedByName + '</a></br><span class="commentText"> ' + data[i].commentedText + '</span ></div></div></div>';
             }
-            document.getElementById(myData).getElementsByClassName("CommentsList")[0].innerHTML = result
+            var commentsList = document.getElementById(myData)?.getElementsByClassName("CommentsList")[0];
+            if (commentsList) commentsList.innerHTML = result;
             UpdateCommentCount(myData);
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
-    })
+    });
 }
 
-//function used to add new comment
+// Add a new comment to a post
 function AddingComment(myData) {
-    var val;
+    GetCommentList(myData);
+    var commentSection = document.getElementById(myData)?.getElementsByClassName("commentSection")[0];
+    if (!commentSection) return;
+    var input = commentSection.getElementsByClassName("addComment")[0];
+    if (!input) return;
 
-    if (myData.postId == undefined) {
-        val = myData.id
-    } else {
-        val = myData.postId
-    }
-
-    GetCommentList(val);
-    var input = document.getElementById(val).getElementsByClassName("commentSection")[0].getElementsByClassName("addComment")[0];
+    // Remove any existing event listener by cloning the node
+    var newInput = input.cloneNode(true);
+    input.parentNode.replaceChild(newInput, input);
+    input = newInput;
 
     let isSubmitting = false;
 
-    input.addEventListener("keyup", (event) => {
+    input.addEventListener("keyup", function (event) {
         if (event.key === "Enter" && input.value.trim() !== '' && !isSubmitting) {
             isSubmitting = true;
-
-            var value = {
-                "id": val,
-                "text": input.value
-            };
-
-            $.post({
+            var value = { "id": myData, "text": input.value };
+            $.ajax({
                 url: 'https://' + location.host + '/Feed/Commented',
-                method: 'Post',
+                method: 'POST',
                 data: value,
-                success: function (data) {
+                success: function () {
                     input.value = '';
-                    setTimeout(() => GetCommentList(val), 750);
+                    setTimeout(() => GetCommentList(myData), 750);
                 },
                 complete: function () {
                     isSubmitting = false;
+                },
+                error: function (xhr, status, error) {
+                    showError(error);
                 }
             });
         }
     });
 }
 
+// Update the comment count for a post
 function UpdateCommentCount(postId) {
     var value = { "id": postId };
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetCommentsBy',
-        method: 'Post',
+        method: 'POST',
         data: value,
         success: function (data) {
-            var countText = data.length === 1 ? "1 comment" : data.length + " comments";
             var postElem = document.getElementById(postId);
             if (postElem) {
                 var countElem = postElem.getElementsByClassName("commentCount")[0];
                 if (countElem) {
-                    countElem.innerHTML = countText;
+                    countElem.innerHTML = data.length === 1 ? "1 comment" : data.length + " comments";
                 }
             }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
     });
 }
 
 $(document).ready(function () {
-    let btn = document.getElementById("inputAreaSpan");
-    let input = document.getElementById("fileInput")
+    var btn = document.getElementById("inputAreaSpan");
+    var input = document.getElementById("fileInput");
 
-    btn.onclick = function () {
-        input.click();
+    if (btn && input) {
+        btn.onclick = function () {
+            input.click();
+        };
+
+        input.addEventListener('change', function () {
+            var file = this.files[0];
+            if (!file) return;
+            var fileReader = new FileReader();
+            fileReader.readAsDataURL(file);
+            fileReader.onload = function () {
+                var fileURL = fileReader.result;
+                btn.innerHTML = `<img class="img1" src="${fileURL}">`;
+            };
+        });
     }
 
-    let file;
-
-    input.addEventListener('change', function () {
-        file = this.files[0];
-
-        let fileReader = new FileReader();
-        fileReader.readAsDataURL(file);
-        fileReader.onload = () => {
-            let fileURL = fileReader.result;
-            let imgTag = `<img class="img1" src="${fileURL}">`
-            btn.innerHTML = imgTag;
-        }
-    })
-
-    //populates the likes section (section above likes and comments)
-    var value = {
-    }
-    $.post({
+    // Populate likes section
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetPostsLikedByMe',
-        method: 'Post',
-        data: value,
-        async: false,
+        method: 'POST',
+        data: {},
         success: function (data) {
             for (var i = 0; i < data.length; i++) {
                 var op = data[i];
                 var likedByMe = document.getElementById(op);
-                if (likedByMe == null) {
-                    continue
-                }
-                else {
-                    likedByMe.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
-
-                    if (likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "1") {
-                        likedByMe.getElementsByClassName("likeCount")[0].textContent = "You"
-                    }
-                    else if (likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "2") {
-                        likedByMe.getElementsByClassName("likeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0]) - 1) + " other";
-                    }
-                    else {
-                        likedByMe.getElementsByClassName("likeCount")[0].textContent = "You and " + (parseInt(likedByMe.getElementsByClassName("likeCount")[0].textContent.split(" ")[0]) - 1) + " others";
+                if (!likedByMe) continue;
+                var likeBtnImg = likedByMe.getElementsByClassName("likeBtnImg")[0];
+                var likeCountElem = likedByMe.getElementsByClassName("likeCount")[0];
+                if (likeBtnImg) likeBtnImg.src = "https://" + location.host + "/images/likedbutton.png";
+                if (likeCountElem) {
+                    var count = likeCountElem.textContent.split(" ")[0];
+                    if (count == "1") {
+                        likeCountElem.textContent = "You";
+                    } else if (count == "2") {
+                        likeCountElem.textContent = "You and 1 other";
+                    } else {
+                        likeCountElem.textContent = "You and " + (parseInt(count) - 1) + " others";
                     }
                 }
+            }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
+        }
+    });
 
+    // Like button click handler
+    $(document).on("click", ".likeDiv", function () {
+        var postElem = this.parentNode.parentNode;
+        var postId = postElem.id;
+        $.ajax('https://' + location.host + likedUrl + '?id=' + postId);
+
+        var likeBtnImg = postElem.getElementsByClassName("likeBtnImg")[0];
+        var likeCountElem = postElem.getElementsByClassName("likeCount")[0];
+        var postLike = postElem.getElementsByClassName("postLike")[0];
+
+        if (likeBtnImg && likeBtnImg.src == "https://" + location.host + "/images/likebutton.png") {
+            likeBtnImg.src = "https://" + location.host + "/images/likedbutton.png";
+            if (likeCountElem) {
+                if (likeCountElem.textContent == "") {
+                    likeCountElem.textContent = "You";
+                    if (postLike) postLike.src = "https://" + location.host + "/images/postLike.png";
+                } else if (likeCountElem.textContent.split(" ")[0] == "1") {
+                    likeCountElem.textContent = "You and 1 other";
+                } else {
+                    likeCountElem.textContent = "You and " + likeCountElem.textContent.split(" ")[0] + " others";
+                }
+            }
+        } else if (likeBtnImg) {
+            likeBtnImg.src = "https://" + location.host + "/images/likebutton.png";
+            if (likeCountElem) {
+                if (likeCountElem.textContent == "You") {
+                    likeCountElem.textContent = "";
+                    if (postLike) postLike.src = "https://" + location.host + "/images/white-solid-color.jpg";
+                } else if (likeCountElem.textContent.split(" ")[2] == "1") {
+                    likeCountElem.textContent = "1 other";
+                } else {
+                    likeCountElem.textContent = likeCountElem.textContent.split(" ")[2] + " others";
+                }
             }
         }
     });
 
-    $(".likeDiv").click(function () {
-        $.post('https://' + location.host + likedUrl + '?id=' + this.parentNode.parentNode.id);
-
-        var imgSrc = document.getElementById(this.parentNode.parentNode.id);
-        if (imgSrc.getElementsByClassName("likeBtnImg")[0].src == "https://" + location.host + "/images/likebutton.png") {
-            imgSrc.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likedbutton.png"
-
-            if (imgSrc.getElementsByClassName("likeCount")[0].textContent == "") {
-                imgSrc.getElementsByClassName("likeCount")[0].textContent = "You"
-                imgSrc.getElementsByClassName("postLike")[0].src = "https://" + location.host + "/images/postLike.png"
-
-            }
-            else if (imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] == "1") {
-                imgSrc.getElementsByClassName("likeCount")[0].textContent = "You and " + imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] + " other";
-            }
-            else {
-                imgSrc.getElementsByClassName("likeCount")[0].textContent = "You and " + imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[0] + " others";
-            }
-        }
-        else {
-            imgSrc.getElementsByClassName("likeBtnImg")[0].src = "https://" + location.host + "/images/likebutton.png"
-
-            if (imgSrc.getElementsByClassName("likeCount")[0].textContent == "You") {
-                imgSrc.getElementsByClassName("likeCount")[0].textContent = ""
-                imgSrc.getElementsByClassName("postLike")[0].src = "https://" + location.host + "/images/white-solid-color.jpg"
-
-            }
-            else if (imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[2] == "1") {
-                imgSrc.getElementsByClassName("likeCount")[0].textContent = imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[2] + " other";
-            }
-            else {
-                imgSrc.getElementsByClassName("likeCount")[0].textContent = imgSrc.getElementsByClassName("likeCount")[0].textContent.split(" ")[2] + " others";
-            }
-        }
-    });
-
-    $.post({
-        //populates the contacts section
+    // Populate contacts section
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetContacts',
-        method: 'Post',
+        method: 'POST',
         data: "",
         success: function (data) {
             var result = '';
-            for (var i = 0; i < data.length; i++) {
-                var value = {
-                    "email": data[i]
-                }
-                $.post({
-                    url: 'https://' + location.host + '/Profile/GetProfileDetails',
-                    method: 'Post',
-                    data: value,
-                    async: false,
-                    success: function (data1) {
-                        if (data1[0].status == "Online") {
-                            result = result + '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="' + 'http://127.0.0.1:8080/' + data1[0].profileImagePath.substr(64) + '"/><div class="onlineMarkerBG"><div class="onlineMarker"></div></div></div><a class="contactData" href="/Profile/ProfileData?email=' + data1[0].email + '">' + data1[0].firstName + " " + data1[0].surname + '</a></div>'
-                        }
-                        else {
-                            result = result + '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="' + 'http://127.0.0.1:8080/' + data1[0].profileImagePath.substr(64) + '"/></div><a class="contactData" href="/Profile/ProfileData?email=' + data1[0].email + '">' + data1[0].firstName + " " + data1[0].surname + '</a></div>'
-                        }
-                    }
-                })
+            var pending = data.length;
+            if (pending === 0) {
+                document.getElementsByClassName("conatctList")[0].innerHTML = result;
+                return;
             }
-            document.getElementsByClassName("conatctList")[0].innerHTML = result;
-
-            $('.contactDiv').click(function () {
-                $(this)[0].getElementsByClassName("contactData")[0].click();
-            });
-
-            $('#myProfile').click(function () {
-                $(this)[0].getElementsByClassName("myProfileText")[0].getElementsByClassName("myProfileTextA")[0].click();
-            });
+            for (var i = 0; i < data.length; i++) {
+                (function (email) {
+                    var value = { "email": email };
+                    $.ajax({
+                        url: 'https://' + location.host + '/Profile/GetProfileDetails',
+                        method: 'POST',
+                        data: value,
+                        success: function (data1) {
+                            if (data1.status == "Online") {
+                                result += '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="http://127.0.0.1:8080/' + data1.profileImagePath.substr(64) + '"/><div class="onlineMarkerBG"><div class="onlineMarker"></div></div></div><a class="contactData" href="/Profile/ProfileData?email=' + data1.email + '">' + data1.firstName + " " + data1.surname + '</a></div>';
+                            } else {
+                                result += '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="http://127.0.0.1:8080/' + data1.profileImagePath.substr(64) + '"/></div><a class="contactData" href="/Profile/ProfileData?email=' + data1.email + '">' + data1.firstName + " " + data1.surname + '</a></div>';
+                            }
+                        },
+                        complete: function () {
+                            pending--;
+                            if (pending === 0) {
+                                document.getElementsByClassName("conatctList")[0].innerHTML = result;
+                                $('.contactDiv').click(function () {
+                                    $(this)[0].getElementsByClassName("contactData")[0].click();
+                                });
+                                $('#myProfile').click(function () {
+                                    $(this)[0].getElementsByClassName("myProfileText")[0].getElementsByClassName("myProfileTextA")[0].click();
+                                });
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            showError(error);
+                        }
+                    });
+                })(data[i]);
+            }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
-    })
+    });
 
-    //loads comments count
+    // Load comments count
     GetCommentsCount();
 
-    document.getElementById("result").style.padding = "0px"
+    var resultElem = document.getElementById("result");
+    if (resultElem) resultElem.style.padding = "0px";
 
-    //redirect to friends page
+    // Redirect to friends page
     $('#friends').click(function () {
-        document.getElementsByClassName("friendsTextA")[0].click();
-    })
+        var friendsTextA = document.getElementsByClassName("friendsTextA")[0];
+        if (friendsTextA) friendsTextA.click();
+    });
 });
