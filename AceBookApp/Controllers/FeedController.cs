@@ -73,7 +73,7 @@ namespace AceBookApp.Controllers
             ViewBag.Lastname = loggedAccountDetailsQuery.Surname;
             ViewBag.Fullname = loggedAccountDetailsQuery.FirstName + " " + loggedAccountDetailsQuery.Surname;
             fullname = loggedAccountDetailsQuery.FirstName + " " + loggedAccountDetailsQuery.Surname;
-            ViewBag.ProfileUrl = loggedAccountDetailsQuery.ProfileImagePath;
+            ViewBag.ProfileUrl = loggedAccountDetailsQuery.ProfileImagePath.Split("Uploads\\")[1];
             profileImage = loggedAccountDetailsQuery.ProfileImagePath;
             ViewData["Host"] = Request.Host;
 
