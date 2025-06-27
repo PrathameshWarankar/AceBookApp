@@ -571,7 +571,7 @@ namespace AceBookApp.Controllers
         }
 
         //method to logout user
-        public async void Logout()
+        public async Task Logout()
         {
             try
             {

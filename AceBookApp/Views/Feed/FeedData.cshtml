@@ -117,7 +117,7 @@
                             <div class="likedNames" runat="server" style="display: none;"></div>
                         </div>
 
-                        <div class="likeCommentCount" onclick="GetCommentsCount(@post.PostId)">
+                        <div class="likeCommentCount" onclick="GetCommentsCount('@post.PostId')">
                             @if (ViewBag.PostLikeCount[c] == 0)
                             {
                                 <img class="postLike" alt="not liked image" src="~/images/white-solid-color.jpg" />
@@ -126,12 +126,12 @@
                             else if (ViewBag.PostLikeCount[c] == 1)
                             {
                                 <img class="postLike" alt="liked image" src="~/images/postLike.png" />
-                                <h3 class="likeCount" onmouseover="DisplayLikes(@post.PostId)" onmouseout="DisplayLikesHide(@post.PostId)">@ViewBag.PostLikeCount[c] other</h3>
+                                <h3 class="likeCount" onmouseover="DisplayLikes('@post.PostId')" onmouseout="DisplayLikesHide('@post.PostId')">@ViewBag.PostLikeCount[c] other</h3>
                             }
                             else
                             {
                                 <img onclick="test()" alt="liked image" class="postLike" src="~/images/postLike.png" />
-                                <h3 class="likeCount" onmouseover="DisplayLikes(@post.PostId)" onmouseout="DisplayLikesHide(@post.PostId)">@ViewBag.PostLikeCount[c] others</h3>
+                                <h3 class="likeCount" onmouseover="DisplayLikes('@post.PostId')" onmouseout="DisplayLikesHide('@post.PostId')">@ViewBag.PostLikeCount[c] others</h3>
                             }
                             <div class="commentCountDiv">
                                 <h3 class="commentCount"></h3>
@@ -143,7 +143,7 @@
                                 <img class="likeBtnImg" alt="like button image" src="~/images/likebutton.png" />
                                 <span class="like">Like</span>
                             </div>
-                            <div class="commentDiv" onclick="ShowComments(@post.PostId); AddingComment(@post.PostId);">
+                            <div class="commentDiv" onclick="ShowComments('@post.PostId'); AddingComment('@post.PostId');">
                                 <img class="commentBtnImg" alt="comment button image" src="~/images/commentbutton.png" />
                                 <span class="comment">Comment</span>
                             </div>
