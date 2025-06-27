@@ -781,32 +781,34 @@ $(document).ready(function () {
                     $('.myProfileHeaderProfileAddEditDiv, .myProfileHeaderProfileAddFriendDiv').removeClass('hidden');
                     $('.myProfileHeaderProfileFrndAcceptedDiv, .myProfileHeaderProfileEditDiv').addClass('hidden');
                 }
-            },
-            error: function (xhr, status, error) {
-                showError(error);
-            }
-        });
-        $.ajax({
-            url: `${baseUrl}/Profile/IsFriend`,
-            method: 'POST',
-            data: { toRequest: profileEmail },
-            success: function (data) {
-                if (data === "Yes") {
-                    $('.myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileAddFriendDiv').addClass('hidden');
-                    $('.myProfileHeaderProfileAddEditDiv, .myProfileHeaderProfileFrndAcceptedDiv').removeClass('hidden');
-                    $('.myProfileHeaderProfileEditDiv').addClass('hidden');
-                } else if (myEmail === profileEmail) {
-                    $('.myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-                    $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
-                } else {
-                    $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
-                }
+
+                $.ajax({
+                    url: `${baseUrl}/Profile/IsFriend`,
+                    method: 'POST',
+                    data: { toRequest: profileEmail },
+                    success: function (data) {
+                        if (data === "Yes") {
+                            $('.myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileAddFriendDiv').addClass('hidden');
+                            $('.myProfileHeaderProfileAddEditDiv, .myProfileHeaderProfileFrndAcceptedDiv').removeClass('hidden');
+                            $('.myProfileHeaderProfileEditDiv').addClass('hidden');
+                        } else if (myEmail === profileEmail) {
+                            $('.myProfileHeaderProfileCancelReqDiv, .myProfileHeaderProfileAddFriendDiv, .myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                            $('.myProfileHeaderProfileEditDiv').removeClass('hidden');
+                        } else {
+                            $('.myProfileHeaderProfileFrndAcceptedDiv').addClass('hidden');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        showError(error);
+                    }
+                });
             },
             error: function (xhr, status, error) {
                 showError(error);
             }
         });
     }
+
     setTimeout(updateFriendRequestStatus, 200);
 
     // Populate friends for friends and posts tab
