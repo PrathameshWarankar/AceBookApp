@@ -33,7 +33,7 @@ namespace AceBookApp.Controllers
 
                 var isNoti = await _context.Notifications
                             .Where(_ => _.NotifiedBy == HomeController.loggedUser.Email && _.NotiType == "Add Friend")
-                            .FirstAsync();
+                            .FirstOrDefaultAsync();
 
                 //if friend req already exists, delete the req
                 if (existingReqCheckQuery != null)
@@ -153,14 +153,14 @@ namespace AceBookApp.Controllers
             {
                 var myAccDetailsQuery = await _context.Accounts
                                         .Where(x => x.Email == HomeController.loggedUser.Email)
-                                        .FirstAsync();
+                                        .FirstOrDefaultAsync();
                 return Json(myAccDetailsQuery);
             }
             else
             {
                 var accDetailsQuery = await _context.Accounts
                                         .Where(x => x.Email == email)
-                                        .FirstAsync();
+                                        .FirstOrDefaultAsync();
                 return Json(accDetailsQuery);
             }
         }
@@ -386,7 +386,7 @@ namespace AceBookApp.Controllers
         {
             var account = await (from acc in _context.Accounts
                                 where acc.Email == HomeController.loggedUser.Email
-                                select acc).FirstAsync();
+                                select acc).FirstOrDefaultAsync();
 
             string path = ImgPath(profileImg);
             account.ProfileImagePath = path;
@@ -401,7 +401,7 @@ namespace AceBookApp.Controllers
         {
             var account = await (from acc in _context.Accounts
                                 where acc.Email == HomeController.loggedUser.Email
-                                select acc).FirstAsync();
+                                select acc).FirstOrDefaultAsync();
 
             string path = ImgPath(coverImg);
             account.CoverImagePath = path;
@@ -455,7 +455,7 @@ namespace AceBookApp.Controllers
         {
             var account = await (from acc in _context.Accounts
                                 where acc.Email == HomeController.loggedUser.Email
-                                select acc).FirstAsync();
+                                select acc).FirstOrDefaultAsync();
 
             return View(account);
         }
@@ -467,7 +467,7 @@ namespace AceBookApp.Controllers
 
             var myAcc = await (from acc in _context.Accounts
                               where acc.Email == HomeController.loggedUser.Email
-                              select acc).FirstAsync();
+                              select acc).FirstOrDefaultAsync();
 
             if (type == "name")
             {
@@ -493,7 +493,7 @@ namespace AceBookApp.Controllers
 
                 var myAddAcc = await (from addAcc in _context.additionAccountDetails
                                       where addAcc.Loggedemail == HomeController.loggedUser.Email
-                                      select addAcc).FirstAsync();
+                                      select addAcc).FirstOrDefaultAsync();
 
                 AdditionAccountDetail newAddAcc = new AdditionAccountDetail();
                 newAddAcc.WorkInfo1 = myAddAcc.WorkInfo1;
@@ -556,7 +556,7 @@ namespace AceBookApp.Controllers
         {
             var myAcc = await (from acc in _context.Accounts
                               where acc.Email == HomeController.loggedUser.Email
-                              select acc).FirstAsync();
+                              select acc).FirstOrDefaultAsync();
 
             if (myAcc.Password != currPass)
             {
@@ -577,7 +577,7 @@ namespace AceBookApp.Controllers
             {
                 var account = await (from acc in _context.Accounts
                                      where acc.Email == HomeController.loggedUser.Email
-                                     select acc).FirstAsync();
+                                     select acc).FirstOrDefaultAsync();
 
                 account.Status = "Offline";
 

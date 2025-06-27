@@ -57,12 +57,16 @@ function Cancel() {
     document.body.style.overflow = 'visible';
 }
 
+function showError(error) {
+    alert("An error occurred: " + error);
+}
+
 //function executed when hovered over likes count
 function DisplayLikes(myData) {
     var value = {
         "id": myData.id
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetLikesBy',
         method: 'Post',
         data: value,
@@ -74,6 +78,9 @@ function DisplayLikes(myData) {
             }
             document.getElementById(myData.id).getElementsByClassName("likedNames")[0].style.display = "block";
             document.getElementById(myData.id).getElementsByClassName("likedNames")[0].innerHTML = result
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
     })
 }
@@ -85,7 +92,7 @@ function DisplayLikesHide(myData) {
 
 //function executed to display comments count
 function GetCommentsCount() {
-    $.post({
+    $.ajax({
         //populates the comments count
         url: 'https://' + location.host + '/Feed/AllPostIds',
         method: 'Post',
@@ -97,7 +104,7 @@ function GetCommentsCount() {
                 let value = {
                     "id": data[i]
                 }
-                $.post({
+                $.ajax({
                     url: 'https://' + location.host + '/Feed/GetCommentsBy',
                     method: 'Post',
                     data: value,
@@ -107,9 +114,15 @@ function GetCommentsCount() {
                         } else {
                             document.getElementById(postId).getElementsByClassName("commentCountDiv")[0].getElementsByClassName("commentCount")[0].innerHTML = data.length + " comments";
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        showError(error);
                     }
                 })
             }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
     })
 }
@@ -131,7 +144,7 @@ function GetCommentList(myData) {
     var value1 = {
         "id": myData
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetCommentsBy',
         method: 'Post',
         data: value1,
@@ -142,6 +155,9 @@ function GetCommentList(myData) {
             }
             document.getElementById(myData).getElementsByClassName("CommentsList")[0].innerHTML = result
             UpdateCommentCount(myData);
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
     })
 }
@@ -170,7 +186,7 @@ function AddingComment(myData) {
                 "text": input.value
             };
 
-            $.post({
+            $.ajax({
                 url: 'https://' + location.host + '/Feed/Commented',
                 method: 'Post',
                 data: value,
@@ -180,6 +196,9 @@ function AddingComment(myData) {
                 },
                 complete: function () {
                     isSubmitting = false;
+                },
+                error: function (xhr, status, error) {
+                    showError(error);
                 }
             });
         }
@@ -188,7 +207,7 @@ function AddingComment(myData) {
 
 function UpdateCommentCount(postId) {
     var value = { "id": postId };
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Feed/GetCommentsBy',
         method: 'Post',
         data: value,
@@ -201,6 +220,9 @@ function UpdateCommentCount(postId) {
                     countElem.innerHTML = countText;
                 }
             }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
     });
 }
@@ -230,11 +252,10 @@ $(document).ready(function () {
     //populates the likes section (section above likes and comments)
     var value = {
     }
-    $.post({
+    $.ajax({
         url: 'https://' + location.host + '/Profile/GetPostsLikedByMe',
         method: 'Post',
         data: value,
-        async: false,
         success: function (data) {
             for (var i = 0; i < data.length; i++) {
                 var op = data[i];
@@ -257,11 +278,14 @@ $(document).ready(function () {
                 }
 
             }
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
     });
 
-    $(".likeDiv").click(function () {
-        $.post('https://' + location.host + likedUrl + '?id=' + this.parentNode.parentNode.id);
+    $(document).on("click", ".likeDiv", function () {
+        $.ajax('https://' + location.host + likedUrl + '?id=' + this.parentNode.parentNode.id);
 
         var imgSrc = document.getElementById(this.parentNode.parentNode.id);
         if (imgSrc.getElementsByClassName("likeBtnImg")[0].src == "https://" + location.host + "/images/likebutton.png") {
@@ -296,7 +320,7 @@ $(document).ready(function () {
         }
     });
 
-    $.post({
+    $.ajax({
         //populates the contacts section
         url: 'https://' + location.host + '/Feed/GetContacts',
         method: 'Post',
@@ -307,11 +331,10 @@ $(document).ready(function () {
                 var value = {
                     "email": data[i]
                 }
-                $.post({
+                $.ajax({
                     url: 'https://' + location.host + '/Profile/GetProfileDetails',
                     method: 'Post',
                     data: value,
-                    async: false,
                     success: function (data1) {
                         if (data1[0].status == "Online") {
                             result = result + '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="' + 'http://127.0.0.1:8080/' + data1[0].profileImagePath.substr(64) + '"/><div class="onlineMarkerBG"><div class="onlineMarker"></div></div></div><a class="contactData" href="/Profile/ProfileData?email=' + data1[0].email + '">' + data1[0].firstName + " " + data1[0].surname + '</a></div>'
@@ -319,6 +342,9 @@ $(document).ready(function () {
                         else {
                             result = result + '<div class="contactDiv"><div class="contactImg"><img class="contactImg" src="' + 'http://127.0.0.1:8080/' + data1[0].profileImagePath.substr(64) + '"/></div><a class="contactData" href="/Profile/ProfileData?email=' + data1[0].email + '">' + data1[0].firstName + " " + data1[0].surname + '</a></div>'
                         }
+                    },
+                    error: function (xhr, status, error) {
+                        showError(error);
                     }
                 })
             }
@@ -331,6 +357,9 @@ $(document).ready(function () {
             $('#myProfile').click(function () {
                 $(this)[0].getElementsByClassName("myProfileText")[0].getElementsByClassName("myProfileTextA")[0].click();
             });
+        },
+        error: function (xhr, status, error) {
+            showError(error);
         }
     })
 

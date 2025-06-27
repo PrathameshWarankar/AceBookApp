@@ -1,6 +1,7 @@
 ﻿using AceBookApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace AceBookApp.Controllers
 {
@@ -21,14 +22,12 @@ namespace AceBookApp.Controllers
         }
 
         //loads user's feed
-        public IActionResult FeedData()
+        public async Task<IActionResult> FeedData()
         {
             //return all the user posts present in database
-            var allPostQuery = from post in _context.Posts
-                               orderby post.Date descending
-                               select post;
-
-            Post[] posts = allPostQuery.ToArray();
+            List<Post> posts = await (from post in _context.Posts
+                                     orderby post.Date descending
+                                     select post).ToListAsync();
 
             List<string> names = new List<string>();
             List<string> emails = new List<string>();
@@ -38,24 +37,23 @@ namespace AceBookApp.Controllers
             foreach (var post in posts)
             {
                 //fetch account details of post owners
-                var postOwnerQuery = from acc in _context.Accounts
-                                     where acc.Email == post.Email
-                                     select acc;
+                var postOwner = await (from acc in _context.Accounts
+                                            where acc.Email == post.Email
+                                            select acc).FirstOrDefaultAsync();
 
                 postLikeCount.Add(post.Likes);
 
-                var postOwner = postOwnerQuery.First();
                 names.Add(postOwner.FirstName + " " + postOwner.Surname);
                 emails.Add(postOwner.Email);
                 feedPostProfileUrl.Add(postOwner.ProfileImagePath);
             }
 
             //get list of posts already liked by logged user
-            var likedByMeQuery = from likes in _context.Likes
-                                 where likes.LikedBy == HomeController.loggedUser.Email
-                                 select likes.PostId;
+            var likedByMeQuery = await (from likes in _context.Likes
+                                        where likes.LikedBy == HomeController.loggedUser.Email
+                                        select likes.PostId).ToListAsync();
 
-            ViewBag.LikedByMe = likedByMeQuery.ToArray();
+            ViewBag.LikedByMe = likedByMeQuery;
 
             ViewBag.Names = names;
             ViewBag.Posts = posts;
@@ -66,9 +64,9 @@ namespace AceBookApp.Controllers
             ViewBag.Email = HomeController.loggedUser.Email;
 
             //get account details of logged user
-            var loggedAccountDetailsQuery = (from account in _context.Accounts
-                                            where account.Email == HomeController.loggedUser.Email
-                                            select account).First();
+            var loggedAccountDetailsQuery = await (from account in _context.Accounts
+                                                   where account.Email == HomeController.loggedUser.Email
+                                                   select account).FirstOrDefaultAsync();
 
             ViewBag.Firstname = loggedAccountDetailsQuery.FirstName;
             ViewBag.Lastname = loggedAccountDetailsQuery.Surname;
@@ -84,7 +82,7 @@ namespace AceBookApp.Controllers
 
         //method executed when new post is created
         [HttpPost]
-        public IActionResult FeedData(Post p, IFormFile imgfile)
+        public async Task<IActionResult> FeedData(Post p, IFormFile imgfile)
         {
             Post post = new Post();
             Result result = ImgPath(imgfile);
@@ -103,7 +101,8 @@ namespace AceBookApp.Controllers
                 post.Date = DateTime.Now;
 
                 _context.Posts.Add(post);
-                _context.SaveChanges();
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction("FeedData", "Feed");
             }
         }
@@ -169,9 +168,12 @@ namespace AceBookApp.Controllers
 
         //return results for Search functionality
         [HttpPost]
-        public IActionResult SearchBy(string name)
+        public async Task<IActionResult> SearchBy(string name)
         {
-            var result = _context.Accounts.Where(x => (x.FirstName.StartsWith(name) || x.Surname.StartsWith(name))).ToList();
+            var result = await _context.Accounts
+                        .Where(x => x.FirstName.StartsWith(name) || x.Surname.StartsWith(name))
+                        .ToListAsync();
+
             return Json(result);
         }
 
@@ -185,15 +187,15 @@ namespace AceBookApp.Controllers
         }
 
         //returns list of friend requests
-        public List<SelectListItem> FriendReqList()
+        public async Task<List<SelectListItem>> FriendReqList()
         {
             List<SelectListItem> reqList = new List<SelectListItem>();
 
-            var friendReqQuery = from item in _context.FriendRequests
-                                 where item.ToRequest == HomeController.loggedUser.Email
-                                 select item.FromRequest;
+            var friendReqQuery = await (from item in _context.FriendRequests
+                                       where item.ToRequest == HomeController.loggedUser.Email
+                                       select item.FromRequest).ToListAsync();
 
-            foreach (var item in friendReqQuery.ToList())
+            foreach (var item in friendReqQuery)
             {
                 reqList.Add(new SelectListItem { Text = item.ToString() });
             }
@@ -202,27 +204,31 @@ namespace AceBookApp.Controllers
         }
 
         //method to return all posts id
-        public ActionResult AllPostIds()
+        public async Task<ActionResult> AllPostIds()
         {
-            var postIds = (from post in _context.Posts
-                           select post.PostId).ToList();
+            var postIds = await (from post in _context.Posts
+                                select post.PostId).ToListAsync();
+
             return Json(postIds);
         }
 
         //method to be executed with a post is liked/unliked
-        public ActionResult Liked(string id)
+        public async Task<ActionResult> Liked(string id)
         {
             Like like = new Like();
 
-            Post p = (from post in _context.Posts
-                      where post.PostId == id
-                      select post).First();
+            Post p = await (from post in _context.Posts
+                           where post.PostId == id
+                           select post).FirstOrDefaultAsync();
 
-            var isLike = _context.Likes.Where(_ => (_.LikedBy == HomeController.loggedUser.Email && _.PostId == id));
-            var isNoti = _context.Notifications.Where(_ => (_.NotifiedBy == HomeController.loggedUser.Email && _.PostId == id && _.NotiType == "Like"));
+            var isLike = await _context.Likes
+                            .FirstOrDefaultAsync(_ => _.LikedBy == HomeController.loggedUser.Email && _.PostId == id);
+
+            var isNoti = await _context.Notifications
+                            .FirstOrDefaultAsync(_ => _.NotifiedBy == HomeController.loggedUser.Email && _.PostId == id && _.NotiType == "Like");
 
             //if post was not liked previously by logged user
-            if (!isLike.Any())
+            if (isLike == null)
             {
                 p.Likes += 1;
                 like.PostId = id;
@@ -240,41 +246,45 @@ namespace AceBookApp.Controllers
                     noti.PostId = id;
                     noti.NotiStatus = "Unread";
                     _context.Notifications.Add(noti);
-                    _context.SaveChanges();
+
+                    await _context.SaveChangesAsync();
                 }
             }
             //if post was already liked previously by logged user
             else
             {
                 p.Likes -= 1;
-                _context.Likes.Remove(isLike.First());
+                _context.Likes.Remove(isLike);
 
                 if (p.Email != HomeController.loggedUser.Email)
                 {
-                    _context.Notifications.Remove(isNoti.First());
+                    _context.Notifications.Remove(isNoti);
                 }
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return new EmptyResult();
         }
 
         //returns all the likes for a given post
-        public IActionResult GetLikesBy(string id)
+        public async Task<IActionResult> GetLikesBy(string id)
         {
-            var getLikesQuery = _context.Likes.Where(x => x.PostId == id).ToList();
+            var getLikesQuery = await _context.Likes
+                                .Where(x => x.PostId == id)
+                                .ToListAsync();
+
             return Json(getLikesQuery);
         }
 
         //method to be executed when there is new comment on a post
-        public ActionResult Commented(string id, string text)
+        public async Task<ActionResult> Commented(string id, string text)
         {
             Comment comment = new Comment();
 
-            Post p = (from post in _context.Posts
-                      where post.PostId == id
-                      select post).First();
+            Post p = await (from post in _context.Posts
+                           where post.PostId == id
+                           select post).FirstOrDefaultAsync();
 
             p.Comments += 1;
             comment.PostId = id;
@@ -298,31 +308,31 @@ namespace AceBookApp.Controllers
                 _context.Notifications.Add(noti);
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Json("success");
         }
 
         //returns all the comments for a given post
-        public IActionResult GetCommentsBy(string id)
+        public async Task<IActionResult> GetCommentsBy(string id)
         {
-            var getCommentsQuery = (from cmt in _context.Comments
-                                    where cmt.PostId == id
-                                    orderby cmt.CommentedDate descending
-                                    select cmt).ToList();
+            var getCommentsQuery = await (from cmt in _context.Comments
+                                         where cmt.PostId == id
+                                         orderby cmt.CommentedDate descending
+                                         select cmt).ToListAsync();
 
             return Json(getCommentsQuery);
         }
 
         //returns all the friends of logged user
-        public IActionResult GetContacts()
+        public async Task<IActionResult> GetContacts()
         {
-            var getFriendsQuery1 = (from acc in _context.Friends
-                                    where acc.ToRequest == HomeController.loggedUser.Email
-                                    select acc.FromRequest).ToList();
+            var getFriendsQuery1 = await (from acc in _context.Friends
+                                         where acc.ToRequest == HomeController.loggedUser.Email
+                                         select acc.FromRequest).ToListAsync();
 
-            var getFriendsQuery2 = (from acc in _context.Friends
+            var getFriendsQuery2 = await (from acc in _context.Friends
                                     where acc.FromRequest == HomeController.loggedUser.Email
-                                    select acc.ToRequest).ToList();
+                                    select acc.ToRequest).ToListAsync();
 
             getFriendsQuery1.AddRange(getFriendsQuery2);
 
@@ -330,35 +340,41 @@ namespace AceBookApp.Controllers
         }
 
         //returns all notications of logged user
-        public IActionResult GetMyNotifications()
+        public async Task<IActionResult> GetMyNotifications()
         {
-            var getMyNotiQuery = from noti in _context.Notifications
-                                 where noti.NotifiedTo == HomeController.loggedUser.Email
-                                 orderby noti descending
-                                 select noti;
+            var getMyNotiQuery = await (from noti in _context.Notifications
+                                       where noti.NotifiedTo == HomeController.loggedUser.Email
+                                       orderby noti descending
+                                       select noti).ToListAsync();
 
             return Json(getMyNotiQuery);
         }
 
         //method to update notification status if it has been read
-        public IActionResult UpdateNotificatioStatus(string type, string id)
+        public async Task<IActionResult> UpdateNotificatioStatus(string type, string id)
         {
             if (type == "Add Friend")
             {
-                _context.Notifications
-                    .Where(noti => noti.NotiType == type && noti.NotifiedBy == id && noti.NotifiedTo == HomeController.loggedUser.Email)
-                    .ToList()
-                    .ForEach(entry => entry.NotiStatus = "Read");
+                var notifications = await _context.Notifications
+                                    .Where(noti => noti.NotiType == type &&
+                                                   noti.NotifiedBy == id &&
+                                                   noti.NotifiedTo == HomeController.loggedUser.Email)
+                                    .ToListAsync();
+
+                notifications.ForEach(entry => entry.NotiStatus = "Read");
             }
             else
             {
-                _context.Notifications
-                    .Where(noti => noti.NotiType == type && noti.PostId == id && noti.NotifiedTo == HomeController.loggedUser.Email)
-                    .ToList()
-                    .ForEach(entry => entry.NotiStatus = "Read");
+                var notifications = await _context.Notifications
+                                    .Where(noti => noti.NotiType == type &&
+                                                   noti.PostId == id &&
+                                                   noti.NotifiedTo == HomeController.loggedUser.Email)
+                                    .ToListAsync();
+
+                notifications.ForEach(entry => entry.NotiStatus = "Read");
             }
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return new EmptyResult();
         }

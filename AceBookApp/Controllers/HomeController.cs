@@ -54,7 +54,7 @@ namespace AceBookApp.Controllers
 
         //adds created account's details in database
         [HttpPost]
-        public IActionResult CreateAccount(Account acc)
+        public async Task<IActionResult> CreateAccount(Account acc)
         {
             if (ModelState.IsValid)
             {
@@ -70,8 +70,10 @@ namespace AceBookApp.Controllers
 
                 var passwordHasher = new PasswordHasher<IdentityUser>();
                 acc.Password = passwordHasher.HashPassword(null, acc.Password);
+
                 _context.Accounts.Add(acc);
-                _context.SaveChanges();
+
+                await _context.SaveChangesAsync();
                 return RedirectToAction("Success", "Home");
             }
             else
@@ -92,7 +94,7 @@ namespace AceBookApp.Controllers
 
         //checks if logged user is a valid user or not
         [HttpPost]
-        public IActionResult Login(string email, string password)
+        public async Task<IActionResult> Login(string email, string password)
         {
             var loggedAccount = _context.Accounts.Find(email);
             if (loggedAccount != null)
@@ -111,7 +113,7 @@ namespace AceBookApp.Controllers
 
                     account.Status = "Online";
 
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
 
                     return RedirectToAction("FeedData", "Feed");
                 }
@@ -133,6 +135,5 @@ namespace AceBookApp.Controllers
         {
             return View();
         }
-
     }
 }
