@@ -1,7 +1,8 @@
 ﻿using AceBookApp.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 namespace AceBookApp.Controllers
 {
@@ -9,6 +10,7 @@ namespace AceBookApp.Controllers
     {
         private readonly AppDbContext _context;
         private readonly IHostEnvironment _host;
+        protected string CurrentUserEmail => User.Identity?.Name;
 
         //initializes AppDbContext
         public ProfileController(AppDbContext context, IHostEnvironment host)
@@ -32,7 +34,7 @@ namespace AceBookApp.Controllers
                                                   select entry).SingleOrDefaultAsync();
 
                 var isNoti = await _context.Notifications
-                            .Where(_ => _.NotifiedBy == HomeController.loggedUser.Email && _.NotiType == "Add Friend")
+                            .Where(_ => _.NotifiedBy == CurrentUserEmail && _.NotiType == "Add Friend")
                             .FirstOrDefaultAsync();
 
                 //if friend req already exists, delete the req
@@ -87,7 +89,7 @@ namespace AceBookApp.Controllers
         public async Task<string> IsReqSent(string toRequest)
         {
             var reqCheckQuery = await (from entry in _context.FriendRequests
-                                      where entry.FromRequest == HomeController.loggedUser.Email && entry.ToRequest == toRequest
+                                      where entry.FromRequest == CurrentUserEmail && entry.ToRequest == toRequest
                                       select entry).FirstOrDefaultAsync();
 
             if (reqCheckQuery != null)
@@ -100,8 +102,8 @@ namespace AceBookApp.Controllers
         public async Task<string> IsFriend(string toRequest)
         {
             var frndCheckQuery = await (from entry in _context.Friends
-                                       where (entry.FromRequest == HomeController.loggedUser.Email && entry.ToRequest == toRequest)
-                                          || (entry.ToRequest == HomeController.loggedUser.Email && entry.FromRequest == toRequest)
+                                       where (entry.FromRequest == CurrentUserEmail && entry.ToRequest == toRequest)
+                                          || (entry.ToRequest == CurrentUserEmail && entry.FromRequest == toRequest)
                                        select entry).FirstOrDefaultAsync();
 
             if (frndCheckQuery != null)
@@ -152,7 +154,7 @@ namespace AceBookApp.Controllers
             if (email == null)
             {
                 var myAccDetailsQuery = await _context.Accounts
-                                        .Where(x => x.Email == HomeController.loggedUser.Email)
+                                        .Where(x => x.Email == CurrentUserEmail)
                                         .FirstOrDefaultAsync();
                 return Json(myAccDetailsQuery);
             }
@@ -170,13 +172,13 @@ namespace AceBookApp.Controllers
         {
             AdditionAccountDetail details = new AdditionAccountDetail();
             var isEntry = await _context.additionAccountDetails
-                            .Where(x => x.Loggedemail == HomeController.loggedUser.Email)
+                            .Where(x => x.Loggedemail == CurrentUserEmail)
                             .FirstOrDefaultAsync();
 
             //if details do not exists previously
             if (isEntry == null)
             {
-                details.Loggedemail = HomeController.loggedUser.Email;
+                details.Loggedemail = CurrentUserEmail;
                 details.WorkInfo1 = i1;
                 details.WorkInfo2 = i2;
                 details.WorkInfo3 = i3;
@@ -201,12 +203,12 @@ namespace AceBookApp.Controllers
             if (type == "College")
             {
                 var isEntry = await _context.additionAccountDetails
-                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
+                                .FirstOrDefaultAsync(x => x.Loggedemail == CurrentUserEmail);
 
                 //if college details do not exists previously
                 if (isEntry == null)
                 {
-                    details.Loggedemail = HomeController.loggedUser.Email;
+                    details.Loggedemail = CurrentUserEmail;
                     details.CollegeInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
@@ -222,11 +224,11 @@ namespace AceBookApp.Controllers
             if (type == "School")
             {
                 var isEntry = await _context.additionAccountDetails
-                                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
+                                                .FirstOrDefaultAsync(x => x.Loggedemail == CurrentUserEmail);
                 //if school details do not exists previously
                 if (isEntry == null)
                 {
-                    details.Loggedemail = HomeController.loggedUser.Email;
+                    details.Loggedemail = CurrentUserEmail;
                     details.SchoolInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
@@ -242,11 +244,11 @@ namespace AceBookApp.Controllers
             if (type == "City")
             {
                 var isEntry = await _context.additionAccountDetails
-                                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
+                                                .FirstOrDefaultAsync(x => x.Loggedemail == CurrentUserEmail);
                 //if city details do not exists previously
                 if (isEntry == null)
                 {
-                    details.Loggedemail = HomeController.loggedUser.Email;
+                    details.Loggedemail = CurrentUserEmail;
                     details.PlaceInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
@@ -262,11 +264,11 @@ namespace AceBookApp.Controllers
             if (type == "Contact")
             {
                 var isEntry = await _context.additionAccountDetails
-                                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
+                                                .FirstOrDefaultAsync(x => x.Loggedemail == CurrentUserEmail);
                 //if contact details do not exists previously
                 if (isEntry == null)
                 {
-                    details.Loggedemail = HomeController.loggedUser.Email;
+                    details.Loggedemail = CurrentUserEmail;
                     details.PhoneInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
@@ -282,11 +284,11 @@ namespace AceBookApp.Controllers
             if (type == "Website")
             {
                 var isEntry = await _context.additionAccountDetails
-                                                .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
+                                                .FirstOrDefaultAsync(x => x.Loggedemail == CurrentUserEmail);
                 //if website details do not exists previously
                 if (isEntry == null)
                 {
-                    details.Loggedemail = HomeController.loggedUser.Email;
+                    details.Loggedemail = CurrentUserEmail;
                     details.SocialAccInfo = i1;
                     _context.additionAccountDetails.Add(details);
                 }
@@ -307,7 +309,7 @@ namespace AceBookApp.Controllers
             if (email == null)
             {
                 var myDetailsQuery = await _context.additionAccountDetails
-                                    .FirstOrDefaultAsync(x => x.Loggedemail == HomeController.loggedUser.Email);
+                                    .FirstOrDefaultAsync(x => x.Loggedemail == CurrentUserEmail);
 
                 return Json(myDetailsQuery);
             }
@@ -375,7 +377,7 @@ namespace AceBookApp.Controllers
         public async Task<IActionResult> GetPostsLikedByMe()
         {
             var myLikedPostsQuery = await (from like in _context.Likes
-                                          where like.LikedBy == HomeController.loggedUser.Email
+                                          where like.LikedBy == CurrentUserEmail
                                           select like.PostId).ToListAsync();
 
             return Json(myLikedPostsQuery);
@@ -385,7 +387,7 @@ namespace AceBookApp.Controllers
         public async Task<IActionResult> ProfileImgUpload(IFormFile profileImg)
         {
             var account = await (from acc in _context.Accounts
-                                where acc.Email == HomeController.loggedUser.Email
+                                where acc.Email == CurrentUserEmail
                                 select acc).FirstOrDefaultAsync();
 
             string path = ImgPath(profileImg);
@@ -393,14 +395,14 @@ namespace AceBookApp.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("ProfileData", "Profile", new { email = HomeController.loggedUser.Email });
+            return RedirectToAction("ProfileData", "Profile", new { email = CurrentUserEmail });
         }
 
         //method to update cover photo of logged user
         public async Task<IActionResult> CoverImgUpload(IFormFile coverImg)
         {
             var account = await (from acc in _context.Accounts
-                                where acc.Email == HomeController.loggedUser.Email
+                                where acc.Email == CurrentUserEmail
                                 select acc).FirstOrDefaultAsync();
 
             string path = ImgPath(coverImg);
@@ -408,7 +410,7 @@ namespace AceBookApp.Controllers
 
             await _context.SaveChangesAsync();
 
-            return RedirectToAction("ProfileData", "Profile", new { email = HomeController.loggedUser.Email });
+            return RedirectToAction("ProfileData", "Profile", new { email = CurrentUserEmail });
         }
 
         //method to generate path of profile/cover photo
@@ -425,7 +427,7 @@ namespace AceBookApp.Controllers
                 {
                     try
                     {
-                        path = Path.Combine(_host.ContentRootPath + "PostContent\\Uploads\\" + HomeController.loggedUser.Email + "\\ProfileCoverImg", random + Path.GetFileName(file.FileName));
+                        path = Path.Combine(_host.ContentRootPath + "PostContent\\Uploads\\" + CurrentUserEmail + "\\ProfileCoverImg", random + Path.GetFileName(file.FileName));
                         Directory.CreateDirectory(Path.GetDirectoryName(path));
                         using (Stream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
                         {
@@ -454,7 +456,7 @@ namespace AceBookApp.Controllers
         public async Task<IActionResult> Settings(string email)
         {
             var account = await (from acc in _context.Accounts
-                                where acc.Email == HomeController.loggedUser.Email
+                                where acc.Email == CurrentUserEmail
                                 select acc).FirstOrDefaultAsync();
 
             return View(account);
@@ -466,7 +468,7 @@ namespace AceBookApp.Controllers
             Account account = new Account();
 
             var myAcc = await (from acc in _context.Accounts
-                              where acc.Email == HomeController.loggedUser.Email
+                              where acc.Email == CurrentUserEmail
                               select acc).FirstOrDefaultAsync();
 
             if (type == "name")
@@ -492,7 +494,7 @@ namespace AceBookApp.Controllers
                 _context.Accounts.Add(newAcc);
 
                 var myAddAcc = await (from addAcc in _context.additionAccountDetails
-                                      where addAcc.Loggedemail == HomeController.loggedUser.Email
+                                      where addAcc.Loggedemail == CurrentUserEmail
                                       select addAcc).FirstOrDefaultAsync();
 
                 AdditionAccountDetail newAddAcc = new AdditionAccountDetail();
@@ -509,41 +511,39 @@ namespace AceBookApp.Controllers
                 _context.additionAccountDetails.Add(newAddAcc);
 
                 _context.Comments
-                    .Where(x => x.CommentedBy == HomeController.loggedUser.Email)
+                    .Where(x => x.CommentedBy == CurrentUserEmail)
                     .ToList()
                     .ForEach(a => a.CommentedBy = value1);
 
                 _context.FriendRequests
-                    .Where(x => x.FromRequest == HomeController.loggedUser.Email)
+                    .Where(x => x.FromRequest == CurrentUserEmail)
                     .ToList()
                     .ForEach(a => a.FromRequest = value1);
 
                 _context.FriendRequests
-                    .Where(x => x.ToRequest == HomeController.loggedUser.Email)
+                    .Where(x => x.ToRequest == CurrentUserEmail)
                     .ToList()
                     .ForEach(a => a.ToRequest = value1);
 
                 _context.Friends
-                    .Where(x => x.FromRequest == HomeController.loggedUser.Email)
+                    .Where(x => x.FromRequest == CurrentUserEmail)
                     .ToList()
                     .ForEach(a => a.FromRequest = value1);
 
                 _context.Friends
-                    .Where(x => x.ToRequest == HomeController.loggedUser.Email)
+                    .Where(x => x.ToRequest == CurrentUserEmail)
                     .ToList()
                     .ForEach(a => a.ToRequest = value1);
 
                 _context.Likes
-                    .Where(x => x.LikedBy == HomeController.loggedUser.Email)
+                    .Where(x => x.LikedBy == CurrentUserEmail)
                     .ToList()
                     .ForEach(a => a.LikedBy = value1);
 
                 _context.Posts
-                    .Where(x => x.Email == HomeController.loggedUser.Email)
+                    .Where(x => x.Email == CurrentUserEmail)
                     .ToList()
                     .ForEach(a => a.Email = value1);
-
-                HomeController.loggedUser.Email = value1;
             }
 
             await _context.SaveChangesAsync();
@@ -555,7 +555,7 @@ namespace AceBookApp.Controllers
         public async Task<string> UpdatePassword(string currPass, string newPass)
         {
             var myAcc = await (from acc in _context.Accounts
-                              where acc.Email == HomeController.loggedUser.Email
+                              where acc.Email == CurrentUserEmail
                               select acc).FirstOrDefaultAsync();
 
             if (myAcc.Password != currPass)
@@ -576,15 +576,19 @@ namespace AceBookApp.Controllers
             try
             {
                 var account = await (from acc in _context.Accounts
-                                     where acc.Email == HomeController.loggedUser.Email
+                                     where acc.Email == CurrentUserEmail
                                      select acc).FirstOrDefaultAsync();
 
                 account.Status = "Offline";
 
                 await _context.SaveChangesAsync();
+
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             }
             catch (Exception ex)
             {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
                 Console.WriteLine("Error while saving Status changes to database: " + ex.Message);
             }
         }

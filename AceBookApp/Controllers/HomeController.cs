@@ -1,13 +1,18 @@
 ﻿using AceBookApp.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
 namespace AceBookApp.Controllers
 {
+    [AllowAnonymous]
     public class HomeController : Controller
     {
 
@@ -105,16 +110,30 @@ namespace AceBookApp.Controllers
 
                 if (result == PasswordVerificationResult.Success)
                 {
-                    loggedUser.Email = email;
                     loggedUser.UserId = BitConverter.ToString(SHA256.HashData(Encoding.UTF8.GetBytes(email.Trim().ToLower()))).Replace("-", "").ToLower().Substring(0, 16);
 
                     var account = await (from acc in _context.Accounts
-                                   where acc.Email == email
-                                   select acc).FirstOrDefaultAsync();
+                                         where acc.Email == email
+                                         select acc).FirstOrDefaultAsync();
 
                     account.Status = "Online";
 
                     await _context.SaveChangesAsync();
+
+                    var claims = new List<Claim> {
+                                    new Claim(ClaimTypes.Name, email),
+                                };
+
+                    var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    await HttpContext.SignInAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme,
+                            new ClaimsPrincipal(claimsIdentity),
+                            new AuthenticationProperties
+                            {
+                                IsPersistent = false 
+                            });
+
 
                     return RedirectToAction("FeedData", "Feed");
                 }

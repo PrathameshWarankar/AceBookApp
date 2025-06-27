@@ -128,10 +128,12 @@ $(document).ready(function () {
             method: 'Post',
             data: value,
             success: function (data) {
+                alert('Please re-login to the application')
+                $.post('https://' + location.host + '/Profile/Logout', function () {
+                    window.location.href = "https://" + window.location.host + "/Home/Login";
+                });
             }
         })
-
-        location.reload();
     })
 
     $(".rightSettingPasswordSaveBtn").click(function () {

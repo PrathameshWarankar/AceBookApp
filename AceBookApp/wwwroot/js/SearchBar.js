@@ -212,9 +212,14 @@ $(document).ready(function () {
 
     //logs out user account
     $(".searchFeedSettingLogoutOptionDiv").click(function () {
-        window.location.href = "https://" + window.location.host
-        $.ajax('https://' + location.host + '/Profile/Logout')
-    })
+        $.ajax({
+            url: 'https://' + location.host + '/Profile/Logout',
+            method: 'POST', 
+            success: function () {
+                window.location.href = "https://" + window.location.host + "/Home/Login";
+            }
+        });
+    });
 
     //displays notification
     $("#notiIconDiv").click(function () {

@@ -13,6 +13,7 @@ namespace AceBookApp.Controllers
         public static FriendRequest frData = new FriendRequest();
         static string fullname;
         static string profileImage;
+        protected string CurrentUserEmail => User.Identity?.Name;
 
         //initializes AppDbContext
         public FeedController(AppDbContext context, IHostEnvironment host)
@@ -50,7 +51,7 @@ namespace AceBookApp.Controllers
 
             //get list of posts already liked by logged user
             var likedByMeQuery = await (from likes in _context.Likes
-                                        where likes.LikedBy == HomeController.loggedUser.Email
+                                        where likes.LikedBy == CurrentUserEmail
                                         select likes.PostId).ToListAsync();
 
             ViewBag.LikedByMe = likedByMeQuery;
@@ -61,11 +62,11 @@ namespace AceBookApp.Controllers
             ViewBag.FeedPostProfileUrl = feedPostProfileUrl;
             ViewBag.PostLikeCount = postLikeCount;
 
-            ViewBag.Email = HomeController.loggedUser.Email;
+            ViewBag.Email = CurrentUserEmail;
 
             //get account details of logged user
             var loggedAccountDetailsQuery = await (from account in _context.Accounts
-                                                   where account.Email == HomeController.loggedUser.Email
+                                                   where account.Email == CurrentUserEmail
                                                    select account).FirstOrDefaultAsync();
 
             ViewBag.Firstname = loggedAccountDetailsQuery.FirstName;
@@ -92,7 +93,7 @@ namespace AceBookApp.Controllers
             else
             {
                 //add new post's data in database
-                post.Email = HomeController.loggedUser.Email;
+                post.Email = CurrentUserEmail;
                 Random r = new Random();
                 post.PostId = HomeController.loggedUser.UserId + r.Next();
                 post.Caption = p.Caption;
@@ -129,7 +130,7 @@ namespace AceBookApp.Controllers
                 {
                     try
                     {
-                        path = Path.Combine(_host.ContentRootPath, "PostContent", "Uploads", HomeController.loggedUser.Email, "Posts", random.ToString(), Path.GetFileName(file.FileName));
+                        path = Path.Combine(_host.ContentRootPath, "PostContent", "Uploads", CurrentUserEmail, "Posts", random.ToString(), Path.GetFileName(file.FileName));
                         Directory.CreateDirectory(Path.GetDirectoryName(path));
                         using (Stream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
                         {
@@ -192,7 +193,7 @@ namespace AceBookApp.Controllers
             List<SelectListItem> reqList = new List<SelectListItem>();
 
             var friendReqQuery = await (from item in _context.FriendRequests
-                                       where item.ToRequest == HomeController.loggedUser.Email
+                                       where item.ToRequest == CurrentUserEmail
                                        select item.FromRequest).ToListAsync();
 
             foreach (var item in friendReqQuery)
@@ -222,25 +223,25 @@ namespace AceBookApp.Controllers
                            select post).FirstOrDefaultAsync();
 
             var isLike = await _context.Likes
-                            .FirstOrDefaultAsync(_ => _.LikedBy == HomeController.loggedUser.Email && _.PostId == id);
+                            .FirstOrDefaultAsync(_ => _.LikedBy == CurrentUserEmail && _.PostId == id);
 
             var isNoti = await _context.Notifications
-                            .FirstOrDefaultAsync(_ => _.NotifiedBy == HomeController.loggedUser.Email && _.PostId == id && _.NotiType == "Like");
+                            .FirstOrDefaultAsync(_ => _.NotifiedBy == CurrentUserEmail && _.PostId == id && _.NotiType == "Like");
 
             //if post was not liked previously by logged user
             if (isLike == null)
             {
                 p.Likes += 1;
                 like.PostId = id;
-                like.LikedBy = HomeController.loggedUser.Email;
+                like.LikedBy = CurrentUserEmail;
                 like.LikedByName = fullname;
                 _context.Likes.Add(like);
 
                 //send notification for liked post to post owner
                 Notification noti = new Notification();
-                if (p.Email != HomeController.loggedUser.Email)
+                if (p.Email != CurrentUserEmail)
                 {
-                    noti.NotifiedBy = HomeController.loggedUser.Email;
+                    noti.NotifiedBy = CurrentUserEmail;
                     noti.NotifiedTo = p.Email;
                     noti.NotiType = "Like";
                     noti.PostId = id;
@@ -256,7 +257,7 @@ namespace AceBookApp.Controllers
                 p.Likes -= 1;
                 _context.Likes.Remove(isLike);
 
-                if (p.Email != HomeController.loggedUser.Email)
+                if (p.Email != CurrentUserEmail)
                 {
                     _context.Notifications.Remove(isNoti);
                 }
@@ -289,7 +290,7 @@ namespace AceBookApp.Controllers
             p.Comments += 1;
             comment.PostId = id;
             comment.CommentedText = text;
-            comment.CommentedBy = HomeController.loggedUser.Email;
+            comment.CommentedBy = CurrentUserEmail;
             comment.CommentedByName = fullname;
             comment.CommentedDate = DateTime.Now;
             comment.CommentedByImagepath = profileImage.Substring(64);
@@ -298,9 +299,9 @@ namespace AceBookApp.Controllers
             Notification noti = new Notification();
 
             //send notification for commented post to post owner
-            if (p.Email != HomeController.loggedUser.Email)
+            if (p.Email != CurrentUserEmail)
             {
-                noti.NotifiedBy = HomeController.loggedUser.Email;
+                noti.NotifiedBy = CurrentUserEmail;
                 noti.NotifiedTo = p.Email;
                 noti.NotiType = "Comment";
                 noti.PostId = id;
@@ -327,11 +328,11 @@ namespace AceBookApp.Controllers
         public async Task<IActionResult> GetContacts()
         {
             var getFriendsQuery1 = await (from acc in _context.Friends
-                                         where acc.ToRequest == HomeController.loggedUser.Email
+                                         where acc.ToRequest == CurrentUserEmail
                                          select acc.FromRequest).ToListAsync();
 
             var getFriendsQuery2 = await (from acc in _context.Friends
-                                    where acc.FromRequest == HomeController.loggedUser.Email
+                                    where acc.FromRequest == CurrentUserEmail
                                     select acc.ToRequest).ToListAsync();
 
             getFriendsQuery1.AddRange(getFriendsQuery2);
@@ -343,7 +344,7 @@ namespace AceBookApp.Controllers
         public async Task<IActionResult> GetMyNotifications()
         {
             var getMyNotiQuery = await (from noti in _context.Notifications
-                                       where noti.NotifiedTo == HomeController.loggedUser.Email
+                                       where noti.NotifiedTo == CurrentUserEmail
                                        orderby noti descending
                                        select noti).ToListAsync();
 
@@ -358,7 +359,7 @@ namespace AceBookApp.Controllers
                 var notifications = await _context.Notifications
                                     .Where(noti => noti.NotiType == type &&
                                                    noti.NotifiedBy == id &&
-                                                   noti.NotifiedTo == HomeController.loggedUser.Email)
+                                                   noti.NotifiedTo == CurrentUserEmail)
                                     .ToListAsync();
 
                 notifications.ForEach(entry => entry.NotiStatus = "Read");
@@ -368,7 +369,7 @@ namespace AceBookApp.Controllers
                 var notifications = await _context.Notifications
                                     .Where(noti => noti.NotiType == type &&
                                                    noti.PostId == id &&
-                                                   noti.NotifiedTo == HomeController.loggedUser.Email)
+                                                   noti.NotifiedTo == CurrentUserEmail)
                                     .ToListAsync();
 
                 notifications.ForEach(entry => entry.NotiStatus = "Read");
