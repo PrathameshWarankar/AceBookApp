@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -107,9 +108,9 @@ namespace AceBookApp.Controllers
                     loggedUser.Email = email;
                     loggedUser.UserId = BitConverter.ToString(SHA256.HashData(Encoding.UTF8.GetBytes(email.Trim().ToLower()))).Replace("-", "").ToLower().Substring(0, 16);
 
-                    var account = (from acc in _context.Accounts
+                    var account = await (from acc in _context.Accounts
                                    where acc.Email == email
-                                   select acc).First();
+                                   select acc).FirstOrDefaultAsync();
 
                     account.Status = "Online";
 
