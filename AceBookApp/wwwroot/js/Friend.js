@@ -7,7 +7,7 @@ function showError(error) {
 function ConfirmBtn(email) {
     var value = {
         "fromRequest": email,
-        "toRequest": $(location).attr('href').substr(46)
+        "toRequest": $(location).attr('href').split("email=")[1]
     }
     $.ajax({
         url: 'https://' + location.host + '/Profile/AddFriend',
@@ -41,7 +41,7 @@ function DeleteBtn(email) {
     var len = email.length
     var value = {
         "fromRequest": email.substr(0, len - 4),
-        "toRequest": $(location).attr('href').substr(46)
+        "toRequest": $(location).attr('href').split("email=")[1]
     }
     $.ajax({
         url: 'https://' + location.host + '/Profile/DeleteReq',
@@ -97,7 +97,7 @@ function ajaxPromise(options) {
 // Loads friend requests and renders them
 function loadFriendRequests() {
     var value = {
-        "email": $(location).attr('href').substr(46)
+        "email": $(location).attr('href').split("email=")[1]
     };
     ajaxPromise({
         url: 'https://' + location.host + '/Profile/GetFriendReq',
@@ -122,7 +122,7 @@ function loadFriendRequests() {
             var result = '';
             profiles.forEach(function (data1) {
                 result += '<div class="gridItem">' +
-                    '<div class="requestedAccImgDiv"><img class="requestedAccImg" src="' + serverUrl + data1.profileImagePath.substr(64) + '"/></div>' +
+                    '<div class="requestedAccImgDiv"><img class="requestedAccImg" src="' + data1.profileImagePath + '"/></div>' +
                     '<div class="requestedAccName"><span class="requestedAccNameA">' + data1.firstName + ' ' + data1.surname + '</span></div>' +
                     '<button id="' + data1.email + '" class="confirmBtn" onclick="ConfirmBtn(this.id)">Confirm</button><br/>' +
                     '<button class="deleteBtn" id="' + data1.email + '-Del" onclick="DeleteBtn(this.id)">Delete</button>' +
@@ -139,7 +139,7 @@ function loadFriendRequests() {
 // Loads all friends and renders them
 function loadAllFriends() {
     var value = {
-        "email": $(location).attr('href').substr(46)
+        "email": $(location).attr('href').split("email=")[1]
     };
     ajaxPromise({
         url: 'https://' + location.host + '/Profile/GetFriendList',
@@ -162,7 +162,7 @@ function loadAllFriends() {
         Promise.all(requests).then(function (profiles) {
             profiles.forEach(function (data1) {
                 result += '<div class="frndAcc" id="' + data1.email + '" onclick="FrndProfileDisplay(this.id)">' +
-                    '<div class="frndAccImgDiv"><img class="frndAccImg" src="' + serverUrl + data1.profileImagePath.substr(64) + '"/></div>' +
+                    '<div class="frndAccImgDiv"><img class="frndAccImg" src="' + data1.profileImagePath + '"/></div>' +
                     '<div class="frndAccNameDiv"><span class="frndAccName">' + data1.firstName + ' ' + data1.surname + '</span></div>' +
                     '</div>';
             });

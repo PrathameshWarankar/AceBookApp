@@ -125,7 +125,7 @@ function AddingComment(myData) {
                     setTimeout(function () {
                         GetCommentList(val);
                         UpdateCommentCount(val);
-                    }, 750);
+                    }, 150);
                 },
                 complete: function () {
                     isSubmitting = false;

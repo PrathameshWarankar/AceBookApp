@@ -190,7 +190,7 @@ function AddingComment(myData) {
                 data: value,
                 success: function (data) {
                     input.value = '';
-                    setTimeout(() => GetCommentList(val), 750);
+                    setTimeout(() => GetCommentList(val), 150);
                 },
                 complete: function () {
                     isSubmitting = false;

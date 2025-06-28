@@ -1,9 +1,5 @@
 ﻿@model AceBookApp.Models.Post
 
-@{
-    var serverUrl = "http://127.0.0.1:8080/";
-}
-
 <head>
     <script src="https://code.jquery.com/jquery-3.6.1.min.js"
             integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ="
@@ -20,7 +16,7 @@
     <div id="leftFeed">
         <div id="myProfile">
             <div class="myProfileImg">
-                <img class="myProfilelogoImg" alt="my profile photo" src="@Url.Content(serverUrl + ViewBag.ProfileUrl)" />
+                <img class="myProfilelogoImg" alt="my profile photo" src="@Url.Content(ViewBag.ProfileUrl)" />
             </div>
             <div class="myProfileText">
                 <a class="myProfileTextA" href='@Url.Action("ProfileData", "Profile", new { email = ViewBag.Email })'>@ViewBag.Fullname</a>
@@ -50,7 +46,7 @@
         <div id="createPostFeed">
             <div id="createPostFeed1">
                 <div class="createPostInputPhoto">
-                    <img class="createPostInputPhotoImg" alt="profile photo" src="@Url.Content(serverUrl + ViewBag.ProfileUrl)" />
+                    <img class="createPostInputPhotoImg" alt="profile photo" src="@Url.Content(ViewBag.ProfileUrl)" />
                 </div>
                 <input id="createPostInput" placeholder="What's on your mind, @ViewBag.Firstname?" />
             </div>
@@ -81,7 +77,7 @@
 
                 @foreach (var post in ViewBag.Posts)
                 {
-                    string p = serverUrl + @post.Imagepath.Substring(64);
+                    string p = @post.Imagepath;
 
                     TimeSpan time = DateTime.Now.Subtract(post.Date);
 
@@ -89,7 +85,7 @@
 
                         <div class="postDetails">
                             <div>
-                                <img class="feedPostPhoto" alt="profile img" src="@Url.Content(serverUrl + ViewBag.FeedPostProfileUrl[c].Substring(64))" />
+                                <img class="feedPostPhoto" alt="profile img" src="@Url.Content(ViewBag.FeedPostProfileUrl[c])" />
                             </div>
                             <div class="postName">
                                 <a href='@Url.Action("ProfileData", "Profile", new { email = ViewBag.PostEmails[c] })'>@ViewBag.Names[c]</a>
@@ -155,7 +151,7 @@
 
                         <div class="commentSection" style="display: none;">
                             <div class="addCommentDiv">
-                                <img class="commentProfileImg" alt="profile photo" src="@Url.Content(serverUrl + ViewBag.ProfileUrl)" />
+                                <img class="commentProfileImg" alt="profile photo" src="@Url.Content(ViewBag.ProfileUrl)" />
                                 <input class="addComment" placeholder="Write a comment..." />
                             </div>
                             <div class="CommentsList">
@@ -176,7 +172,7 @@
             <div>
                 <form asp-action="FeedData" method="post" role="form" enctype="multipart/form-data" id="createPostForm">
                     <div>
-                        <img class="createPostProfileImg" alt="profile photo" src="@Url.Content(serverUrl + ViewBag.ProfileUrl)" />
+                        <img class="createPostProfileImg" alt="profile photo" src="@Url.Content(ViewBag.ProfileUrl)" />
                     </div>
                     <div id="Fullnamelabel">
                         <span>@ViewBag.Fullname</span>

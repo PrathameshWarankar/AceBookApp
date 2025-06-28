@@ -1,7 +1,11 @@
 ﻿using AceBookApp.Models;
+using Azure.Identity;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace AceBookApp.Controllers
 {
@@ -46,7 +50,12 @@ namespace AceBookApp.Controllers
 
                 names.Add(postOwner.FirstName + " " + postOwner.Surname);
                 emails.Add(postOwner.Email);
-                feedPostProfileUrl.Add(postOwner.ProfileImagePath);
+
+                var feedPostProfileUrlSplit = postOwner.ProfileImagePath.Split("/");
+                feedPostProfileUrl.Add(HomeController.SasTokenGenerator(feedPostProfileUrlSplit[3], feedPostProfileUrlSplit[4]));
+
+                var postImageSplit = post.Imagepath.Split("/");
+                post.Imagepath = HomeController.SasTokenGenerator(postImageSplit[3], postImageSplit[4]);
             }
 
             //get list of posts already liked by logged user
@@ -73,7 +82,10 @@ namespace AceBookApp.Controllers
             ViewBag.Lastname = loggedAccountDetailsQuery.Surname;
             ViewBag.Fullname = loggedAccountDetailsQuery.FirstName + " " + loggedAccountDetailsQuery.Surname;
             fullname = loggedAccountDetailsQuery.FirstName + " " + loggedAccountDetailsQuery.Surname;
-            ViewBag.ProfileUrl = loggedAccountDetailsQuery.ProfileImagePath.Split("Uploads\\")[1];
+
+            var profileImagePathSplit = loggedAccountDetailsQuery.ProfileImagePath.Split("/");
+
+            ViewBag.ProfileUrl = HomeController.SasTokenGenerator(profileImagePathSplit[3], profileImagePathSplit[4]);
             profileImage = loggedAccountDetailsQuery.ProfileImagePath;
             ViewData["Host"] = Request.Host;
 
@@ -86,7 +98,7 @@ namespace AceBookApp.Controllers
         public async Task<IActionResult> FeedData(Post p, IFormFile imgfile)
         {
             Post post = new Post();
-            Result result = ImgPath(imgfile);
+            Result result = await ImgPath(imgfile);
 
             if (result.isError == true)
                 return RedirectToAction("Result", "Feed", result);
@@ -116,7 +128,7 @@ namespace AceBookApp.Controllers
         }
 
         //save the new post's image in local folder and then return its path
-        public Result ImgPath(IFormFile file)
+        public async Task<Result> ImgPath(IFormFile file)
         {
             Random r = new Random();
             string path = string.Empty;
@@ -130,12 +142,33 @@ namespace AceBookApp.Controllers
                 {
                     try
                     {
-                        path = Path.Combine(_host.ContentRootPath, "PostContent", "Uploads", CurrentUserEmail, "Posts", random.ToString(), Path.GetFileName(file.FileName));
-                        Directory.CreateDirectory(Path.GetDirectoryName(path));
-                        using (Stream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                        var blobServiceClient = new BlobServiceClient(
+                                                new Uri("https://acebookstorage01.blob.core.windows.net"),
+                                                new DefaultAzureCredential());
+
+                        BlobContainerClient? containerClient = blobServiceClient.GetBlobContainerClient(CurrentUserEmail.Replace("@", "").Replace(".", "") + "-posts");
+
+                        var exists = await containerClient.ExistsAsync();
+
+                        if (!exists.Value)
                         {
-                            file.CopyTo(fileStream);
+                            containerClient = await blobServiceClient.CreateBlobContainerAsync(CurrentUserEmail.Replace("@", "").Replace(".", "") + "-posts");
                         }
+
+                        BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(file.FileName));
+
+                        using (var stream = file.OpenReadStream())
+                        {
+                            await blobClient.UploadAsync(stream, overwrite: true);
+                        }
+
+                        path = blobClient.Uri.ToString();
+
+                        //Directory.CreateDirectory(Path.GetDirectoryName(path));
+                        //using (Stream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                        //{
+                        //    file.CopyTo(fileStream);
+                        //}
                     }
                     catch (Exception ex)
                     {
@@ -174,6 +207,8 @@ namespace AceBookApp.Controllers
             var result = await _context.Accounts
                         .Where(x => x.FirstName.StartsWith(name) || x.Surname.StartsWith(name))
                         .ToListAsync();
+
+            result.ForEach(_ => _.ProfileImagePath = HomeController.SasTokenGenerator(_.ProfileImagePath.Split("/")[3], _.ProfileImagePath.Split("/")[4]));
 
             return Json(result);
         }
@@ -293,7 +328,7 @@ namespace AceBookApp.Controllers
             comment.CommentedBy = CurrentUserEmail;
             comment.CommentedByName = fullname;
             comment.CommentedDate = DateTime.Now;
-            comment.CommentedByImagepath = profileImage.Substring(64);
+            comment.CommentedByImagepath = profileImage;
             _context.Comments.Add(comment);
 
             Notification noti = new Notification();
@@ -320,6 +355,8 @@ namespace AceBookApp.Controllers
                                          where cmt.PostId == id
                                          orderby cmt.CommentedDate descending
                                          select cmt).ToListAsync();
+
+            getCommentsQuery.ForEach(post => post.CommentedByImagepath = HomeController.SasTokenGenerator(post.CommentedByImagepath.Split("/")[3], post.CommentedByImagepath.Split("/")[4]));
 
             return Json(getCommentsQuery);
         }

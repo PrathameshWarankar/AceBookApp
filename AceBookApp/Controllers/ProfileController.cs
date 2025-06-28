@@ -1,8 +1,12 @@
 ﻿using AceBookApp.Models;
+using Azure.Identity;
+using Azure.Storage.Blobs;
+using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace AceBookApp.Controllers
 {
@@ -156,6 +160,9 @@ namespace AceBookApp.Controllers
                 var myAccDetailsQuery = await _context.Accounts
                                         .Where(x => x.Email == CurrentUserEmail)
                                         .FirstOrDefaultAsync();
+                myAccDetailsQuery.CoverImagePath = HomeController.SasTokenGenerator(myAccDetailsQuery.CoverImagePath.Split("/")[3], myAccDetailsQuery.CoverImagePath.Split("/")[4]);
+                myAccDetailsQuery.ProfileImagePath = HomeController.SasTokenGenerator(myAccDetailsQuery.ProfileImagePath.Split("/")[3], myAccDetailsQuery.ProfileImagePath.Split("/")[4]);
+                
                 return Json(myAccDetailsQuery);
             }
             else
@@ -163,6 +170,10 @@ namespace AceBookApp.Controllers
                 var accDetailsQuery = await _context.Accounts
                                         .Where(x => x.Email == email)
                                         .FirstOrDefaultAsync();
+
+                accDetailsQuery.CoverImagePath = HomeController.SasTokenGenerator(accDetailsQuery.CoverImagePath.Split("/")[3], accDetailsQuery.CoverImagePath.Split("/")[4]);
+                accDetailsQuery.ProfileImagePath = HomeController.SasTokenGenerator(accDetailsQuery.ProfileImagePath.Split("/")[3], accDetailsQuery.ProfileImagePath.Split("/")[4]);
+
                 return Json(accDetailsQuery);
             }
         }
@@ -370,6 +381,8 @@ namespace AceBookApp.Controllers
                                    where post.Email == email
                                    select post).ToListAsync();
 
+            postsQuery.ForEach(post => post.Imagepath = HomeController.SasTokenGenerator(post.Imagepath.Split("/")[3], post.Imagepath.Split("/")[4]));
+
             return Json(postsQuery);
         }
 
@@ -390,8 +403,12 @@ namespace AceBookApp.Controllers
                                 where acc.Email == CurrentUserEmail
                                 select acc).FirstOrDefaultAsync();
 
-            string path = ImgPath(profileImg);
-            account.ProfileImagePath = path;
+            Result result = await ImgPath(profileImg);
+
+            if (result.isError == true)
+                return RedirectToAction("Result", "Feed", result);
+            else
+                account.ProfileImagePath = result.message;
 
             await _context.SaveChangesAsync();
 
@@ -405,8 +422,12 @@ namespace AceBookApp.Controllers
                                 where acc.Email == CurrentUserEmail
                                 select acc).FirstOrDefaultAsync();
 
-            string path = ImgPath(coverImg);
-            account.CoverImagePath = path;
+            Result result = await ImgPath(coverImg);
+
+            if (result.isError == true)
+                return RedirectToAction("Result", "Feed", result);
+            else
+                account.CoverImagePath = result.message;
 
             await _context.SaveChangesAsync();
 
@@ -414,42 +435,76 @@ namespace AceBookApp.Controllers
         }
 
         //method to generate path of profile/cover photo
-        public string ImgPath(IFormFile file)
+        public async Task<Result> ImgPath(IFormFile file)
         {
             Random r = new Random();
-            string path = "-1";
+            string path = string.Empty;
+
             int random = r.Next();
             if (file != null && file.Length > 0)
             {
                 string extension = Path.GetExtension(file.FileName);
 
-                if (extension.ToLower().Equals(".jpg") || extension.ToLower().Equals(".jpeg") || extension.ToLower().Equals(".png") || extension.ToLower().Equals(".jfif"))
+                if (file.ContentType.ToLower().Contains("image"))
                 {
                     try
                     {
-                        path = Path.Combine(_host.ContentRootPath + "PostContent\\Uploads\\" + CurrentUserEmail + "\\ProfileCoverImg", random + Path.GetFileName(file.FileName));
-                        Directory.CreateDirectory(Path.GetDirectoryName(path));
-                        using (Stream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                        var blobServiceClient = new BlobServiceClient(
+                                                new Uri("https://acebookstorage01.blob.core.windows.net"),
+                                                new DefaultAzureCredential());
+
+                        BlobContainerClient? containerClient = blobServiceClient.GetBlobContainerClient(CurrentUserEmail.Replace("@", "").Replace(".", "") + "-profile-images");
+
+                        var exists = await containerClient.ExistsAsync();
+
+                        if (!exists.Value)
                         {
-                            file.CopyTo(fileStream);
+                            containerClient = await blobServiceClient.CreateBlobContainerAsync(CurrentUserEmail.Replace("@", "").Replace(".", "") + "-profile-images");
                         }
+
+                        BlobClient blobClient = containerClient.GetBlobClient(Path.GetFileName(file.FileName));
+
+                        using (var stream = file.OpenReadStream())
+                        {
+                            await blobClient.UploadAsync(stream, overwrite: true);
+                        }
+
+                        path = blobClient.Uri.ToString();
+
+                        //Directory.CreateDirectory(Path.GetDirectoryName(path));
+                        //using (Stream fileStream = new FileStream(path, FileMode.Create, FileAccess.Write))
+                        //{
+                        //    file.CopyTo(fileStream);
+                        //}
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        path = "-1";
+                        return new Result
+                        {
+                            isError = true,
+                            message = "An error occurred while uploading the file. Please try again."
+                        };
                     }
                 }
                 else
-                {
-                    path = "-1";
-                }
+                    return new Result
+                    {
+                        isError = true,
+                        message = "File type not supported. Please upload an image."
+                    };
             }
             else
-            {
-                path = "-1";
-            }
+                return new Result
+                {
+                    isError = true,
+                    message = "File not found. Please upload an image."
+                };
 
-            return path;
+            return new Result
+            {
+                isError = false,
+                message = path
+            };
         }
 
         //return settings page of logged user

@@ -1,4 +1,7 @@
 ﻿using AceBookApp.Models;
+using Azure.Identity;
+using Azure.Storage.Blobs;
+using Azure.Storage.Sas;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -20,12 +24,14 @@ namespace AceBookApp.Controllers
         private readonly IHostEnvironment _host;
         public static Post postData = new Post();
         public static LoggedUser loggedUser = new LoggedUser();
+        private static IMemoryCache _memoryCache;
 
         //initializes AppDbContext
-        public HomeController(AppDbContext context, IHostEnvironment host)
+        public HomeController(AppDbContext context, IHostEnvironment host, IMemoryCache memoryCache)
         {
             _context = context;
             _host = host;
+            _memoryCache = memoryCache;
         }
 
         //returns view of create account page
@@ -65,12 +71,12 @@ namespace AceBookApp.Controllers
             if (ModelState.IsValid)
             {
                 if (acc.ProfileImagePath == null && acc.Gender == "Male")
-                    acc.ProfileImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "maleProfilePhotoDefault.PNG";
+                    acc.ProfileImagePath = "https://acebookstorage01.blob.core.windows.net/default-profile-photo/maleProfilePhotoDefault.png";
                 else if (acc.ProfileImagePath == null && acc.Gender == "Female")
-                    acc.ProfileImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "femaleProfilePhotoDefault.PNG";
+                    acc.ProfileImagePath = "https://acebookstorage01.blob.core.windows.net/default-profile-photo/femaleProfilePhotoDefault.png";
 
                 if (acc.CoverImagePath == null)
-                    acc.CoverImagePath = _host.ContentRootPath + "PostContent\\Uploads\\DefaultProfilePhoto\\" + "coverPhotoDefault.JPG";
+                    acc.CoverImagePath = "https://acebookstorage01.blob.core.windows.net/default-profile-photo/coverPhotoDefault.jpg";
 
                 acc.Status = "Offline";
 
@@ -154,6 +160,49 @@ namespace AceBookApp.Controllers
         public IActionResult Failure()
         {
             return View();
+        }
+
+        public static string SasTokenGenerator(string containerName, string blobName)
+        {
+            var storageAccountName = "acebookstorage01";
+            var blobEndpoint = $"https://{storageAccountName}.blob.core.windows.net";
+
+            if (_memoryCache.TryGetValue(containerName + "/" + blobName, out string cachedValue))
+            {
+                return cachedValue;
+            }
+
+            var credential = new AzureCliCredential();
+            var blobServiceClient = new BlobServiceClient(new Uri(blobEndpoint), credential);
+
+            // Get the container and blob client
+            var containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+            var blobClient = containerClient.GetBlobClient(blobName);
+
+            // Get a User Delegation Key
+            var delegationKey = blobServiceClient.GetUserDelegationKey(
+                DateTimeOffset.UtcNow,
+                DateTimeOffset.UtcNow.AddHours(2));
+
+            // Create SAS builder
+            var sasBuilder = new BlobSasBuilder
+            {
+                BlobContainerName = containerName,
+                BlobName = blobName,
+                Resource = "b", // "b" for blob
+                StartsOn = DateTimeOffset.UtcNow.AddMinutes(-5),
+                ExpiresOn = DateTimeOffset.UtcNow.AddMinutes(15)
+            };
+
+            sasBuilder.SetPermissions(BlobSasPermissions.Read);
+
+            // Generate SAS token
+            var sasToken = sasBuilder.ToSasQueryParameters(delegationKey.Value, storageAccountName).ToString();
+
+            _memoryCache.Set(containerName + "/" + blobName, $"{blobClient.Uri}?{sasToken}", TimeSpan.FromMinutes(15));
+
+            // Final URL
+            return $"{blobClient.Uri}?{sasToken}";
         }
     }
 }
