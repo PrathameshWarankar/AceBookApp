@@ -1,4 +1,4 @@
-using AceBookApp.Models;
+using AceBookApp.Handler;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -26,10 +26,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LogoutPath = "/Profile/Logout";
 });
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
-
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add(new Microsoft.AspNetCore.Mvc.Authorization.AuthorizeFilter());
@@ -40,6 +36,8 @@ builder.Services.AddRazorPages(options =>
 });
 
 builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<AzureSqlTokenProvider>();
+builder.Services.AddDbContext<AppDbContext>(options => { });
 
 var app = builder.Build();
 

@@ -1,11 +1,10 @@
-﻿using AceBookApp.Models;
+﻿using AceBookApp.Handler;
+using AceBookApp.Models;
 using Azure.Identity;
 using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 namespace AceBookApp.Controllers
 {

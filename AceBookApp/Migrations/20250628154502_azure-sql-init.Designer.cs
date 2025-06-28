@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AceBookApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230223145732_additionalDetailsTable2")]
-    partial class additionalDetailsTable2
+    [Migration("20250628154502_azure-sql-init")]
+    partial class azuresqlinit
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,6 +57,9 @@ namespace AceBookApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProfileImagePath")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
@@ -141,6 +144,27 @@ namespace AceBookApp.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("AceBookApp.Models.Friend", b =>
+                {
+                    b.Property<string>("RequestID")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FromRequest")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("SentDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ToRequest")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("RequestID");
+
+                    b.ToTable("Friends");
+                });
+
             modelBuilder.Entity("AceBookApp.Models.FriendRequest", b =>
                 {
                     b.Property<string>("RequestID")
@@ -185,6 +209,38 @@ namespace AceBookApp.Migrations
                     b.HasKey("LikeId");
 
                     b.ToTable("Likes");
+                });
+
+            modelBuilder.Entity("AceBookApp.Models.Notification", b =>
+                {
+                    b.Property<int>("NotificationId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("NotificationId"), 1L, 1);
+
+                    b.Property<string>("NotiStatus")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NotiType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NotifiedBy")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NotifiedTo")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PostId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NotificationId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("AceBookApp.Models.Post", b =>
